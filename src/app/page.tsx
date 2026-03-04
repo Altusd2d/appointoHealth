@@ -5,8 +5,8 @@ import Process from "@/components/process/process";
 export default function Home() {
   return (
     <div className="overflow-x-hidden">
-      {/* <Hero />
-      <CoreService /> */}
+      <Hero />
+      <CoreService />
       <Process />
     </div>
   );

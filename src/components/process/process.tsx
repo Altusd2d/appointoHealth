@@ -105,7 +105,7 @@ function StepCard({ step }: { step: Step }) {
         {step.description}
       </p>
 
-      <div className="absolute left-1/2 top-[94%]  flex h-[clamp(90px,5.5vw,78px)] w-[clamp(52px,7.2vw,104px)] -translate-x-1/2 -translate-y-[36%] items-start justify-center rounded-b-[999px] bg-[#ececec] pt-[clamp(4px,0.7vw,10px)]">
+      <div className="absolute left-1/2 top-[94%]  flex h-[clamp(78px,5.5vw,90px)] w-[clamp(52px,7.2vw,104px)] -translate-x-1/2 -translate-y-[36%] items-start justify-center rounded-b-[999px] bg-[#ececec] pt-[clamp(4px,0.7vw,10px)]">
         <Image src={step.icon} alt="" className="h-auto w-[clamp(20px,3vw,44px)] max-xl:mt-6 mt-4" />
       </div>
     </article>
