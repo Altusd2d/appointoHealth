@@ -1,5 +1,6 @@
 import CoreService from "@/components/coreServices/coreServices";
 import Hero from "@/components/hero/hero";
+import HospitalSearch from "@/components/hospitalSearch/hospitalSearch";
 import Process from "@/components/process/process";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <Hero />
       <CoreService />
       <Process />
+      <HospitalSearch/>
     </div>
   );
 }
