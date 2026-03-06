@@ -25,14 +25,14 @@ export const HOSPITALS:HospitalRecord[]= [
     id: "h-003",
     name: "Manipal Hospital",
     city: "Bengaluru",
-    diseaseTags: ["orthopedic", "diabetes", "asthma", "thyroid"],
+    diseaseTags: ["orthopedic", "diabetes", "asthma", "thyroid","head ache"],
     services: ["Orthopedics", "Pulmonology", "Endocrinology", "Lab"],
   },
   {
     id: "h-004",
     name: "Narayana Health City",
     city: "Bengaluru",
-    diseaseTags: ["heart disease", "kidney disease", "pediatric cardiology"],
+    diseaseTags: ["heart attack", "kidney disease", "pediatric cardiology"],
     services: ["Cardiac Surgery", "Nephrology", "Pediatrics", "Emergency 24x7"],
   },
   {
@@ -75,3 +75,11 @@ export function findHospital(hospital: string): HospitalRecord[] {
     )
   );
 }
+// export function findHospital(query:string){
+//   const searchText=query.trim().toLocaleLowerCase()
+//   return HOSPITALS.filter((hospitalItem)=>{
+//       hospitalItem.diseaseTags.some((disease)=>{
+//             disease.toLowerCase().includes(searchText)
+//       })
+//   })
+// }

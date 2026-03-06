@@ -22,7 +22,7 @@ export default function CoreService() {
           className="h-auto w-full max-w-[240px] object-contain sm:max-w-[320px] md:max-w-[360px] lg:max-w-[420px] xl:max-w-[460px]"
         />
 
-        <div className="grid w-full grid-cols-1 gap-x-6 gap-y-6 max-lg:justify-items-center sm:gap-y-5 sm:grid-cols-2 md:gap-y-4 gap-x-6 lg:gap-x-10 xl:gap-x-12">
+        <div className="grid w-full grid-cols-1 gap-x-6 h-[380px] max-lg:justify-items-center sm:gap-y-5 sm:grid-cols-2 md:gap-y-4 gap-x-6 lg:gap-x-10 xl:gap-x-12">
           {coredata.map((items, ind) => {
             return (
               <div className="flex gap-3 sm:gap-4  items-center" key={`${items.title}-${ind}`}>

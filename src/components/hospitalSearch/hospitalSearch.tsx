@@ -1,54 +1,46 @@
-"use client";
-
-import { useMemo, useState } from "react";
+"use client"
+import { useState } from "react";
 import { findHospital, type HospitalRecord } from "./hospitalData";
-
+import localFont from "next/font/local"
+const font1=localFont({
+  src:"../../fonts/font1.woff2"
+})
 export default function HospitalSearch() {
-  const [searchText, setSearchText] = useState("");
-  const [results, setResults] = useState<HospitalRecord[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
-
-  const query = useMemo(() => searchText.trim(), [searchText]);
-
-  const handleSearch = () => {
-    setHasSearched(true);
-    setResults(findHospital(query));
-  };
-
+  const[searchText,setSearchteaxt]=useState("");
+  const[result,setResult]=useState<HospitalRecord[]>([])
+  const[noResult,setNoResult]=useState(false)
+   function handleClick(searchText:string){
+     setResult(findHospital(searchText))
+     setNoResult(true)
+  }
   return (
-    <section className="bg-slate-50 px-4 py-10 sm:px-8">
-      <div className="mx-auto max-w-6xl">
-        <h2 className="mb-4 text-2xl font-bold text-slate-900 sm:text-3xl">
-          Find Hospitals
-        </h2>
-
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row">
-          <input
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSearch();
-            }}
-            placeholder="Search disease like cardiology, diabetes, cancer..."
-            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none ring-sky-300 transition focus:ring-2"
-          />
-          <button
-            type="button"
-            onClick={handleSearch}
-            className="rounded-xl bg-sky-600 px-6 py-3 text-base font-semibold text-white transition hover:bg-sky-700"
-          >
-            Search
-          </button>
-        </div>
-
-        {hasSearched && results.length === 0 && (
-          <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-700">
-            No hospitals found for "{query}".
+    <div className={ `${font1.className} `}>
+      <div className={` flex justify-center items-center my-5 gap-4  xl:px-35 lg:px-18
+         md:px-10 px-6 `}>
+        <input
+          placeholder="search for hospitals"
+          onChange={(e)=>{
+            setSearchteaxt(e.target.value);
+          }}
+          className=" rounded-xl border py-2 w-full font-2xl px-7 border-[#cbcdcd]"
+        />
+        <button 
+         onClick={()=>{
+            handleClick(searchText);
+         }}
+         className="text-xl bg-[#0066cc] rounded-xl px-2 py-1.25
+          text-center cursor-pointer tracking-tight text-white">search</button>
+      </div>
+      {
+       noResult && result.length==0 &&(
+        <p className="rounded-xl border border-amber-200 bg-amber-50 
+        xl:mx-35 lg:mx-18 md:mx-10 mx-6 py-3 text-amber-700 px-6">
+            No hospitals found for.
           </p>
-        )}
-
-        <div className="space-y-5">
-          {results.map((hospital) => {
+       )
+      }
+      <div className="space-y-5 xl:px-35 lg:px-18 md:px-10 px-6 mb-14">
+          {result.map((hospital) => {
             const openText = hospital.services.some((service) =>
               service.toLowerCase().includes("emergency")
             )
@@ -72,7 +64,7 @@ export default function HospitalSearch() {
 
                   <button
                     type="button"
-                    className="rounded-xl border border-sky-300 px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50"
+                    className="rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50"
                   >
                     Know more
                   </button>
@@ -90,10 +82,10 @@ export default function HospitalSearch() {
                   {openText}
                 </p>
 
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="mt-6 flex flex-col gap-40 sm:flex-row sm:items-center sm:justify-betwee">
                   <button
                     type="button"
-                    className="rounded-lg bg-sky-600 px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-sky-700"
+                    className="rounded-lg bg-[#0066cc] px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-sky-700"
                   >
                     Book an appointment
                   </button>
@@ -108,7 +100,8 @@ export default function HospitalSearch() {
             );
           })}
         </div>
-      </div>
-    </section>
+    </div>
+    
+
   );
 }
