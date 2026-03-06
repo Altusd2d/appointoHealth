@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -17,24 +19,24 @@ export default function Footer() {
             <h3 className="text-base font-semibold">Quick Links</h3>
             <ul className="mt-4 space-y-2 text-sm text-white/75">
               <li>
-                <a href="#" className="transition hover:text-white">
+                <Link href="/" className="transition hover:text-white">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#core-services" className="transition hover:text-white">
+                <Link href="#core-services" className="transition hover:text-white">
                   Services
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#process" className="transition hover:text-white">
+                <Link href="#process" className="transition hover:text-white">
                   How It Works
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#blog" className="transition hover:text-white">
+                <Link href="#blog" className="transition hover:text-white">
                   Blog
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -43,24 +45,24 @@ export default function Footer() {
             <h3 className="text-base font-semibold">Support</h3>
             <ul className="mt-4 space-y-2 text-sm text-white/75">
               <li>
-                <a href="#" className="transition hover:text-white">
+                <Link href="#" className="transition hover:text-white">
                   Help Center
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="transition hover:text-white">
+                <Link href="#" className="transition hover:text-white">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="transition hover:text-white">
+                <Link href="#" className="transition hover:text-white">
                   Terms & Conditions
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="transition hover:text-white">
+                <Link href="#" className="transition hover:text-white">
                   Contact Us
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

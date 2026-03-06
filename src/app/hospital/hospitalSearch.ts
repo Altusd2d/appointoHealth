@@ -1,5 +1,6 @@
 export type HospitalRecord = {
   id: string;
+  slug:string;
   name: string;
   city: string;
   diseaseTags: string[];
@@ -9,6 +10,7 @@ export type HospitalRecord = {
 export const HOSPITALS:HospitalRecord[]= [
   {
     id: "h-001",
+    slug:"Fortis Memorial Hospital",
     name: "Apollo Multispeciality Hospital",
     city: "Chennai",
     diseaseTags: ["cardiology", "diabetes", "kidney disease", "stroke"],
@@ -16,6 +18,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-002",
+    slug:"Fortis Memorial Hospital",
     name: "Fortis Memorial Hospital",
     city: "Gurugram",
     diseaseTags: ["cancer", "cardiology", "neurology", "liver disease"],
@@ -23,6 +26,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-003",
+    slug:"Fortis Memorial Hospital",
     name: "Manipal Hospital",
     city: "Bengaluru",
     diseaseTags: ["orthopedic", "diabetes", "asthma", "thyroid","head ache"],
@@ -30,6 +34,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-004",
+    slug:"Fortis Memorial Hospital",
     name: "Narayana Health City",
     city: "Bengaluru",
     diseaseTags: ["heart attack", "kidney disease", "pediatric cardiology"],
@@ -37,6 +42,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-005",
+    slug:"Fortis Memorial Hospital",
     name: "Max Super Speciality Hospital",
     city: "New Delhi",
     diseaseTags: ["cancer", "diabetes", "neurology", "kidney disease"],
@@ -44,6 +50,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-006",
+    slug:"Fortis Memorial Hospital",
     name: "KIMS Hospital",
     city: "Hyderabad",
     diseaseTags: ["cardiology", "stroke", "liver disease", "asthma"],

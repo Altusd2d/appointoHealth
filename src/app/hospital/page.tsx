@@ -1,44 +1,46 @@
-"use client"
+"use client";
 import { useState } from "react";
-import { findHospital, type HospitalRecord } from "./hospitalData";
-import localFont from "next/font/local"
-const font1=localFont({
-  src:"../../fonts/font1.woff2"
-})
+import { findHospital, type HospitalRecord } from "./hospitalSearch";
+import localFont from "next/font/local";
+import Link from "next/link";
+const font1 = localFont({
+  src: "../../fonts/font1.woff2",
+});
+
 export default function HospitalSearch() {
-  const[searchText,setSearchteaxt]=useState("");
-  const[result,setResult]=useState<HospitalRecord[]>([])
-  const[noResult,setNoResult]=useState(false)
-   function handleClick(searchText:string){
-     setResult(findHospital(searchText))
-     setNoResult(true)
+  const [searchText, setSearchteaxt] = useState("");
+  const [result, setResult] = useState<HospitalRecord[]>([]);
+  const [noResult, setNoResult] = useState(false);
+
+  function handleClick(query: string) {
+    setResult(findHospital(query));
+    setNoResult(true);
   }
+
   return (
-    <div className={ `${font1.className} `}>
-      <div className={` flex justify-center items-center my-5 gap-4  xl:px-35 lg:px-18
-         md:px-10 px-6 `}>
+    <div className={font1.className}>
+      <div className="flex items-center justify-center gap-4 px-6 py-5 md:px-10 lg:px-18 xl:px-35">
         <input
           placeholder="search for hospitals"
-          onChange={(e)=>{
+          onChange={(e) => {
             setSearchteaxt(e.target.value);
           }}
-          className=" rounded-xl border py-2 w-full font-2xl px-7 border-[#cbcdcd]"
+          className="w-full rounded-xl border border-[#cbcdcd] px-7 py-2 font-2xl"
         />
-        <button 
-         onClick={()=>{
+        <button
+          onClick={() => {
             handleClick(searchText);
-         }}
-         className="text-xl bg-[#0066cc] rounded-xl px-2 py-1.25
-          text-center cursor-pointer tracking-tight text-white">search</button>
+          }}
+          className="cursor-pointer rounded-xl bg-[#0066cc] px-2 py-1.25 text-center text-xl tracking-tight text-white"
+        >
+          search
+        </button>
       </div>
-      {
-       noResult && result.length==0 &&(
-        <p className="rounded-xl border border-amber-200 bg-amber-50 
-        xl:mx-35 lg:mx-18 md:mx-10 mx-6 py-3 text-amber-700 px-6">
-            No hospitals found for.
-          </p>
-       )
-      }
+      {noResult && result.length == 0 && (
+        <p className="mx-6 rounded-xl border border-amber-200 bg-amber-50 px-6 py-3 text-amber-700 md:mx-10 lg:mx-18 xl:mx-35">
+          No hospitals found for.
+        </p>
+      )}
       <div className="space-y-5 xl:px-35 lg:px-18 md:px-10 px-6 mb-14">
           {result.map((hospital) => {
             const openText = hospital.services.some((service) =>
@@ -61,14 +63,13 @@ export default function HospitalSearch() {
                       {hospital.name}
                     </h3>
                   </div>
-
-                  <button
+                  <Link href={`/hospital${result.name}`}
                     type="button"
-                    className="rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 
-                    transition hover:bg-sky-50 cursor-pointer"
+                    
+                    className="cursor-pointer rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50"
                   >
                     Know more
-                  </button>
+                  </Link>
                 </div>
 
                 <p className="mt-6 text-lg leading-8 text-slate-600">
