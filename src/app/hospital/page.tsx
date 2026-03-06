@@ -3,6 +3,7 @@ import { useState } from "react";
 import { findHospital, type HospitalRecord } from "./hospitalSearch";
 import localFont from "next/font/local";
 import Link from "next/link";
+import Image from "next/image";
 const font1 = localFont({
   src: "../../fonts/font1.woff2",
 });
@@ -76,8 +77,16 @@ export default function HospitalSearch() {
                 <p className="mt-6 text-lg leading-8 text-slate-600">
                   {hospital.name} in {hospital.city} provides specialized care
                   for {hospital.diseaseTags.slice(0, 3).join(", ")}.
-                  <span className="ml-2 cursor-pointer text-sky-600 hover:text-sky-700">
+                  <span className="ml-2 inline-flex cursor-pointer items-center gap-1 text-sky-600 hover:text-sky-700">
                     View in maps
+                    <Image
+                      src="/google map.png"
+                      alt=""
+                      aria-hidden="true"
+                      width={18}
+                      height={18}
+                      className="h-[18px] w-[18px]"
+                    />
                   </span>
                 </p>
 

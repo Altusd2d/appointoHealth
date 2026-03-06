@@ -22,11 +22,10 @@ export default function CoreService() {
           className="h-auto w-full max-w-[240px] object-contain sm:max-w-[320px] md:max-w-[360px] lg:max-w-[420px] xl:max-w-[460px]"
         />
 
-        <div className="grid w-full grid-cols-1 gap-x-6 sm:h-[380px] h-[270px] max-lg:justify-items-center 
-        sm:gap-y-5 grid-cols-2 md:gap-y-4 gap-x-6 lg:gap-x-10 xl:gap-x-12 max-sm:px-4">
+        <div className="grid w-full grid-cols-1 justify-items-start gap-x-6 gap-y-5 px-4 text-left grid-cols-2 sm:h-[380px] md:gap-y-4 lg:gap-x-10 xl:gap-x-12">
           {coredata.map((items, ind) => {
             return (
-              <div className="flex gap-3 sm:gap-4  items-center" key={`${items.title}-${ind}`}>
+              <div className="flex w-full items-center gap-3 sm:gap-4" key={`${items.title}-${ind}`}>
                 <Image
                   src={items.image}
                   alt={items.des}

@@ -123,7 +123,7 @@ function MobileStepCard({ step }: { step: Step }) {
       </p>
       <h3 className="mt-2 text-xl font-semibold text-[#0d0d0d]">{step.title}</h3>
       <p className="mx-auto mt-2 max-w-[280px] text-xs leading-[1.35] text-[#5e5e5e]">{step.description}</p>
-      <div className="absolute -bottom-6 left-1/2 flex h-12 w-14 -translate-x-1/2 items-start justify-center rounded-b-3xl bg-[#ececec] pt-1.5">
+      <div className="absolute -bottom-7 left-1/2 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-[#ececec]">
         <Image src={step.icon} alt="" className="h-auto w-7" />
       </div>
     </article>
@@ -132,7 +132,7 @@ function MobileStepCard({ step }: { step: Step }) {
 
 export default function Process() {
   return (
-    <section className="bg-[#07156f] px-3 pt-3 md:px-6 md:pt-6 max-lg:pb-10">
+    <section className="bg-[#00264c] px-3 pt-3 md:px-6 md:pt-6 max-lg:pb-10">
       <div className="mx-auto max-w-[1180px]">
         <div className="grid gap-10 lg:hidden">
           {mobileSteps.map((step) => (
