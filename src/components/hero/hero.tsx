@@ -11,8 +11,8 @@ export default function Hero(){
          <div className="flex max-md:flex-col items-center">
             <div className="flex-col ">
               <span className='text-white xl:text-6xl lg:text-5xl md:text-4xl sm:text-3xl text-2xl font-semibold mr-7 xl:leading-17 mt-8'>Tired of waiting for booking appointments for a doctor</span>
-              <p className='opacity-65 md:mt-4 mt- text-lg text-white'>No more waiting, book the doctor first, then visit and save time</p>
-              <div className='flex gap-14 mt-7 text-center font-medium text-[15px]'>
+              <p className='opacity-65 xl:mt-14 lg:mt-12 md:mt-8 mt-4 text-lg text-white'>No more waiting, book the doctor first, then visit and save time</p>
+              <div className='flex gap-14 xl:mt-14 lg:mt-12 md:mt-8 mt-4 text-center font-medium text-[15px]'>
                 <div className='text-black bg-white rounded-lg py-1.5 px-3 text-center'>Book an appointment</div>
                 <div className='bg-[#0066cc] rounded-lg py-1.5 px-3 text-center h-fit'>Login/Signup</div>
               </div>

@@ -63,7 +63,7 @@ export default function HospitalSearch() {
                       {hospital.name}
                     </h3>
                   </div>
-                  <Link href={`/hospital${result.name}`}
+                  <Link href={`/hospital/${hospital.slug}`}
                     type="button"
                     
                     className="cursor-pointer rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50"

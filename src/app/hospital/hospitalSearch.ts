@@ -7,10 +7,19 @@ export type HospitalRecord = {
   services: string[];
 };
 
+function toSlug(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 export const HOSPITALS:HospitalRecord[]= [
   {
     id: "h-001",
-    slug:"Fortis Memorial Hospital",
+    slug:"apollo-multispeciality-hospital",
     name: "Apollo Multispeciality Hospital",
     city: "Chennai",
     diseaseTags: ["cardiology", "diabetes", "kidney disease", "stroke"],
@@ -18,7 +27,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-002",
-    slug:"Fortis Memorial Hospital",
+    slug:"fortis-memorial-hospital",
     name: "Fortis Memorial Hospital",
     city: "Gurugram",
     diseaseTags: ["cancer", "cardiology", "neurology", "liver disease"],
@@ -26,7 +35,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-003",
-    slug:"Fortis Memorial Hospital",
+    slug:"manipal-hospital",
     name: "Manipal Hospital",
     city: "Bengaluru",
     diseaseTags: ["orthopedic", "diabetes", "asthma", "thyroid","head ache"],
@@ -34,7 +43,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-004",
-    slug:"Fortis Memorial Hospital",
+    slug:"narayana-health-city",
     name: "Narayana Health City",
     city: "Bengaluru",
     diseaseTags: ["heart attack", "kidney disease", "pediatric cardiology"],
@@ -42,7 +51,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-005",
-    slug:"Fortis Memorial Hospital",
+    slug:"max-super-speciality-hospital",
     name: "Max Super Speciality Hospital",
     city: "New Delhi",
     diseaseTags: ["cancer", "diabetes", "neurology", "kidney disease"],
@@ -50,7 +59,7 @@ export const HOSPITALS:HospitalRecord[]= [
   },
   {
     id: "h-006",
-    slug:"Fortis Memorial Hospital",
+    slug:"kims-hospital",
     name: "KIMS Hospital",
     city: "Hyderabad",
     diseaseTags: ["cardiology", "stroke", "liver disease", "asthma"],
@@ -80,6 +89,15 @@ export function findHospital(hospital: string): HospitalRecord[] {
     hospitalItem.diseaseTags.some((disease) =>
       disease.toLowerCase().includes(query)
     )
+  );
+}
+
+export function findHospitalBySlug(slug: string): HospitalRecord | undefined {
+  const normalizedSlug = toSlug(slug);
+  return HOSPITALS.find(
+    (hospital) =>
+      toSlug(hospital.slug) === normalizedSlug ||
+      toSlug(hospital.name) === normalizedSlug
   );
 }
 // export function findHospital(query:string){
