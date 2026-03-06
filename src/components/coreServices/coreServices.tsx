@@ -34,7 +34,7 @@ export default function CoreService() {
                   className=" shrink-0 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16 h-9 w-9"
                 />
                 <div className="flex flex-col justify-center gap-1 tracking-tight sm:gap-2">
-                  <span className="text-2xl  font-semibold text-[#7f7e7e] sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl">
+                  <span className="text-2xl  font-bold text-[#7f7e7e] sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl">
                     {items.title}
                   </span>
                   <span className="text-sm leading-tight text-[#a0a0a0] sm:text-base lg:text-lg">{items.des}</span>
