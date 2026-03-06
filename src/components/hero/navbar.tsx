@@ -1,5 +1,5 @@
 import localFont from "next/font/local";
-
+import Link from "next/link"
 const font1 = localFont({
   src: "../../fonts/font1.woff2",
 });
@@ -18,13 +18,13 @@ export default function Navbar() {
           BOOK MY DOCTOR
         </span>
 
-        <button
+        <Link href="#process"
           type="button"
           className="rounded-md bg-[#0a7be0] px-3 py-2 text-[10px] font-semibold text-white 
           transition hover:bg-[#0669c1] sm:px-5 sm:pt-3 sm:text-xs md:text-sm tracking-wide"
         >
           GET STARTED
-        </button>
+        </Link>
         {/* </div> */}
       </nav>
     </header>

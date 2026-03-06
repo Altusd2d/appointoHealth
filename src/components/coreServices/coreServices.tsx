@@ -12,7 +12,7 @@ const font1 = localFont({
 
 export default function CoreService() {
   return (
-    <section className={`px-4 py-4 sm:px-6 md:px-12 xl:px-20 ${font1.className}`}>
+    <section id="services" className={`px-4 py-4 sm:px-6 md:px-12 xl:px-20 ${font1.className}`}>
       <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6 sm:gap-8 lg:flex-row lg:items-start lg:gap-10">
         <Image
           src={twentyfour}

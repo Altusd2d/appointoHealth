@@ -19,7 +19,7 @@ export default function HospitalSearch() {
   }
 
   return (
-    <div className={font1.className}>
+    <div className={font1.className} id="hospitalSearch">
       <div className="flex items-center justify-center gap-4 px-6 py-5 md:px-10 lg:px-18 xl:px-35">
         <input
           placeholder="search for hospitals"

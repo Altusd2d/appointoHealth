@@ -132,7 +132,7 @@ function MobileStepCard({ step }: { step: Step }) {
 
 export default function Process() {
   return (
-    <section className="bg-[#00264c] px-3 pt-3 md:px-6 md:pt-6 max-lg:pb-10">
+    <section id="process" className="bg-[#00264c] px-3 pt-3 md:px-6 md:pt-6 max-lg:pb-10">
       <div className="mx-auto max-w-[1180px]">
         <div className="grid gap-10 lg:hidden">
           {mobileSteps.map((step) => (
