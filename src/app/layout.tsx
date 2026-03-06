@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Roboto } from "next/font/google";
+import Navbar from "@/components/hero/navbar";
+import Footer from "@/components/footer/footer";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -28,13 +30,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" className="scroll-smooth">
+  return ( 
+    <html lang="en" className="scroll-smooth relative ">
       <body
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} antialiased`}
       >
+        <Navbar/>
         {children}
+        <Footer/>
       </body>
     </html>
   );

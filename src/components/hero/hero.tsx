@@ -11,7 +11,7 @@ export default function Hero(){
     return(
         <div className={`bg-[#00264c] xl:px-20 md:px-12 px-6 tracking-tighter md:pb-6
            Roboto`}>
-            <Navbar/>
+            {/* <Navbar/> */}
          <div className="flex max-md:flex-col items-center">
             <div className="flex-col ">
               <span className='text-white xl:text-[60px] lg:text-5xl md:text-4xl sm:text-3xl text-3xl font-semibold mr-7 xl:leading-17 mt-8 text-center'>Tired of waiting for booking appointments for a doctor</span>

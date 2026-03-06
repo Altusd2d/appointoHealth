@@ -3,8 +3,6 @@ import Hero from "@/components/hero/hero";
 import HospitalSearch from "./hospital/page";
 import Process from "@/components/process/process";
 import BlogPage from "./blog/page";
-import Footer from "@/components/footer/footer";
-
 export default function Home() {
   return (
     <div className="overflow-x-hidden">
@@ -13,7 +11,6 @@ export default function Home() {
       <Process />
       <HospitalSearch/>
       <BlogPage/>
-      <Footer />
     </div>
   );
 }
