@@ -3,6 +3,7 @@ import Hero from "@/components/hero/hero";
 import HospitalSearch from "@/components/hospitalSearch/hospitalSearch";
 import Process from "@/components/process/process";
 import BlogPage from "./blog/page";
+import Footer from "@/components/footer/footer";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Process />
       <HospitalSearch/>
       <BlogPage/>
+      <Footer />
     </div>
   );
 }

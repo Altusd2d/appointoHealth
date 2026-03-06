@@ -22,7 +22,8 @@ export default function CoreService() {
           className="h-auto w-full max-w-[240px] object-contain sm:max-w-[320px] md:max-w-[360px] lg:max-w-[420px] xl:max-w-[460px]"
         />
 
-        <div className="grid w-full grid-cols-1 gap-x-6 h-[380px] max-lg:justify-items-center sm:gap-y-5 sm:grid-cols-2 md:gap-y-4 gap-x-6 lg:gap-x-10 xl:gap-x-12">
+        <div className="grid w-full grid-cols-1 gap-x-6 sm:h-[380px] h-[270px] max-lg:justify-items-center 
+        sm:gap-y-5 grid-cols-2 md:gap-y-4 gap-x-6 lg:gap-x-10 xl:gap-x-12 max-sm:px-4">
           {coredata.map((items, ind) => {
             return (
               <div className="flex gap-3 sm:gap-4  items-center" key={`${items.title}-${ind}`}>
@@ -31,10 +32,10 @@ export default function CoreService() {
                   alt={items.des}
                   width={96}
                   height={96}
-                  className="h-12 w-12 shrink-0 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16"
+                  className=" shrink-0 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16 h-9 w-9"
                 />
                 <div className="flex flex-col justify-center gap-1 tracking-tight sm:gap-2">
-                  <span className="text-3xl font-semibold text-[#7f7e7e] sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl ">
+                  <span className="text-2xl  font-semibold text-[#7f7e7e] sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl ">
                     {items.title}
                   </span>
                   <span className="text-sm leading-tight text-[#a0a0a0] sm:text-base lg:text-lg">{items.des}</span>

@@ -64,7 +64,8 @@ export default function HospitalSearch() {
 
                   <button
                     type="button"
-                    className="rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50"
+                    className="rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 
+                    transition hover:bg-sky-50 cursor-pointer"
                   >
                     Know more
                   </button>
@@ -82,7 +83,7 @@ export default function HospitalSearch() {
                   {openText}
                 </p>
 
-                <div className="mt-6 flex flex-col gap-40 sm:flex-row sm:items-center sm:justify-betwee">
+                <div className="mt-6 flex flex-col sm:gap-40 gap-5 sm:flex-row sm:items-center sm:justify-betwee">
                   <button
                     type="button"
                     className="rounded-lg bg-[#0066cc] px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-sky-700"
