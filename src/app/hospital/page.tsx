@@ -25,13 +25,14 @@ export default function HospitalSearch() {
           onChange={(e) => {
             setSearchteaxt(e.target.value);
           }}
-          className="w-full rounded-xl border border-[#cbcdcd] px-7 py-2 font-2xl"
+          className="sm:w-[50vw] w-[68vw] rounded-xl border border-[#cbcdcd] px-7 py-2 font-2xl mt-14"
         />
         <button
           onClick={() => {
             handleClick(searchText);
           }}
-          className="cursor-pointer rounded-xl bg-[#0066cc] px-2 py-1.25 text-center text-xl tracking-tight text-white"
+          className="cursor-pointer rounded-lg bg-[#0066cc] px-5 py-1.5 text-center 
+           tracking-tight text-base font-semibold text-white mt-14"
         >
           search
         </button>
