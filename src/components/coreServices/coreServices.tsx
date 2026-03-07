@@ -5,6 +5,7 @@ import plus from "../../../public/coreServices/Vector.png";
 import search from "../../../public/coreServices/search.png";
 import Image from "next/image";
 import localFont from "next/font/local";
+import CountUp from "../ui/CountUp";
 
 const font1 = localFont({
   src: "../../fonts/font1.woff2",
@@ -12,7 +13,7 @@ const font1 = localFont({
 
 export default function CoreService() {
   return (
-    <section id="services" className={`px-4 py-4 sm:px-6 md:px-12 xl:px-20 ${font1.className}`}>
+    <section id="services" className={`px-4 py-4 sm:px-6 md:px-12 xl:px-20`}>
       <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6 sm:gap-8 lg:flex-row lg:items-start lg:gap-10">
         <Image
           src={twentyfour}
@@ -35,7 +36,7 @@ export default function CoreService() {
                 />
                 <div className="flex flex-col justify-center gap-1 tracking-tight sm:gap-2">
                   <span className="text-2xl  font-bold text-[#7f7e7e] sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl">
-                    {items.title}
+                    {items.id === 2 ? <CountUp start={50} end={250} durationMs={3000} suffix="+" /> : items.title}
                   </span>
                   <span className="text-sm leading-tight text-[#a0a0a0] sm:text-base lg:text-lg">{items.des}</span>
                 </div>

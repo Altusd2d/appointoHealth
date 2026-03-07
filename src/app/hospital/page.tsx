@@ -19,7 +19,7 @@ export default function HospitalSearch() {
   }
 
   return (
-    <div className={font1.className} id="hospitalSearch">
+    <div  id="hospitalSearch">
       <form 
       onSubmit={(e)=>{
         e.preventDefault();
