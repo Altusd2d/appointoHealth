@@ -9,37 +9,41 @@ const font1 = localFont({
 });
 
 export default function HospitalSearch() {
-  const [searchText, setSearchteaxt] = useState("");
+  const [searchText, setSearchtext] = useState("");
   const [result, setResult] = useState<HospitalRecord[]>([]);
   const [noResult, setNoResult] = useState(false);
 
   function handleClick(query: string) {
-    setResult(findHospital(query));
+    setResult(findHospital(query.trim()));
     setNoResult(true);
   }
 
   return (
     <div className={font1.className} id="hospitalSearch">
-      <div className="flex items-center justify-center gap-4 px-6 py-5 md:px-10 lg:px-18 xl:px-35
+      <form 
+      onSubmit={(e)=>{
+        e.preventDefault();
+        handleClick(searchText);
+      }}
+      className="flex items-center justify-center gap-4 px-6 py-5 md:px-10 lg:px-18 xl:px-35
       mb-6 ">
         <input
+        value={searchText}
           placeholder="search for hospitals"
           onChange={(e) => {
-            setSearchteaxt(e.target.value);
+            setSearchtext(e.target.value);
           }}
           className="sm:w-[37vw] w-[68vw] rounded-3xl border border-[#cbcdcd] px-7
            py-2.5 font-2xl mt-14 "
         />
         <button
-          onClick={() => {
-            handleClick(searchText);
-          }}
+          type="submit"
           className="cursor-pointer rounded-lg bg-[#0066cc] px-5 py-2 text-center 
            tracking-tight text-base font-semibold text-white mt-14 "
         >
           search
         </button>
-      </div>
+      </form>
       {noResult && result.length == 0 && (
         <p className="mx-6 rounded-xl border border-amber-200 bg-amber-50 px-6 py-3 text-amber-700 md:mx-10 lg:mx-18 xl:mx-35">
           No hospitals found for.
