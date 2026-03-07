@@ -21,13 +21,14 @@ export default function HospitalSearch() {
   return (
     <div className={font1.className} id="hospitalSearch">
       <div className="flex items-center justify-center gap-4 px-6 py-5 md:px-10 lg:px-18 xl:px-35
-      mb-6">
+      mb-6 ">
         <input
           placeholder="search for hospitals"
           onChange={(e) => {
             setSearchteaxt(e.target.value);
           }}
-          className="sm:w-[37vw] w-[68vw] rounded-3xl border border-[#cbcdcd] px-7 py-2.5 font-2xl mt-14"
+          className="sm:w-[37vw] w-[68vw] rounded-3xl border border-[#cbcdcd] px-7
+           py-2.5 font-2xl mt-14 "
         />
         <button
           onClick={() => {

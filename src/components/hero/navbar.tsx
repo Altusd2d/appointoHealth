@@ -13,7 +13,7 @@ export default function Navbar() {
         </span>
 
         {/* <div className="flex justify-"> */}
-            <span className="text-center text-[15px] font-semibold  text-white 
+            <span className="text-center text-[14px] font-semibold  text-white 
             sm:text-lg md:text-3xl tracking-tight">
           BOOK MY DOCTOR
         </span>
