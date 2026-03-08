@@ -29,7 +29,7 @@ export default function HospitalSearch() {
       mb-6 ">
         <input
         value={searchText}
-          placeholder="search for hospitals"
+          placeholder="search hospital/problem"
           onChange={(e) => {
             setSearchtext(e.target.value);
           }}

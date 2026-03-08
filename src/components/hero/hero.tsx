@@ -2,7 +2,6 @@
 import phones from "../../../public/hero/webpages_in_phone-removebg-preview.png";
 import Image from "next/image";
 // import localFont from "next/font/local";
-import { Roboto } from "next/font/google";
 import Link from "next/link";
 import { motion } from "framer-motion";
 // const font1=localFont({
@@ -10,6 +9,14 @@ import { motion } from "framer-motion";
 // })
 export default function Hero() {
   const title = "Tired of waiting for booking appointments for a doctor";
+
+  const handleBookAppointmentClick = () => {
+    const target = document.getElementById("hospitalSearch");
+    if (!target) return;
+
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.replaceState(null, "", "#hospitalSearch");
+  };
   return (
     <div
       className={`bg-[#00264c] xl:px-20 md:px-12 px-6 tracking-tighter md:pb-6
@@ -41,13 +48,14 @@ export default function Hero() {
             No more waiting, book the doctor first, then visit and save time
           </p>
           <div className="flex sm:gap-14 gap-8 md:mt-8 mt-4 text-center font-medium text-[15px]">
-            <Link
-              href="#hospitalSearch"
+            <button
+              type="button"
+              onClick={handleBookAppointmentClick}
               className="text-black bg-white rounded-lg py-1.5 px-3 
                 text-center whitespace-nowrap font-semibold md:text-lg text-md cursor-pointer"
             >
               Book an appointment
-            </Link>
+            </button>
             <Link href="/login">
               <div className="bg-[#0066cc] rounded-lg py-2 px-3 text-center tracking-normal text-white">
                 Login/Signup
