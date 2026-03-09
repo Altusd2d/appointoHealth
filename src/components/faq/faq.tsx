@@ -10,7 +10,7 @@ const faqItems = [
   },
   {
     question: "Will I receive booking confirmation?",
-    answer: "Yes. Once your appointment is confirmed, you will receive confirmation via SMS, email, or WhatsApp.",
+    answer: "Yes. Once your appointment is confirmed, you will receive confirmation via SMS, email.",
   },
   {
     question: "Can I reschedule or cancel my appointment?",
