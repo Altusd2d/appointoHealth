@@ -4,6 +4,7 @@ import HospitalSearch from "./hospital/page";
 import Process from "@/components/process/process";
 import BlogPage from "./blog/page";
 import { Roboto } from "next/font/google";
+import Faq from "@/components/faq/faq";
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
@@ -17,6 +18,7 @@ export default function Home() {
       <Process />
       <HospitalSearch/>
       <BlogPage/>
+      <Faq/>
     </div>
   );
 }
