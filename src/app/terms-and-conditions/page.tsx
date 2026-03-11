@@ -5,7 +5,22 @@ export const metadata: Metadata = {
   description: "Terms and conditions for using the Appointo Health and BookMyDoctor platform.",
 };
 
-const sections = [
+type PolicyGroup = {
+  heading: string;
+  items: string[];
+  note?: string;
+};
+
+type PolicySection = {
+  title: string;
+  paragraphs?: string[];
+  items?: string[];
+  groups?: PolicyGroup[];
+  contact?: string[];
+  note?: string;
+};
+
+const sections: PolicySection[] = [
   {
     title: "1. DEFINITIONS",
     items: [
@@ -272,3 +287,4 @@ export default function TermsAndConditionsPage() {
     </main>
   );
 }
+

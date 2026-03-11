@@ -5,7 +5,22 @@ export const metadata: Metadata = {
   description: "Privacy policy for Appointo Health and BookMyDoctor platform users.",
 };
 
-const policySections = [
+type PolicyGroup = {
+  heading: string;
+  items: string[];
+  note?: string;
+};
+
+type PolicySection = {
+  title: string;
+  paragraphs?: string[];
+  items?: string[];
+  groups?: PolicyGroup[];
+  contact?: string[];
+  note?: string;
+};
+
+const policySections: PolicySection[] = [
   {
     title: "1. INFORMATION WE COLLECT",
     paragraphs: ["We may collect the following types of information:"],
@@ -217,3 +232,4 @@ export default function PrivacyPolicyPage() {
     </main>
   );
 }
+

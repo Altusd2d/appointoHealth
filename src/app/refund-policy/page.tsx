@@ -5,7 +5,22 @@ export const metadata: Metadata = {
   description: "Refund and cancellation policy for Appointo Health and BookMyDoctor users.",
 };
 
-const sections = [
+type PolicyGroup = {
+  heading: string;
+  items: string[];
+  note?: string;
+};
+
+type PolicySection = {
+  title: string;
+  paragraphs?: string[];
+  items?: string[];
+  groups?: PolicyGroup[];
+  contact?: string[];
+  note?: string;
+};
+
+const sections: PolicySection[] = [
   {
     title: "1. APPOINTMENT BOOKING",
     paragraphs: [
@@ -171,3 +186,4 @@ export default function RefundPolicyPage() {
     </main>
   );
 }
+

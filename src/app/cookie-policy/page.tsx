@@ -5,7 +5,22 @@ export const metadata: Metadata = {
   description: "Cookie policy for Appointo Health and BookMyDoctor platform users.",
 };
 
-const sections = [
+type PolicyGroup = {
+  heading: string;
+  items: string[];
+  note?: string;
+};
+
+type PolicySection = {
+  title: string;
+  paragraphs?: string[];
+  items?: string[];
+  groups?: PolicyGroup[];
+  contact?: string[];
+  note?: string;
+};
+
+const sections: PolicySection[] = [
   {
     title: "1. WHAT ARE COOKIES?",
     paragraphs: [
@@ -178,3 +193,4 @@ export default function CookiePolicyPage() {
     </main>
   );
 }
+
