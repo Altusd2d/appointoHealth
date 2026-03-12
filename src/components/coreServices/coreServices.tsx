@@ -4,12 +4,10 @@ import doctor from "../../../public/coreServices/fontisto_doctor.png";
 import plus from "../../../public/coreServices/Vector.png";
 import search from "../../../public/coreServices/search.png";
 import Image from "next/image";
-import localFont from "next/font/local";
+// import localFont from "next/font/local";
 import CountUp from "../ui/CountUp";
 
-const font1 = localFont({
-  src: "../../fonts/font1.woff2",
-});
+
 
 export default function CoreService() {
   return (
