@@ -56,7 +56,7 @@ export default function Hero() {
             >
               Book an appointment
             </button>
-            <Link href="/login">
+            <Link href="/sign-up">
               <div className="bg-[#0066cc] rounded-lg py-2 px-3 text-center tracking-normal text-white">
                 Login/Signup
               </div>
