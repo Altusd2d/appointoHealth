@@ -107,12 +107,13 @@ export default function HospitalSearch() {
                   >
                     Book an appointment
                   </button>
-                  <button
-                    type="button"
+                  <Link
+                    // type="button"
+                    href="/hospital/premium"
                     className="text-base font-medium text-sky-600 transition hover:text-sky-700"
                   >
                     View More...
-                  </button>
+                  </Link>
                 </div>
               </article>
             );
