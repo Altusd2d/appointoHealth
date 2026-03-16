@@ -101,12 +101,13 @@ export default function HospitalSearch() {
                 </p>
 
                 <div className="mt-6 flex flex-col sm:gap-40 gap-5 sm:flex-row sm:items-center sm:justify-betwee">
-                  <button
-                    type="button"
+                  <Link
+                    // type="button"
+                    href="/booking-form"
                     className="rounded-lg bg-[#0066cc] px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-sky-700"
                   >
                     Book an appointment
-                  </button>
+                  </Link>
                   <Link
                     // type="button"
                     href={`/hospital/${hospital.slug}`}
