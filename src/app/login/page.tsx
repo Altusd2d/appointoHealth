@@ -32,7 +32,7 @@ export default function Login() {
             // height={280}
             className=" 
              md:w-[20vwpx] h-[290px] -ml-15 object-contain 
-             absolute top-20 lg:left-[60%] z-20 left[50%]"
+             absolute top-20 lg:left-[60%] z-20 left[50%] xl:left-[64%]"
             priority
           />
           </div>
@@ -65,7 +65,7 @@ export default function Login() {
             </p>
           </div>
 
-          <h2 className="relative z-10 mb-6 text-center text-4xl font-bold text-[#00264c] uppercase">Login </h2>
+          <h2 className="relative z-10 mb-6 text-center text-4xl font-bold text-[#00264c] ">Login </h2>
 
           <form className="relative z-10 space-y-4">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -110,11 +110,11 @@ export default function Login() {
             <p className="py-2.5 text-sm text-[#0d3055]">I Don't have a account?</p>
 
             <Link
-              href="/login"
+              href="/sign-up"
               className="flex h-11 w-full items-center justify-center rounded-md bg-[#002b5a] 
               text-lg font-bold text-white shadow-2xl"
             >
-              SIGNUP
+              Sign up
             </Link>
           </form>
         </div>
