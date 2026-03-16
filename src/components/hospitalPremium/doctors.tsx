@@ -98,7 +98,7 @@ export default function Doctors() {
         <div className="grid max-h-[352px] max-w-[255px] place-items-center">
           <button
             type="button"
-            className="text-[40px] font-semibold text-[#111111]"
+            className="md:text-[40px] text-[34px] font-semibold text-[#111111]"
           >
             View More...
           </button>
