@@ -85,7 +85,7 @@ export default function Login() {
             
             </div>
 
-            <div>
+            {/* <div>
               <p className="text-xs font-semibold text-[#1f1f1f]">Enter OTP</p>
               <div className="mt-2 flex gap-2">
                 {[0, 1, 2, 3].map((slot) => (
@@ -97,7 +97,7 @@ export default function Login() {
                   />
                 ))}
               </div>
-            </div>
+            </div> */}
 
             <button
               type="submit"
