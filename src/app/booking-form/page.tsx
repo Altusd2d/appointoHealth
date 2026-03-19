@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import sethascope from "../../../public/sign-up/sethascope.png"
 import heartrate from "../../../public/sign-up/heart_rate.png"
 
@@ -41,6 +41,8 @@ export default function BookingForm() {
   const [selectedSlot, setSelectedSlot] = useState(TIME_SLOTS[0]);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
+  const [phone, setPhone] = useState("");
+  const [description, setDescription] = useState("");
 
   const dayOptions = useMemo(
     () => Array.from({ length: getDaysInMonth(selectedYear, selectedMonth) }, (_, index) => index + 1),
@@ -54,12 +56,27 @@ export default function BookingForm() {
     }
   }, [dayOptions.length, selectedDate]);
 
+  const handlePhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const numericValue = event.target.value.replace(/\D/g, "").slice(0, 10);
+    setPhone(numericValue);
+  };
+
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const alphaOnly = event.target.value.replace(/[^a-zA-Z\s]/g, "").replace(/\s{2,}/g, " ");
+    setName(alphaOnly.toUpperCase());
+  };
+
+  const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const cleanText = event.target.value.replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s{2,}/g, " ");
+    setDescription(cleanText);
+  };
+
   return (
-    <main className=" bg-white px-4 py-10 md:px-6">
+    <main className=" bg-white px-4 py-10 md:pl-6 md:pr-10">
       <section className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden 
        bg-[#efefef] md:flex-row md:shadow-2xl rounded-xl">
         <div className="relative hidden md:flex w-full flex-col items-center
-         justify-between bg-white px-6 pb-8 pt-10 md:w-1/2 md:px-8">
+         justify-between bg-white px-6 pb-8 pt-24 md:w-1/2 md:px-8">
           <h1 className="z-10 text-center text-4xl font-bold uppercase
            leading-tight text-[#042b52] lg:text-5xl text-[40px]">
             Appointo 
@@ -74,7 +91,7 @@ export default function BookingForm() {
             // width={240}
             // height={90}
             className="mt-1 ml-14 w-[30vw] h-[200px] left-[0%]
-            absolute top-[40%] object-contain"
+            absolute top-[37%] object-contain"
           />
           <Image
             src={sethascope}
@@ -83,19 +100,19 @@ export default function BookingForm() {
             // height={280}
             className=" 
              md:w-[20vwpx] h-[290px] xl:-ml-20 -ml-15 object-contain 
-             absolute top-[30%] lg:left-[60%] z-20 left[50%] xl:w-[64vw]"
+             absolute top-[25%] lg:left-[60%] z-20 left[50%] xl:w-[64vw]"
             priority
           />
           </div>
 
-          <p className="mt-8 text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
+          <p className="mt-8 mb-10 text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
             Your Life Ours
             <br />
             Responsibility
           </p>
         </div>
 
-        <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 md:w-1/2 md:px-10 md:py-10">
+        <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 md:w-1/2 md:pl-10 md:py-10">
           <div className="pointer-events-none absolute inset-0 md:hidden">
             <Image
               src={heartrate}
@@ -120,7 +137,7 @@ export default function BookingForm() {
 
           <form
             onSubmit={(event) => event.preventDefault()}
-            className="relative z-10 space-y-4 xl:pl-6 xl:pr-3"
+            className="relative z-10 space-y-4 xl:pl-6 xl:pr-3 [&_input]:cursor-text [&_textarea]:cursor-text"
           >
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <label className=" font-semibold text-[#1f1f1f]">
@@ -129,7 +146,7 @@ export default function BookingForm() {
                   type="text"
                   name="name"
                   value={name}
-                  onChange={(event) => setName(event.target.value)}
+                  onChange={handleNameChange}
                   placeholder="Please enter name"
                   className="mt-3 h-9 md:text-sm w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
@@ -152,6 +169,13 @@ export default function BookingForm() {
                 Phone Number *
                 <input
                   type="tel"
+                  name="phone"
+                  value={phone}
+                  onChange={handlePhoneChange}
+                  inputMode="numeric"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  autoComplete="tel-national"
                   placeholder="1234567890"
                   className="mt-3 h-9 w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
@@ -190,6 +214,8 @@ export default function BookingForm() {
                 Description
                 <textarea
                   rows={3}
+                  value={description}
+                  onChange={handleDescriptionChange}
                   placeholder="Tell me about the problem"
                   className="mt-3 w-full resize-none rounded-md bg-white px-3 py-3 text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
@@ -222,7 +248,7 @@ export default function BookingForm() {
                 <select
                   value={selectedMonth}
                   onChange={(event) => setSelectedMonth(Number(event.target.value))}
-                  className="mt-2 h-10 w-full rounded-md bg-white px-3 text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7]"
+                  className="mt-2 h-10 w-full rounded-md bg-white px- text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7]"
                 >
                   {MONTHS.map((month, index) => (
                     <option key={month} value={index}>
@@ -250,7 +276,7 @@ export default function BookingForm() {
                 <select
                   value={selectedSlot}
                   onChange={(event) => setSelectedSlot(event.target.value)}
-                  className="mt-2 h-10 w-full rounded-md bg-white px-3 text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7]"
+                  className="mt-2 h-10 w-full rounded-md bg-white  text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7]"
                 >
                   {TIME_SLOTS.map((timeSlot) => (
                     <option key={timeSlot} value={timeSlot}>

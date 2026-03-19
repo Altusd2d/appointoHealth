@@ -1,4 +1,12 @@
 @import "tailwindcss";
+/* 
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+textarea {
+  cursor: text !important;
+} */
 
 /* :root {
   --background: #ffffff;

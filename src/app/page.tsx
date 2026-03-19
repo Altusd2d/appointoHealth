@@ -3,9 +3,9 @@ import Hero from "@/components/hero/hero";
 import HospitalSearch from "./hospital/page";
 import Process from "@/components/process/process";
 import BlogPage from "./blog/page";
+import AboutUs from "@/components/aboutus/aboutus";
 import { Roboto } from "next/font/google";
 import Faq from "@/components/faq/faq";
-import TopHospital from "@/components/topHospital/topHospital";
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
@@ -15,9 +15,9 @@ export default function Home() {
   return (
     <div className={`overflow-x-hidden ${roboto.className}`}>
       <Hero />
+      <AboutUs />
       <CoreService />
       <Process />
-      <TopHospital />
       <HospitalSearch/>
       <BlogPage/>
       <Faq/>

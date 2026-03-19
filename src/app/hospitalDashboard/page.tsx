@@ -24,8 +24,6 @@ type TabKey =
   | "Dashboard"
   | "Appointments"
   | "Doctors"
-  | "Schedules"
-  | "Patients"
   | "Billing"
   | "Analytics"
   | "Settings";
@@ -89,8 +87,8 @@ const sidebarItems: { label: TabKey; glyph: string }[] = [
   { label: "Dashboard", glyph: "DB" },
   { label: "Appointments", glyph: "AP" },
   { label: "Doctors", glyph: "DR" },
-  { label: "Schedules", glyph: "SC" },
-  { label: "Patients", glyph: "PT" },
+  // { label: "Schedules", glyph: "SC" },
+  // { label: "Patients", glyph: "PT" },
   { label: "Billing", glyph: "BL" },
   { label: "Analytics", glyph: "AN" },
   { label: "Settings", glyph: "ST" },
@@ -139,9 +137,9 @@ function SettingsPanel() {
         <div className="rounded-xl border border-slate-200 p-4">
           <h3 className="text-lg font-semibold">Preferences</h3>
           <div className="mt-4 space-y-3 text-sm">
-            <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>SMS Notifications</span><input type="checkbox" defaultChecked /></label>
+            {/* <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>SMS Notifications</span><input type="checkbox" defaultChecked /></label>
             <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Email Reports</span><input type="checkbox" defaultChecked /></label>
-            <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Auto-confirm Follow-ups</span><input type="checkbox" /></label>
+            <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Auto-confirm Follow-ups</span><input type="checkbox" /></label> */}
           </div>
           <button type="button" className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700">Save Settings</button>
         </div>
@@ -153,11 +151,11 @@ function SettingsPanel() {
 function DashboardPanel() {
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-xs font-semibold text-sky-700">AP</div>
-            <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+12%</span>
+            {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+12%</span> */}
           </div>
           <h2 className="text-4xl font-bold leading-none">142</h2>
           <p className="mt-2 text-sm text-slate-600">Today&apos;s Appointments</p>
@@ -166,7 +164,7 @@ function DashboardPanel() {
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-xs font-semibold text-emerald-700">OK</div>
-            <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+8%</span>
+            {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+8%</span> */}
           </div>
           <h2 className="text-4xl font-bold leading-none">89</h2>
           <p className="mt-2 text-sm text-slate-600">Completed Today</p>
@@ -175,20 +173,20 @@ function DashboardPanel() {
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-xs font-semibold text-orange-700">WT</div>
-            <span className="rounded-md bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">-3%</span>
+            {/* <span className="rounded-md bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">-3%</span> */}
           </div>
           <h2 className="text-4xl font-bold leading-none">28</h2>
           <p className="mt-2 text-sm text-slate-600">Currently Waiting</p>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm">
+        {/* <div className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-100 text-xs font-semibold text-violet-700">DR</div>
             <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">0%</span>
           </div>
           <h2 className="text-4xl font-bold leading-none">45</h2>
           <p className="mt-2 text-sm text-slate-600">Active Doctors</p>
-        </div>
+        </div> */}
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.8fr,1fr]">
@@ -311,10 +309,10 @@ export default function HospitalDashboardPage() {
               <p className="mt-1 text-base text-slate-600">Welcome back, Apollo Hospital</p>
             </div>
             <div className="flex items-center gap-3">
-              <button type="button" className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white text-xs font-semibold shadow-sm">
+              {/* <button type="button" className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white text-xs font-semibold shadow-sm">
                 NTF
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">3</span>
-              </button>
+              </button> */}
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 text-sm font-semibold text-white">AH</div>
             </div>
           </header>
