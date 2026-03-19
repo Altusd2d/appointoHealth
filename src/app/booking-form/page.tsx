@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import sethascope from "../../../public/sign-up/sethascope.png"
 import heartrate from "../../../public/sign-up/heart_rate.png"
 
@@ -41,6 +41,8 @@ export default function BookingForm() {
   const [selectedSlot, setSelectedSlot] = useState(TIME_SLOTS[0]);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
+  const [phone, setPhone] = useState("");
+  const [description, setDescription] = useState("");
 
   const dayOptions = useMemo(
     () => Array.from({ length: getDaysInMonth(selectedYear, selectedMonth) }, (_, index) => index + 1),
@@ -53,6 +55,21 @@ export default function BookingForm() {
       setSelectedDate(dayOptions.length);
     }
   }, [dayOptions.length, selectedDate]);
+
+  const handlePhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const numericValue = event.target.value.replace(/\D/g, "").slice(0, 10);
+    setPhone(numericValue);
+  };
+
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const alphaOnly = event.target.value.replace(/[^a-zA-Z\s]/g, "").replace(/\s{2,}/g, " ");
+    setName(alphaOnly.toUpperCase());
+  };
+
+  const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const cleanText = event.target.value.replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s{2,}/g, " ");
+    setDescription(cleanText);
+  };
 
   return (
     <main className=" bg-white px-4 py-10 md:pl-6 md:pr-10">
@@ -83,7 +100,7 @@ export default function BookingForm() {
             // height={280}
             className=" 
              md:w-[20vwpx] h-[290px] xl:-ml-20 -ml-15 object-contain 
-             absolute top-[28%] lg:left-[60%] z-20 left[50%] xl:w-[64vw]"
+             absolute top-[25%] lg:left-[60%] z-20 left[50%] xl:w-[64vw]"
             priority
           />
           </div>
@@ -120,7 +137,7 @@ export default function BookingForm() {
 
           <form
             onSubmit={(event) => event.preventDefault()}
-            className="relative z-10 space-y-4 xl:pl-6 xl:pr-3"
+            className="relative z-10 space-y-4 xl:pl-6 xl:pr-3 [&_input]:cursor-text [&_textarea]:cursor-text"
           >
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <label className=" font-semibold text-[#1f1f1f]">
@@ -129,7 +146,7 @@ export default function BookingForm() {
                   type="text"
                   name="name"
                   value={name}
-                  onChange={(event) => setName(event.target.value)}
+                  onChange={handleNameChange}
                   placeholder="Please enter name"
                   className="mt-3 h-9 md:text-sm w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
@@ -152,6 +169,13 @@ export default function BookingForm() {
                 Phone Number *
                 <input
                   type="tel"
+                  name="phone"
+                  value={phone}
+                  onChange={handlePhoneChange}
+                  inputMode="numeric"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  autoComplete="tel-national"
                   placeholder="1234567890"
                   className="mt-3 h-9 w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
@@ -190,6 +214,8 @@ export default function BookingForm() {
                 Description
                 <textarea
                   rows={3}
+                  value={description}
+                  onChange={handleDescriptionChange}
                   placeholder="Tell me about the problem"
                   className="mt-3 w-full resize-none rounded-md bg-white px-3 py-3 text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
