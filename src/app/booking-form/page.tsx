@@ -55,11 +55,11 @@ export default function BookingForm() {
   }, [dayOptions.length, selectedDate]);
 
   return (
-    <main className=" bg-white px-4 py-10 md:px-6">
+    <main className=" bg-white px-4 py-10 md:pl-6 md:pr-10">
       <section className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden 
        bg-[#efefef] md:flex-row md:shadow-2xl rounded-xl">
         <div className="relative hidden md:flex w-full flex-col items-center
-         justify-between bg-white px-6 pb-8 pt-10 md:w-1/2 md:px-8">
+         justify-between bg-white px-6 pb-8 pt-24 md:w-1/2 md:px-8">
           <h1 className="z-10 text-center text-4xl font-bold uppercase
            leading-tight text-[#042b52] lg:text-5xl text-[40px]">
             Appointo 
@@ -74,7 +74,7 @@ export default function BookingForm() {
             // width={240}
             // height={90}
             className="mt-1 ml-14 w-[30vw] h-[200px] left-[0%]
-            absolute top-[40%] object-contain"
+            absolute top-[37%] object-contain"
           />
           <Image
             src={sethascope}
@@ -83,19 +83,19 @@ export default function BookingForm() {
             // height={280}
             className=" 
              md:w-[20vwpx] h-[290px] xl:-ml-20 -ml-15 object-contain 
-             absolute top-[30%] lg:left-[60%] z-20 left[50%] xl:w-[64vw]"
+             absolute top-[28%] lg:left-[60%] z-20 left[50%] xl:w-[64vw]"
             priority
           />
           </div>
 
-          <p className="mt-8 text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
+          <p className="mt-8 mb-10 text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
             Your Life Ours
             <br />
             Responsibility
           </p>
         </div>
 
-        <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 md:w-1/2 md:px-10 md:py-10">
+        <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 md:w-1/2 md:pl-10 md:py-10">
           <div className="pointer-events-none absolute inset-0 md:hidden">
             <Image
               src={heartrate}
@@ -222,7 +222,7 @@ export default function BookingForm() {
                 <select
                   value={selectedMonth}
                   onChange={(event) => setSelectedMonth(Number(event.target.value))}
-                  className="mt-2 h-10 w-full rounded-md bg-white px-3 text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7]"
+                  className="mt-2 h-10 w-full rounded-md bg-white px- text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7]"
                 >
                   {MONTHS.map((month, index) => (
                     <option key={month} value={index}>
@@ -250,7 +250,7 @@ export default function BookingForm() {
                 <select
                   value={selectedSlot}
                   onChange={(event) => setSelectedSlot(event.target.value)}
-                  className="mt-2 h-10 w-full rounded-md bg-white px-3 text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7]"
+                  className="mt-2 h-10 w-full rounded-md bg-white  text-xs md:text-sm text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7]"
                 >
                   {TIME_SLOTS.map((timeSlot) => (
                     <option key={timeSlot} value={timeSlot}>
