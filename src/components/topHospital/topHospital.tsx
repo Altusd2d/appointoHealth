@@ -15,7 +15,7 @@ const hospitals = [
 
 export default function TopHospital() {
   return (
-    <section className=" py-14 md:py-20">
+    <section className=" pt-14 md:pt-20">
       <div className="mx-auto flex w-full max-w-[1220px] flex-wrap items-center justify-center gap-7 px-4">
         {hospitals.map((hospital) => (
           <article

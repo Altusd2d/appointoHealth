@@ -6,7 +6,6 @@ import BlogPage from "./blog/page";
 import AboutUs from "@/components/aboutus/aboutus";
 import { Roboto } from "next/font/google";
 import Faq from "@/components/faq/faq";
-import TopHospital from "@/components/topHospital/topHospital";
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
@@ -19,7 +18,6 @@ export default function Home() {
       <AboutUs />
       <CoreService />
       <Process />
-      <TopHospital />
       <HospitalSearch/>
       <BlogPage/>
       <Faq/>

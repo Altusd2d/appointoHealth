@@ -4,6 +4,7 @@ import { findHospital, type HospitalRecord } from "./hospitalSearch";
 import localFont from "next/font/local";
 import Link from "next/link";
 import Image from "next/image";
+import TopHospital from "@/components/topHospital/topHospital";
 const font1 = localFont({
   src: "../../fonts/font1.woff2",
 });
@@ -20,6 +21,7 @@ export default function HospitalSearch() {
 
   return (
     <div  id="hospitalSearch">
+      <TopHospital />
       <form 
       onSubmit={(e)=>{
         e.preventDefault();
