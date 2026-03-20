@@ -128,8 +128,7 @@ export default function Signup() {
 
             <button
               type="submit"
-              className="mt-4 h-11 w-full rounded-md shadow-2xl bg-[#002b5a]
-               text-lg font-bold text-white "
+              className="mt-4 h-11 w-full rounded-md bg-[#002b5a] text-lg font-bold text-white shadow-[0_10px_24px_rgba(0,43,90,0.35)] transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]"
             >
               Sign up
             </button>
@@ -138,8 +137,7 @@ export default function Signup() {
 
             <Link
               href="/login"
-              className="flex h-11 w-full items-center justify-center rounded-md bg-[#002b5a] 
-              text-lg font-bold text-white shadow-2xl"
+              className="flex h-11 w-full items-center justify-center rounded-md bg-[#002b5a] text-lg font-bold text-white shadow-[0_10px_24px_rgba(0,43,90,0.35)] transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]"
             >
               Login
             </Link>

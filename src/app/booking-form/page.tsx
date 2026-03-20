@@ -288,8 +288,7 @@ export default function BookingForm() {
             </div>
             <button
               type="submit"
-              className="mt-4 h-11 w-full rounded-md shadow-2xl bg-[#002b5a]
-               text-lg font-bold text-white cursor-pointer"
+              className="mt-4 h-11 w-full rounded-md bg-[#002b5a] text-lg font-bold text-white cursor-pointer shadow-[0_10px_24px_rgba(0,43,90,0.35)] transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]"
             >
               Book an appointment
             </button>
