@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | BookMyDoctor",
-  description: "Terms and conditions for using the Appointo Health and BookMyDoctor platform.",
+  title: "Terms & Conditions | Appointo",
+  description: "Terms and conditions for using the Appointo Health and Appointo platform.",
 };
 
 type PolicyGroup = {
@@ -24,7 +24,7 @@ const sections: PolicySection[] = [
   {
     title: "1. DEFINITIONS",
     items: [
-      "Service - The Appointo Health website (www.appointohealth.in) used for booking doctor appointments.",
+      "Service - The Appointo Health website (www.Appointohealth.in) used for booking doctor appointments.",
       "Platform - The Appointo Health website and related digital services.",
       "User / Patient - Any individual using the platform to search for hospitals or book appointments.",
       "Hospital / Healthcare Provider - Hospitals, clinics, and medical facilities registered on the Appointo Health platform.",
@@ -82,7 +82,7 @@ const sections: PolicySection[] = [
     items: [
       "Provide accurate registration information",
       "Maintain the confidentiality of login credentials",
-      "Notify us immediately at support@appointohealth.in of any unauthorized account access",
+      "Notify us immediately at support@Appointohealth.in of any unauthorized account access",
       "Use the platform responsibly and lawfully",
     ],
     groups: [
@@ -134,7 +134,7 @@ const sections: PolicySection[] = [
     title: "8. PRIVACY AND DATA PROTECTION",
     paragraphs: [
       "Appointo Health collects and processes personal information in accordance with our Privacy Policy and applicable data protection laws, including the Information Technology Act, 2000 and the Digital Personal Data Protection Act, 2023.",
-      "For details on data collection and use, please refer to our Privacy Policy at www.appointohealth.in.",
+      "For details on data collection and use, please refer to our Privacy Policy at www.Appointohealth.in.",
     ],
   },
   {
@@ -181,7 +181,7 @@ const sections: PolicySection[] = [
     title: "13. DISPUTE RESOLUTION",
     paragraphs: [
       "These Terms are governed by and construed in accordance with the laws of India.",
-      "Before initiating any formal legal proceedings, users agree to first contact our Grievance Officer at support@appointohealth.in to attempt an amicable resolution within 30 days.",
+      "Before initiating any formal legal proceedings, users agree to first contact our Grievance Officer at support@Appointohealth.in to attempt an amicable resolution within 30 days.",
       "Any unresolved disputes shall be subject to the exclusive jurisdiction of competent courts located in Hyderabad, Telangana, India.",
     ],
   },
@@ -190,7 +190,7 @@ const sections: PolicySection[] = [
     paragraphs: ["As required under the IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, we have appointed a Grievance Officer:"],
     contact: [
       "Grievance Officer: [Name of Grievance Officer]",
-      "Email: support@appointohealth.in",
+      "Email: support@Appointohealth.in",
       "Response Time: Within 48 hours of receipt; resolution within 30 days.",
     ],
   },
@@ -210,8 +210,8 @@ const sections: PolicySection[] = [
     title: "17. CONTACT INFORMATION",
     contact: [
       "Company Name: Appointo Health",
-      "Website: www.appointohealth.in",
-      "Email: support@appointohealth.in",
+      "Website: www.Appointohealth.in",
+      "Email: support@Appointohealth.in",
       "Phone: +91 XXXXX XXXXX [Please update with actual number]",
     ],
   },

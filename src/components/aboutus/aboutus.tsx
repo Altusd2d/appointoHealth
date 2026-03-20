@@ -10,7 +10,7 @@ export default function AboutUs() {
             About us
           </span>
 
-          <p className="mt-5 max-w-3xl text-xl font-medium leading-tight text-[#131313] sm:text-2xl md:text-[34px]">
+          <p className="mt-5 max-w-3xl text-xl leading-tight text-[#131313] sm:text-2xl md:text-[34px]">
             We provide seamless services for advance booking. We also connect you with the best hospitals for different facilities.
           </p>
 

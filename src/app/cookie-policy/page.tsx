@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy | BookMyDoctor",
-  description: "Cookie policy for Appointo Health and BookMyDoctor platform users.",
+  title: "Cookie Policy | Appointo",
+  description: "Cookie policy for Appointo Health and Appointo platform users.",
 };
 
 type PolicyGroup = {
@@ -120,9 +120,9 @@ const sections: PolicySection[] = [
     title: "9. CONTACT US",
     paragraphs: ["If you have any questions or concerns about our use of cookies, please contact us at:"],
     contact: [
-      "Email: support@appointohealth.in",
-      "Website: www.appointohealth.in",
-      "Grievance Officer: [Name] - support@appointohealth.in",
+      "Email: support@Appointohealth.in",
+      "Website: www.Appointohealth.in",
+      "Grievance Officer: [Name] - support@Appointohealth.in",
     ],
   },
 ];
@@ -137,7 +137,7 @@ export default function CookiePolicyPage() {
 
         <p className="mt-6 text-base leading-7 text-slate-700">
           Appointo Health (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) uses cookies and similar technologies on our website
-          appointohealth.in to provide a better browsing experience, improve our services, and understand how our
+          Appointohealth.in to provide a better browsing experience, improve our services, and understand how our
           platform is used.
         </p>
         <p className="mt-4 text-base leading-7 text-slate-700">
