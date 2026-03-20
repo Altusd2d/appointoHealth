@@ -264,25 +264,22 @@ export default function UserDashboardPage() {
                     </div>
 
                     <div className="mx-auto mt-3 flex max-w-[560px] flex-wrap items-start gap-3 rounded-[8px] border border-[#c8c8c8] bg-[#f6f6f6] p-3 shadow sm:flex-nowrap sm:items-center sm:gap-4">
-                      <div className="flex">
-                        <Image
+                      <Image
                         src={appointment.doctorPhoto}
                         alt={appointment.doctor}
                         width={86}
                         height={86}
                         className="h-[70px] w-[70px] rounded-full object-cover sm:h-[86px] sm:w-[86px]"
                       />
-                      <div className="text-[10px] text-[#222] sm:text-[11px] ">
+                      <div className="text-[10px] text-[#222] sm:text-[11px]">
                         <p className="text-[14px] text-[#2c6fd1] sm:text-[16px]">
                           {appointment.doctor}
                         </p>
                         <p className="font-medium">{appointment.specialty}</p>
                         <p>5 years of experience</p>
-                        </div>
-                         </div>
                         <p className="mt-2 font-medium">{appointment.qualification}</p>
                         <p className="font-medium">Fortis Hospital , Jaipur</p>
-                     
+                      </div>
                     </div>
 
                     <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:gap-8">
