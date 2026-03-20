@@ -1,5 +1,6 @@
 "use client";
-
+import logo from "../../../public/hospital/apollo_logo.jpg";
+import Image from "next/image";
 import React, { useMemo, useState } from "react";
 
 type Appointment = {
@@ -77,10 +78,34 @@ const appointments: Appointment[] = [
 ];
 
 const doctors: ActiveDoctor[] = [
-  { initials: "RK", name: "Dr. Rajesh Kumar", specialty: "Cardiologist", patients: 18, color: "from-indigo-500 to-violet-500" },
-  { initials: "PS", name: "Dr. Priya Sharma", specialty: "Dermatologist", patients: 22, color: "from-pink-500 to-rose-400" },
-  { initials: "AP", name: "Dr. Amit Patel", specialty: "Orthopedic", patients: 15, color: "from-cyan-500 to-sky-400" },
-  { initials: "SR", name: "Dr. Sneha Reddy", specialty: "Pediatrician", patients: 20, color: "from-orange-400 to-amber-400" },
+  {
+    initials: "RK",
+    name: "Dr. Rajesh Kumar",
+    specialty: "Cardiologist",
+    patients: 18,
+    color: "from-indigo-500 to-violet-500",
+  },
+  {
+    initials: "PS",
+    name: "Dr. Priya Sharma",
+    specialty: "Dermatologist",
+    patients: 22,
+    color: "from-pink-500 to-rose-400",
+  },
+  {
+    initials: "AP",
+    name: "Dr. Amit Patel",
+    specialty: "Orthopedic",
+    patients: 15,
+    color: "from-cyan-500 to-sky-400",
+  },
+  {
+    initials: "SR",
+    name: "Dr. Sneha Reddy",
+    specialty: "Pediatrician",
+    patients: 20,
+    color: "from-orange-400 to-amber-400",
+  },
 ];
 
 const sidebarItems: { label: TabKey; glyph: string }[] = [
@@ -104,7 +129,9 @@ function SimplePanel({ title }: { title: string }) {
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm">
       <h2 className="text-2xl font-semibold">{title}</h2>
-      <p className="mt-2 text-slate-600">{title} content is ready for integration.</p>
+      <p className="mt-2 text-slate-600">
+        {title} content is ready for integration.
+      </p>
     </article>
   );
 }
@@ -113,25 +140,34 @@ function SettingsPanel() {
   return (
     <article className="rounded-2xl bg-white p-5 shadow-sm md:p-6">
       <h2 className="text-2xl font-semibold">Settings</h2>
-      <p className="mt-1 text-slate-600">Manage hospital profile and dashboard preferences.</p>
+      <p className="mt-1 text-slate-600">
+        Manage hospital profile and dashboard preferences.
+      </p>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-2">
         <div className="rounded-xl border border-slate-200 p-4">
           <h3 className="text-lg font-semibold">Hospital Profile</h3>
           <div className="mt-4 space-y-3">
-            
             <div>
-              
               <label className="text-sm text-slate-600">Hospital Name</label>
-              <input defaultValue="Apollo Hospital" className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" />
+              <input
+                defaultValue="Apollo Hospital"
+                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+              />
             </div>
             <div>
               <label className="text-sm text-slate-600">Contact Email</label>
-              <input defaultValue="admin@apollohospital.com" className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" />
+              <input
+                defaultValue="admin@apollohospital.com"
+                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+              />
             </div>
             <div>
               <label className="text-sm text-slate-600">Contact Number</label>
-              <input defaultValue="+91 40 1234 5678" className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" />
+              <input
+                defaultValue="+91 40 1234 5678"
+                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+              />
             </div>
           </div>
         </div>
@@ -140,7 +176,12 @@ function SettingsPanel() {
           {/* <h3 className="text-lg font-semibold">Preferences</h3> */}
           <div className="mt-4 space-y-3 text-sm">
             <div>
-              <label htmlFor="hospital-image-1" className="text-sm text-slate-600">Image 1</label>
+              <label
+                htmlFor="hospital-image-1"
+                className="text-sm text-slate-600"
+              >
+                Image 1
+              </label>
               <input
                 id="hospital-image-1"
                 type="file"
@@ -149,7 +190,12 @@ function SettingsPanel() {
               />
             </div>
             <div>
-              <label htmlFor="hospital-image-2" className="text-sm text-slate-600">Image 2</label>
+              <label
+                htmlFor="hospital-image-2"
+                className="text-sm text-slate-600"
+              >
+                Image 2
+              </label>
               <input
                 id="hospital-image-2"
                 type="file"
@@ -158,7 +204,12 @@ function SettingsPanel() {
               />
             </div>
             <div>
-              <label htmlFor="hospital-location" className="text-sm text-slate-600">Location</label>
+              <label
+                htmlFor="hospital-location"
+                className="text-sm text-slate-600"
+              >
+                Location
+              </label>
               <input
                 id="hospital-location"
                 defaultValue="Hyderabad"
@@ -169,29 +220,143 @@ function SettingsPanel() {
             <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Email Reports</span><input type="checkbox" defaultChecked /></label>
             <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Auto-confirm Follow-ups</span><input type="checkbox" /></label> */}
           </div>
-          <button type="button" className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700">Save Settings</button>
+          <button
+            type="button"
+            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
+          >
+            Save Settings
+          </button>
         </div>
       </div>
     </article>
   );
 }
 
+function AppointmentsPanel() {
+  return (
+    <article className="overflow-hidden rounded-sm border border-slate-300 bg-[#d9d9d9] shadow-sm">
+      <div className="grid grid-cols-1 border-b border-white/50 bg-[#c4c4c4] text-center text-[#0d2f52] sm:grid-cols-2">
+        <div className="border-r border-white/50 px-4 py-3 text-2xl font-bold max-sm:border-r-0 sm:px-6 sm:py-4 sm:text-3xl">
+          ID:202324
+        </div>
+        <div className="px-4 py-3 text-base font-medium text-slate-900 sm:px-6 sm:py-4 sm:text-2xl">
+          ON:8-April-2026/<span className="font-semibold">9:30 AM</span>
+        </div>
+      </div>
+
+      <div className="p-4 md:p-7">
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-4 sm:items-center">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <Image
+              src={logo}
+              alt="Hospital logo"
+              width={100}
+              height={32}
+              className="h-8 w-auto object-contain rounded-full"
+            />
+            {/* <div className="text-lg font-bold tracking-[0.24em] text-[#173453] sm:text-2xl">APOLLO</div> */}
+            <h2 className="text-xl font-semibold text-slate-900 sm:text-2xl ">
+              Appollo Hospital,Hyderabad
+            </h2>
+          </div>
+          {/* <button
+            type="button"
+            className="rounded-md border border-slate-500 bg-[#f2f2f2] px-4 py-2 text-base font-semibold text-[#123554] shadow-[0_3px_8px_rgba(0,0,0,0.22)] sm:px-5 sm:text-xl"
+          >
+            Location <span aria-hidden="true">Pin</span>
+          </button> */}
+        </div>
+
+        <div className="rounded-xl border border-slate-300 bg-[#efefef] p-4 shadow-[0_5px_12px_rgba(0,0,0,0.18)] md:p-5">
+          <div className="flex flex-wrap items-start gap-4 sm:items-center sm:gap-6 md:gap-8">
+            <div className="h-24 w-24 overflow-hidden rounded-full border border-slate-300 bg-white shadow-sm sm:h-28 sm:w-28 md:h-36 md:w-36">
+              <Image
+                src="/hospital/doctor1.png"
+                alt="Doctor"
+                width={144}
+                height={144}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="text-slate-900">
+              <h3 className="text-xl font-medium text-[#1363a2] sm:text-2xl lg:text-4xl">
+                Dr.Chandra Shakar Reddy
+              </h3>
+              <p className="mt-1 text-sm sm:text-base lg:text-xl">
+                cardio specialist
+              </p>
+              <p className="text-sm text-slate-600 sm:text-base lg:text-lg">
+                5 years of experiance
+              </p>
+              <p className="mt-3 text-xs leading-relaxed sm:text-sm lg:mt-4 lg:text-lg">
+                MBBS, MD - General Medicine, DM - Gastroenterology
+                <br />
+                Fortis Hospital , Jaipur
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-7 grid grid-cols-1 overflow-hidden border border-white/70 bg-[#cfcfcf] text-center text-[#0d2f52] sm:grid-cols-3">
+          <div className="border-b border-white/70 px-4 py-3 text-xl font-bold sm:border-b-0 sm:border-r lg:text-4xl">
+            P.Prashanth
+          </div>
+          <div className="border-b border-white/70 px-4 py-3 text-xl font-bold sm:border-b-0 sm:border-r lg:text-4xl">
+            Age:20
+          </div>
+          <div className="px-4 py-3 text-xl font-bold lg:text-4xl">Male</div>
+        </div>
+
+        <div className="mt-1 border border-white/70 bg-[#cfcfcf] px-4 py-6 text-center text-lg text-slate-900 sm:px-5 sm:py-8 sm:text-2xl lg:text-4xl">
+          Have Problem with Teeth ache Need a regular checkup
+        </div>
+
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-3 sm:gap-5 md:mt-9 md:gap-12">
+          <button
+            type="button"
+            className="w-full rounded-xl bg-[#f4d632] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-5 sm:py-3 sm:text-xl lg:text-3xl"
+          >
+            Mark Waiting
+          </button>
+          <button
+            type="button"
+            className="w-full rounded-xl bg-[#f50000] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-6 sm:py-3 sm:text-xl lg:text-3xl"
+          >
+            Resedule
+          </button>
+          <button
+            type="button"
+            className="w-full rounded-xl bg-[#0069d1] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-5 sm:py-3 sm:text-xl lg:text-3xl"
+          >
+            Mark Completed
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
 function DashboardPanel() {
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-xs font-semibold text-sky-700">AP</div>
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-xs font-semibold text-sky-700">
+              AP
+            </div>
             {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+12%</span> */}
           </div>
           <h2 className="text-4xl font-bold leading-none">142</h2>
-          <p className="mt-2 text-sm text-slate-600">Today&apos;s Appointments</p>
+          <p className="mt-2 text-sm text-slate-600">
+            Today&apos;s Appointments
+          </p>
         </div>
 
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-xs font-semibold text-emerald-700">OK</div>
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-xs font-semibold text-emerald-700">
+              OK
+            </div>
             {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+8%</span> */}
           </div>
           <h2 className="text-4xl font-bold leading-none">89</h2>
@@ -200,7 +365,9 @@ function DashboardPanel() {
 
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-xs font-semibold text-orange-700">WT</div>
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-xs font-semibold text-orange-700">
+              WT
+            </div>
             {/* <span className="rounded-md bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">-3%</span> */}
           </div>
           <h2 className="text-4xl font-bold leading-none">28</h2>
@@ -220,8 +387,15 @@ function DashboardPanel() {
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.8fr,1fr]">
         <article className="min-w-0 rounded-2xl bg-white p-4 shadow-sm md:p-6">
           <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-2xl font-semibold">Today&apos;s Appointments</h3>
-            <button type="button" className="text-sm font-semibold text-blue-600 hover:text-blue-700">View All {"->"}</button>
+            <h3 className="text-2xl font-semibold">
+              Today&apos;s Appointments
+            </h3>
+            <button
+              type="button"
+              className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+            >
+              View All {"->"}
+            </button>
           </div>
 
           <div className="max-w-full overflow-x-auto">
@@ -239,16 +413,36 @@ function DashboardPanel() {
                   <tr key={patient.id} className="border-b border-slate-100">
                     <td className="py-4">
                       <div className="flex items-center gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r ${patient.color} text-sm font-semibold text-white`}>{patient.initials}</div>
+                        <div
+                          className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r ${patient.color} text-sm font-semibold text-white`}
+                        >
+                          {patient.initials}
+                        </div>
                         <div>
-                          <div className="text-base font-semibold leading-tight">{patient.name}</div>
-                          <div className="text-xs text-slate-500">{patient.id}</div>
+                          <div className="text-base font-semibold leading-tight">
+                            {patient.name}
+                          </div>
+                          <div className="text-xs text-slate-500">
+                            {patient.id}
+                          </div>
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 text-sm font-medium">{patient.doctor}</td>
-                    <td className="py-4"><span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">{patient.time}</span></td>
-                    <td className="py-4"><span className={`rounded-lg px-3 py-1 text-xs font-semibold ${statusStyles[patient.status]}`}>{patient.status}</span></td>
+                    <td className="py-4 text-sm font-medium">
+                      {patient.doctor}
+                    </td>
+                    <td className="py-4">
+                      <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
+                        {patient.time}
+                      </span>
+                    </td>
+                    <td className="py-4">
+                      <span
+                        className={`rounded-lg px-3 py-1 text-xs font-semibold ${statusStyles[patient.status]}`}
+                      >
+                        {patient.status}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -301,6 +495,7 @@ export default function HospitalDashboardPage() {
 
   const panel = useMemo(() => {
     if (activeTab === "Dashboard") return <DashboardPanel />;
+    if (activeTab === "Appointments") return <AppointmentsPanel />;
     if (activeTab === "Settings") return <SettingsPanel />;
     return <SimplePanel title={activeTab} />;
   }, [activeTab]);
@@ -309,7 +504,9 @@ export default function HospitalDashboardPage() {
     <main className="min-h-screen overflow-x-hidden bg-[#eef0f3] text-slate-900">
       <div className="flex min-h-screen flex-col md:flex-row">
         <aside className="w-full bg-[#141821] text-white md:w-64 md:flex-shrink-0">
-          <div className="border-b border-white/10 px-6 py-6 text-3xl font-semibold tracking-tight">DoctorBook</div>
+          <div className="border-b border-white/10 px-6 py-6 text-3xl font-semibold tracking-tight">
+            DoctorBook
+          </div>
 
           <nav className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 md:grid-cols-1 md:gap-1 md:p-0 md:py-4">
             {sidebarItems.map((item) => (
@@ -323,7 +520,9 @@ export default function HospitalDashboardPage() {
                     : "text-slate-300 hover:bg-white/5"
                 }`}
               >
-                <span className="w-6 text-center text-[10px] font-semibold tracking-wider">{item.glyph}</span>
+                <span className="w-6 text-center text-[10px] font-semibold tracking-wider">
+                  {item.glyph}
+                </span>
                 <span className="truncate">{item.label}</span>
               </button>
             ))}
@@ -334,14 +533,18 @@ export default function HospitalDashboardPage() {
           <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div>
               <h1 className="text-3xl font-semibold">{activeTab}</h1>
-              <p className="mt-1 text-base text-slate-600">Welcome back, Apollo Hospital</p>
+              <p className="mt-1 text-base text-slate-600">
+                Welcome back, Apollo Hospital
+              </p>
             </div>
             <div className="flex items-center gap-3">
               {/* <button type="button" className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white text-xs font-semibold shadow-sm">
                 NTF
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">3</span>
               </button> */}
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 text-sm font-semibold text-white">AH</div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 text-sm font-semibold text-white">
+                AH
+              </div>
             </div>
           </header>
 
