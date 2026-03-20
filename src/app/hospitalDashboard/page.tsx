@@ -121,6 +121,7 @@ function SettingsPanel() {
           <div className="mt-4 space-y-3">
             
             <div>
+              
               <label className="text-sm text-slate-600">Hospital Name</label>
               <input defaultValue="Apollo Hospital" className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" />
             </div>
