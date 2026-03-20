@@ -9,14 +9,37 @@ const font1 = localFont({
   src: "../../fonts/font1.woff2",
 });
 
+const DOCTORS = [
+  {
+    id: "d-001",
+    name: "Dr.Chandra Shakar Reddy",
+    speciality: "cardio specialist",
+    experience: "5 years of experience",
+    credentials:
+      "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
+    initials: "CR",
+  },
+  {
+    id: "d-002",
+    name: "Dr.Padma Latha",
+    speciality: "cardio specialist",
+    experience: "15 years of experience",
+    credentials:
+      "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
+    initials: "PL",
+  },
+];
+
 export default function HospitalSearch() {
   const [searchText, setSearchtext] = useState("");
   const [result, setResult] = useState<HospitalRecord[]>([]);
   const [noResult, setNoResult] = useState(false);
+  const [expandedHospitalId, setExpandedHospitalId] = useState<string | null>(null);
 
   function handleClick(query: string) {
     setResult(findHospital(query.trim()));
     setNoResult(true);
+    setExpandedHospitalId(null);
   }
 
   return (
@@ -73,7 +96,8 @@ export default function HospitalSearch() {
                       {hospital.name}
                     </h3>
                   </div>
-                  <Link href="/hospital/premium"
+                  <Link
+                  href="/hospital/premium"
                     type="button"
                     
                     className="cursor-pointer rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50"
@@ -110,14 +134,78 @@ export default function HospitalSearch() {
                   >
                     Book an appointment
                   </Link>
-                  <Link
-                    // type="button"
-                    href={`/hospital/${hospital.slug}`}
-                    className="text-base font-medium text-sky-600 transition hover:text-sky-700"
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedHospitalId((prev) =>
+                        prev === hospital.id ? null : hospital.id
+                      )
+                    }
+                    className="text-left text-base font-medium text-sky-600 transition hover:text-sky-700"
                   >
-                    View More...
-                  </Link>
+                    {expandedHospitalId === hospital.id ? "View Less..." : "View More..."}
+                  </button>
                 </div>
+
+                {expandedHospitalId === hospital.id && (
+                  <div className="mt-8 rounded-2xl bg-[#efefef] px-4 py-6 sm:px-8">
+                    <p className="max-w-4xl text-lg leading-[1.45] text-[#4a4a4a] sm:text-2xl">
+                      {hospital.city} branch is a major center with experienced doctors and
+                      advanced treatment facilities.
+                      <span className="ml-2 text-[#0a67d4]">view in maps</span>
+                      <span className="ml-2">map pin</span>
+                    </p>
+
+                    <p className="mt-6 text-3xl font-medium text-[#111111] sm:text-5xl">{openText}</p>
+
+                    <div className="mt-8 space-y-6">
+                      {DOCTORS.map((doctor) => (
+                        <article
+                          key={doctor.id}
+                          className="rounded-2xl border border-[#d8d8d8] bg-white px-6 py-5 shadow-[0_3px_10px_rgba(0,0,0,0.15)] sm:px-8"
+                        >
+                          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-10">
+                            <div className="flex flex-col items-center">
+                              <div className="grid h-[120px] w-[120px] place-items-center rounded-full bg-gradient-to-br from-[#d9dde4] to-[#b8c3d6] text-4xl font-semibold text-[#334155] sm:h-[150px] sm:w-[150px] sm:text-5xl">
+                                {doctor.initials}
+                              </div>
+                              <span className="mt-2 rounded-md border border-[#7ba9e8] px-3 py-1 text-sm text-[#1c71d8]">
+                                {hospital.name.toLowerCase()}
+                              </span>
+                            </div>
+
+                            <div className="flex-1">
+                              <h2 className="text-2xl font-medium text-[#0a67d4] sm:text-4xl">
+                                {doctor.name}
+                              </h2>
+                              <p className="mt-2 text-lg text-[#1d1d1d] sm:text-xl">{doctor.speciality}</p>
+                              <p className="mt-1 text-base text-[#8a8a8a] sm:text-lg">{doctor.experience}</p>
+                              <p className="mt-4 max-w-3xl text-base leading-7 text-[#161616] sm:mt-6 sm:text-lg">
+                                {doctor.credentials}
+                              </p>
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+
+                    <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <Link
+                        href="/booking-form"
+                        className="w-fit rounded-lg bg-[#0066cc] px-8 py-3 text-lg font-semibold text-white shadow-[0_4px_8px_rgba(0,0,0,0.25)] sm:text-2xl"
+                      >
+                        Book a appointment
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedHospitalId(null)}
+                        className="text-left text-2xl font-medium text-[#0a67d4] transition hover:text-[#084f9f] sm:text-3xl"
+                      >
+                        View less...
+                      </button>
+                    </div>
+                  </div>
+                )}
               </article>
             );
           })}
