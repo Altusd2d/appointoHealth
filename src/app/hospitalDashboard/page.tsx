@@ -119,6 +119,7 @@ function SettingsPanel() {
         <div className="rounded-xl border border-slate-200 p-4">
           <h3 className="text-lg font-semibold">Hospital Profile</h3>
           <div className="mt-4 space-y-3">
+            
             <div>
               <label className="text-sm text-slate-600">Hospital Name</label>
               <input defaultValue="Apollo Hospital" className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" />
@@ -128,15 +129,41 @@ function SettingsPanel() {
               <input defaultValue="admin@apollohospital.com" className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" />
             </div>
             <div>
-              <label className="text-sm text-slate-600">Phone</label>
+              <label className="text-sm text-slate-600">Contact Number</label>
               <input defaultValue="+91 40 1234 5678" className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" />
             </div>
           </div>
         </div>
 
         <div className="rounded-xl border border-slate-200 p-4">
-          <h3 className="text-lg font-semibold">Preferences</h3>
+          {/* <h3 className="text-lg font-semibold">Preferences</h3> */}
           <div className="mt-4 space-y-3 text-sm">
+            <div>
+              <label htmlFor="hospital-image-1" className="text-sm text-slate-600">Image 1</label>
+              <input
+                id="hospital-image-1"
+                type="file"
+                accept="image/*"
+                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-sky-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-sky-700 hover:file:bg-sky-100"
+              />
+            </div>
+            <div>
+              <label htmlFor="hospital-image-2" className="text-sm text-slate-600">Image 2</label>
+              <input
+                id="hospital-image-2"
+                type="file"
+                accept="image/*"
+                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-sky-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-sky-700 hover:file:bg-sky-100"
+              />
+            </div>
+            <div>
+              <label htmlFor="hospital-location" className="text-sm text-slate-600">Location</label>
+              <input
+                id="hospital-location"
+                defaultValue="Hyderabad"
+                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+              />
+            </div>
             {/* <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>SMS Notifications</span><input type="checkbox" defaultChecked /></label>
             <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Email Reports</span><input type="checkbox" defaultChecked /></label>
             <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Auto-confirm Follow-ups</span><input type="checkbox" /></label> */}
