@@ -125,7 +125,7 @@ export default function UserDashboardPage() {
               </p>
             </div>
           </div>
-          <button className="h-7 w-12 max-sm:text-center rounded-sm bg-[#0f62c3] text-[10px] font-semibold text-white">
+          <button className="h-7 w-12 max-sm:text-center rounded-sm bg-[#0f62c3] text-[10px] font-semibold text-white text-cen">
             Edit
           </button>
         </div>
