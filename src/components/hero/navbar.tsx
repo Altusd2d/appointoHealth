@@ -1,5 +1,7 @@
 import localFont from "next/font/local";
 import Link from "next/link"
+import Image from "next/image";
+import logo from "../../../public/logo.png"
 const font1 = localFont({
   src: "../../fonts/font1.woff2",
 });
@@ -11,6 +13,13 @@ export default function Navbar() {
         <span className="text-xl font-semibold tracking-tight text-white sm:text-3xl ">
           logo
         </span>
+        {/* <Image
+        alt=""
+         src={logo}
+         width={1600*0.04}
+         height={896*0.1}
+         className="object-cover"
+         /> */}
 
         {/* <div className="flex justify-"> */}
             <span className="text-center text-[14px] font-semibold  text-white 
