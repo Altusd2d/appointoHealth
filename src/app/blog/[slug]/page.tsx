@@ -15,12 +15,12 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Post Not Found | BookMyDoctor",
+      title: "Post Not Found | Appointo",
     };
   }
 
   return {
-    title: `${post.title} | BookMyDoctor`,
+    title: `${post.title} | Appointo`,
     description: post.description,
   };
 }

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Refund & Cancellation Policy | BookMyDoctor",
-  description: "Refund and cancellation policy for Appointo Health and BookMyDoctor users.",
+  title: "Refund & Cancellation Policy | Appointo",
+  description: "Refund and cancellation policy for Appointo Health and Appointo users.",
 };
 
 type PolicyGroup = {
@@ -38,7 +38,7 @@ const sections: PolicySection[] = [
       "Cancellations made at least 2 hours before the scheduled appointment time will be processed without any issue.",
       "Cancellations made less than 2 hours before the appointment may result in the slot being forfeited, subject to the hospital's policy.",
     ],
-    note: "To cancel an appointment, log in to your account on www.appointohealth.in and use the appointment management feature.",
+    note: "To cancel an appointment, log in to your account on www.Appointohealth.in and use the appointment management feature.",
   },
   {
     title: "3. CANCELLATION BY HOSPITALS OR APPOINTO HEALTH",
@@ -109,8 +109,8 @@ const sections: PolicySection[] = [
     title: "10. CONTACT INFORMATION",
     contact: [
       "Company Name: Appointo Health",
-      "Website: www.appointohealth.in",
-      "Email: support@appointohealth.in",
+      "Website: www.Appointohealth.in",
+      "Email: support@Appointohealth.in",
       "Phone: +91 XXXXX XXXXX [Please update with actual number]",
     ],
   },

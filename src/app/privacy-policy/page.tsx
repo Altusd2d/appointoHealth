@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | BookMyDoctor",
-  description: "Privacy policy for Appointo Health and BookMyDoctor platform users.",
+  title: "Privacy Policy | Appointo",
+  description: "Privacy policy for Appointo Health and Appointo platform users.",
 };
 
 type PolicyGroup = {
@@ -93,7 +93,7 @@ const policySections: PolicySection[] = [
       "Comply with legal and regulatory obligations (minimum 3 years for health-related records as per applicable guidelines)",
       "Resolve disputes and enforce agreements",
     ],
-    note: "After the retention period expires, data will be securely deleted or anonymized. Users may request deletion of their account and personal data by contacting us at support@appointohealth.in.",
+    note: "After the retention period expires, data will be securely deleted or anonymized. Users may request deletion of their account and personal data by contacting us at support@Appointohealth.in.",
   },
   {
     title: "6. USER RIGHTS",
@@ -105,7 +105,7 @@ const policySections: PolicySection[] = [
       "Withdraw consent for data processing at any time",
       "Nominate another individual to exercise these rights on your behalf (as per DPDP Act 2023)",
     ],
-    note: "To exercise these rights, please contact us at: support@appointohealth.in",
+    note: "To exercise these rights, please contact us at: support@Appointohealth.in",
   },
   {
     title: "7. COOKIES AND TRACKING TECHNOLOGIES",
@@ -133,8 +133,8 @@ const policySections: PolicySection[] = [
     ],
     contact: [
       "Grievance Officer: [Name of Grievance Officer]",
-      "Email: support@appointohealth.in",
-      "Website: www.appointohealth.in",
+      "Email: support@Appointohealth.in",
+      "Website: www.Appointohealth.in",
       "Address: [Registered Office Address, Hyderabad, Telangana, India]",
     ],
     note: "We will address your grievance within 30 days of receipt.",
@@ -149,8 +149,8 @@ const policySections: PolicySection[] = [
     title: "12. CONTACT INFORMATION",
     contact: [
       "Company Name: Appointo Health",
-      "Website: www.appointohealth.in",
-      "Email: support@appointohealth.in",
+      "Website: www.Appointohealth.in",
+      "Email: support@Appointohealth.in",
       "Phone: +91 XXXXX XXXXX [Please update with actual number]",
     ],
   },
@@ -173,7 +173,7 @@ export default function PrivacyPolicyPage() {
         <p className="mt-6 text-base leading-7 text-slate-700">
           Appointo Health (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) respects your privacy and is committed to
           protecting your personal information. This Privacy Policy explains how we collect, use, store, and protect
-          your information when you use our website www.appointohealth.in and related services.
+          your information when you use our website www.Appointohealth.in and related services.
         </p>
         <p className="mt-4 text-base leading-7 text-slate-700">
           This policy is formulated in compliance with the Information Technology Act, 2000, Information Technology

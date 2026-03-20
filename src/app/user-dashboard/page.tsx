@@ -94,7 +94,7 @@ export default function UserDashboardPage() {
     <main className="min-h-screen px-3 py-6 sm:px-4 sm:py-8 md:px-10">
       <section className="mx-auto max-w-[860px] rounded-[8px] p-3 sm:p-5 md:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between bg-[#d8d8d8] py-3 px-6 rounded-xl">
-          <div className="flex items-center gap-4 md:gap-6 max-sm:flex-col justify-center">
+          <div className="flex items-center gap-4 md:gap-6  justify-center">
             <div className="h-[96px] w-[96px] overflow-hidden rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.35)] sm:h-[110px] sm:w-[110px] md:h-[130px] md:w-[130px]">
               <Image
                 src="/hospital/apollo.jpg"

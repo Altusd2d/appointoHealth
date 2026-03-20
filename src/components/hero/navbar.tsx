@@ -24,7 +24,7 @@ export default function Navbar() {
         {/* <div className="flex justify-"> */}
             <span className="text-center text-[14px] font-semibold  text-white 
             sm:text-lg md:text-3xl tracking-tight">
-          BOOK MY DOCTOR
+          Appointo
         </span>
 
         <Link href="#process"
