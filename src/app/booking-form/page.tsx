@@ -133,7 +133,7 @@ export default function BookingForm() {
             </p>
           </div>
 
-          <h2 className="relative z-10 mb-6 text-center text-4xl font-bold text-[#00264c]">Sign Up</h2>
+          <h2 className="relative z-10 mb-6 text-center text-4xl font-bold text-[#00264c]">Book Appoinment</h2>
 
           <form
             onSubmit={(event) => event.preventDefault()}

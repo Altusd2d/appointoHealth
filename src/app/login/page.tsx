@@ -32,12 +32,12 @@ export default function Login() {
             // height={280}
             className=" 
              md:w-[20vwpx] h-[290px] -ml-15 object-contain 
-             absolute top-20 lg:left-[60%] z-20 left[50%] xl:left-[64%]"
+             absolute top-[16%] lg:left-[60%] z-20 left[50%] xl:left-[64%]"
             priority
           />
           </div>
 
-          <p className="mt-8 text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
+          <p className="mt-50 text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
             Your Life Ours
             <br />
             Responsibility
