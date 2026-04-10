@@ -3,7 +3,7 @@ export type HospitalRecord = {
   slug:string;
   name: string;
   city: string;
-  diseaseTags: string[];
+  specilist: string[];
   services: string[];
 };
 
@@ -22,7 +22,7 @@ export const HOSPITALS:HospitalRecord[]= [
     slug:"apollo-multispeciality-hospital",
     name: "Apollo Multispeciality Hospital",
     city: "Chennai",
-    diseaseTags: ["cardiology", "diabetes", "kidney disease", "stroke"],
+    specilist: ["cardiologist", "diabetes", "kidney disease", "stroke","dentist"],
     services: ["ICU", "Cath Lab", "Dialysis", "Emergency 24x7"],
   },
   {
@@ -30,7 +30,7 @@ export const HOSPITALS:HospitalRecord[]= [
     slug:"fortis-memorial-hospital",
     name: "Fortis Memorial Hospital",
     city: "Gurugram",
-    diseaseTags: ["cancer", "cardiology", "neurology", "liver disease"],
+    specilist: ["cancer", "cardiologist", "neurology", "liver disease","Pediatrician"],
     services: ["Oncology", "Robotic Surgery", "Transplant", "Emergency 24x7"],
   },
   {
@@ -38,7 +38,7 @@ export const HOSPITALS:HospitalRecord[]= [
     slug:"manipal-hospital",
     name: "Manipal Hospital",
     city: "Bengaluru",
-    diseaseTags: ["orthopedic", "diabetes", "asthma", "thyroid","head ache"],
+    specilist: ["orthopedic", "diabetes", "asthma", "thyroid","head ache","Pediatrician","Neurologist "],
     services: ["Orthopedics", "Pulmonology", "Endocrinology", "Lab"],
   },
   {
@@ -46,7 +46,7 @@ export const HOSPITALS:HospitalRecord[]= [
     slug:"narayana-health-city",
     name: "Narayana Health City",
     city: "Bengaluru",
-    diseaseTags: ["heart attack", "kidney disease", "pediatric cardiology"],
+    specilist: ["heart attack", "kidney disease", "pediatric cardiology","Pediatrician","Psychiatrist"],
     services: ["Cardiac Surgery", "Nephrology", "Pediatrics", "Emergency 24x7"],
   },
   {
@@ -54,7 +54,7 @@ export const HOSPITALS:HospitalRecord[]= [
     slug:"max-super-speciality-hospital",
     name: "Max Super Speciality Hospital",
     city: "New Delhi",
-    diseaseTags: ["cancer", "diabetes", "neurology", "kidney disease"],
+    specilist: ["cancer", "indiabetes", "neurology", "kidney disease","Pediatrician","Psychiatrist"],
     services: ["Oncology", "Neurology", "Dialysis", "Radiology"],
   },
   {
@@ -62,7 +62,7 @@ export const HOSPITALS:HospitalRecord[]= [
     slug:"kims-hospital",
     name: "KIMS Hospital",
     city: "Hyderabad",
-    diseaseTags: ["cardiology", "stroke", "liver disease", "asthma"],
+    specilist: ["cardiologist", "stroke", "liver disease", "asthma"],
     services: ["Cardiology", "Neurology", "Hepatology", "Emergency 24x7"],
   },
 ];
@@ -75,7 +75,7 @@ export const HOSPITALS:HospitalRecord[]= [
 //   }
 
 //   return HOSPITALS.filter((hospital) =>
-//     hospital.diseaseTags.some((tag) => tag.toLowerCase().includes(query))
+//     hospital.specilist.some((tag) => tag.toLowerCase().includes(query))
 //   );
 // };
 export function findHospital(hospital: string): HospitalRecord[] {
@@ -86,7 +86,7 @@ export function findHospital(hospital: string): HospitalRecord[] {
   }
 
   return HOSPITALS.filter((hospitalItem) =>
-    hospitalItem.diseaseTags.some((disease) =>
+    hospitalItem.specilist.some((disease) =>
       disease.toLowerCase().includes(query)
     )
   );
@@ -103,7 +103,7 @@ export function findHospitalBySlug(slug: string): HospitalRecord | undefined {
 // export function findHospital(query:string){
 //   const searchText=query.trim().toLocaleLowerCase()
 //   return HOSPITALS.filter((hospitalItem)=>{
-//       hospitalItem.diseaseTags.some((disease)=>{
+//       hospitalItem.specilist.some((disease)=>{
 //             disease.toLowerCase().includes(searchText)
 //       })
 //   })

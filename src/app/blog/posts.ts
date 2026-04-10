@@ -15,7 +15,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "How to Choose the Right Doctor Online in 10 Minutes",
     description:
       "A practical, step-by-step guide to finding the right specialist, checking credibility, and booking confidently.",
-    author: "Appointo Editorial Team",
+    author: "Appointo Health Editorial Team",
     publishedAt: "2026-03-04",
     readTime: "5 min read",
     tags: ["Doctor Booking", "Patient Guide", "Healthcare"],
@@ -32,7 +32,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Teleconsultation vs Clinic Visit: When to Pick Which",
     description:
       "Understand what conditions work well for online consultations and when an in-person visit is the safer option.",
-    author: "Appointo Editorial Team",
+    author: "Appointo Health Editorial Team",
     publishedAt: "2026-03-04",
     readTime: "4 min read",
     tags: ["Telemedicine", "Consultation", "Healthcare Tips"],
@@ -49,7 +49,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "How to Prepare for Your First Doctor Appointment",
     description:
       "A simple checklist to help you explain symptoms clearly and get more value from every consultation.",
-    author: "Appointo Editorial Team",
+    author: "Appointo Health Editorial Team",
     publishedAt: "2026-03-04",
     readTime: "4 min read",
     tags: ["Patient Checklist", "Appointments", "Health Records"],
@@ -66,7 +66,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Why Digital Health Records Improve Treatment Outcomes",
     description:
       "Learn how digital records help doctors make faster, safer, and more consistent clinical decisions.",
-    author: "Appointo Editorial Team",
+    author: "Appointo Health Editorial Team",
     publishedAt: "2026-03-04",
     readTime: "5 min read",
     tags: ["Digital Health", "Medical Records", "Patient Safety"],

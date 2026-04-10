@@ -11,7 +11,7 @@ export default function Login() {
          justify-between bg-white px-6 pb-8 pt-10 md:w-1/2 md:px-8">
           <h1 className="z-10 text-center text-4xl font-bold uppercase
            leading-tight text-[#042b52] lg:text-5xl text-[40px]">
-            Appointo 
+            Appointo
             <br />
             Health
           </h1>
