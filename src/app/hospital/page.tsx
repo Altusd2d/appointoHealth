@@ -47,26 +47,26 @@ export default function HospitalSearch() {
   return (
     <div id="hospitalSearch">
       <TopHospital />
-      <div className="flex  relative justify-center gap-4 items-center max-sm:px-6 border border-amber-300">
-         <Image
-                    src="/google map.png"
-                    alt=""
-                    aria-hidden="true"
-                    width={18}
-                    height={18}
-                    className="h-[18px] w-[18px] absolute top-[65%] left-[29%] "
-                  />
-         
+      <div className="flex justify-center gap-4 items-center max-sm:px-6 -mb-7 ">
+        <div className="relative mt-14 sm:w-[37vw] w-[68vw]">
+          <Image
+            src="/google map.png"
+            alt=""
+            aria-hidden="true"
+            width={18}
+            height={18}
+            className="absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2"
+          />
+
           <input
-          value={searchText}
-          placeholder="search location"
-          onChange={(e) => {
-            setSearchtext(e.target.value);
-          }}
-          className="sm:w-[37vw] w-[68vw] rounded-3xl border border-[#cbcdcd] px-7
-           py-2.5 font-2xl mt-14 "
-            
-        />
+            value={searchText}
+            placeholder="search location"
+            onChange={(e) => {
+              setSearchtext(e.target.value);
+            }}
+            className="w-full rounded-3xl border border-[#cbcdcd] py-2.5 pl-12 pr-7 font-2xl"
+          />
+        </div>
         <button
           type="submit"
           className="cursor-pointer rounded-lg bg-[#0066cc] px-5 py-1 h-10 text-center 
@@ -221,12 +221,12 @@ export default function HospitalSearch() {
                             <p className="mt-4 max-w-3xl text-base leading-7 text-[#161616] sm:mt-6 sm:text-lg">
                               {doctor.credentials}
                             </p>
-                            <button
+                            {/* <button
                               className="px-3 py-1.5 rounded-lg text-black text-[14px] border border-[#cbcdcd]
                                 bg-[#199fd9] "
                             >
                               Book an doctor
-                            </button>
+                            </button> */}
                           </div>
                         </div>
                       </article>
