@@ -100,16 +100,16 @@ export default function BookingForm() {
             Health
           </h1>
 
-          <div className="pointer-events-none relative mt-6 flex h-[320px] w-full items-center justify-center">
+          <div className="pointer-events-none relative isolate mt-6 flex h-[320px] w-full items-center justify-center overflow-visible">
             <Image
               src={heartrate}
               alt="Heartbeat line"
-              className="absolute left-0 top-1/2 h-auto w-full w-[39vw] -translate-y-1/2 object-contain"
+              className="absolute left-1/2 top-1/2 z-0 h-auto w-full max-w-[380px] -translate-x-1/2 -translate-y-1/2 object-contain xl:max-w-[430px]"
             />
             <Image
               src={sethascope}
               alt="Stethoscope"
-              className="absolute left-[70%] top-[6%] h-[250px] w-auto object-contain z-20"
+              className="absolute -right-14 top-[42%] z-30 h-[250px] w-auto -translate-y-[52%] translate-x-[8%] object-contain xl:h-[290px]"
               priority
             />
           </div>
