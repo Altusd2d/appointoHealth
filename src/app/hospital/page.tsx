@@ -351,7 +351,8 @@ export default function HospitalSearch() {
                           </div>
 
                           {isSlotOpen && (
-                            <div className="mt-8 rounded-[26px] border border-[#e4ebf6] bg-[#fcfdff] px-4 py-5 shadow-[0_12px_24px_rgba(15,23,42,0.06)] sm:px-7 sm:py-7">
+                            <div className="mt-8 rounded-[26px] border border-[#e4ebf6] bg-[#fcfdff] md:px-4 px-2 
+                            py-5 shadow-[0_12px_24px_rgba(15,23,42,0.06)] sm:px-7 sm:py-7">
                               <div className="grid grid-cols-1 gap-3 text-center sm:grid-cols-3">
                                 {SLOT_DAYS.map((day) => {
                                   const isActiveDay =
@@ -416,7 +417,8 @@ export default function HospitalSearch() {
 
                               <Link
                                 href="/booking-form"
-                                className="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl bg-[#0a67d4] px-6 text-lg font-semibold
+                                className="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl 
+                                bg-[#0a67d4] px-6 text-lg font-semibold whitespace-nowrap
                                  text-white shadow-xl transition hover:bg-[#085ebc] sm:h-14 sm:text-2xl">
                                 Book a appointment
                               </Link>
