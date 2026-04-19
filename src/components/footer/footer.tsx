@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="mx-auto w-full max-w-7xl px-6 py-12 md:px-10 lg:px-16 xl:px-20">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Appointo</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Appointo Health</h2>
             <p className="mt-4 max-w-xs text-sm leading-6 text-white/70">
               Book appointments faster, reduce waiting time, and connect with
               trusted hospitals and doctors near you.
@@ -80,7 +80,7 @@ export default function Footer() {
           <div>
             <h3 className="text-base font-semibold">Get in Touch</h3>
             <div className="mt-4 space-y-2 text-sm text-white/75">
-              <p>Email: support@Appointo.com</p>
+              <p>Email: support@Appointohealth.com</p>
               <p>Phone: +91 98765 43210</p>
               <p>Mon - Sat: 9:00 AM to 8:00 PM</p>
             </div>
@@ -88,7 +88,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 border-t border-white/15 pt-6 text-center text-xs text-white/60 sm:text-sm">
-          Copyright {year} Appointo. All rights reserved.
+          Copyright {year} Appointo Health. All rights reserved.
         </div>
       </div>
     </footer>

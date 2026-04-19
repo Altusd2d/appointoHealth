@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { BLOG_POSTS } from "./posts";
 
 export const metadata: Metadata = {
-  title: "Health Blog | Appointo",
+  title: "Health Blog | Appointo Health",
   description:
     "Practical healthcare guides on choosing doctors, teleconsultation, and appointment preparation.",
 };
@@ -13,7 +13,7 @@ export default function BlogPage() {
     <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-8">
       <section className="mx-auto max-w-5xl">
         <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-          Appointo Blog
+          Appointo Health Blog
         </h1>
         <p className="mt-3 max-w-2xl text-slate-600">
           Actionable healthcare content to help patients choose better care and

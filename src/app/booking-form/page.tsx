@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import sethascope from "../../../public/sign-up/sethascope.png"
-import heartrate from "../../../public/sign-up/heart_rate.png"
+import sethascope from "../../../public/sign-up/sethascope.png";
+import heartrate from "../../../public/sign-up/heart_rate.png";
 
 const MONTHS = [
   "January",
@@ -33,20 +33,23 @@ const getDaysInMonth = (year: number, monthIndex: number) =>
 export default function BookingForm() {
   const today = new Date();
   const currentYear = today.getFullYear();
-  const yearOptions = Array.from({ length: 10 }, (_, index) => currentYear + index);
 
-  const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
-  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedMonth] = useState(today.getMonth());
+  const [selectedYear] = useState(currentYear);
   const [selectedDate, setSelectedDate] = useState(today.getDate());
-  const [selectedSlot, setSelectedSlot] = useState(TIME_SLOTS[0]);
+  const [selectedSlot] = useState(TIME_SLOTS[0]);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [phone, setPhone] = useState("");
   const [description, setDescription] = useState("");
 
   const dayOptions = useMemo(
-    () => Array.from({ length: getDaysInMonth(selectedYear, selectedMonth) }, (_, index) => index + 1),
-    [selectedMonth, selectedYear]
+    () =>
+      Array.from(
+        { length: getDaysInMonth(selectedYear, selectedMonth) },
+        (_, index) => index + 1,
+      ),
+    [selectedMonth, selectedYear],
   );
   const selectedMonthName = MONTHS[selectedMonth];
 
@@ -62,47 +65,53 @@ export default function BookingForm() {
   };
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const alphaOnly = event.target.value.replace(/[^a-zA-Z\s]/g, "").replace(/\s{2,}/g, " ");
+    const alphaOnly = event.target.value
+      .replace(/[^a-zA-Z\s]/g, "")
+      .replace(/\s{2,}/g, " ");
     setName(alphaOnly.toUpperCase());
   };
 
   const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const cleanText = event.target.value.replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s{2,}/g, " ");
+    const cleanText = event.target.value
+      .replace(/[^a-zA-Z0-9\s]/g, "")
+      .replace(/\s{2,}/g, " ");
     setDescription(cleanText);
   };
 
+  const DOCTORS = [
+    {
+      id: "d-002",
+      name: "Dr.Padma Latha",
+      speciality: "cardio specialist",
+      experience: "15 years of experience",
+      credentials:
+        "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
+      initials: "PL",
+    },
+  ];
+
   return (
-    <main className=" bg-white px-4 py-10 md:pl-6 md:pr-10">
-      <section className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden 
-       bg-[#efefef] md:flex-row md:shadow-2xl rounded-xl">
-        <div className="relative hidden md:flex w-full flex-col items-center
-         justify-between bg-white px-6 pb-8 pt-24 md:w-1/2 md:px-8">
-          <h1 className="z-10 text-center text-4xl font-bold uppercase
-           leading-tight text-[#042b52] lg:text-5xl text-[40px]">
-            Appointo 
+    <main className="overflow-x-hidden bg-white px-4 py-10 md:px-6 xl:px-10">
+      <section className="mx-auto flex w-full max-w-7xl flex-col overflow-hidden rounded-xl bg-[#efefef] md:shadow-2xl lg:flex-row">
+        <div className="relative hidden w-full flex-col items-center justify-between overflow-hidden bg-white px-6 pb-8 pt-24 lg:flex lg:w-[40%] lg:px-8 xl:w-[38%]">
+          <h1 className="z-10 text-center text-[40px] font-bold uppercase leading-tight text-[#042b52] lg:text-5xl">
+            Appointo
             <br />
             Health
           </h1>
 
-          <div className="flex items-center ">
-          <Image
-            src={heartrate}
-            alt="Heartbeat line"
-            // width={240}
-            // height={90}
-            className="mt-1 ml-14 w-[30vw] h-[200px] left-[0%]
-            absolute top-[37%] object-contain"
-          />
-          <Image
-            src={sethascope}
-            alt="Stethoscope"
-            // width={210}
-            // height={280}
-            className=" 
-             md:w-[20vwpx] h-[290px] xl:-ml-20 -ml-15 object-contain 
-             absolute top-[25%] lg:left-[60%] z-20 left[50%] xl:w-[64vw]"
-            priority
-          />
+          <div className="pointer-events-none relative isolate mt-6 flex h-[320px] w-full items-center justify-center overflow-visible">
+            <Image
+              src={heartrate}
+              alt="Heartbeat line"
+              className="absolute left-1/2 top-1/2 z-0 h-auto w-full max-w-[380px] -translate-x-1/2 -translate-y-1/2 object-contain xl:max-w-[430px]"
+            />
+            <Image
+              src={sethascope}
+              alt="Stethoscope"
+              className="absolute -right-14 top-[42%] z-30 h-[250px] w-auto -translate-y-[52%] translate-x-[8%] object-contain xl:h-[290px]"
+              priority
+            />
           </div>
 
           <p className="mt-8 mb-10 text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
@@ -112,8 +121,8 @@ export default function BookingForm() {
           </p>
         </div>
 
-        <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 md:w-1/2 md:pl-10 md:py-10">
-          <div className="pointer-events-none absolute inset-0 md:hidden">
+        <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 lg:w-[60%] lg:pl-10 lg:py-10 xl:w-[62%]">
+          {/* <div className="pointer-events-none absolute inset-0 md:hidden">
             <Image
               src={heartrate}
               alt=""
@@ -131,13 +140,57 @@ export default function BookingForm() {
               <br />
               Responsibility
             </p>
+          </div> */}
+
+          {/* <h2 className="relative z-10 mb-6 text-center text-4xl font-bold text-[#00264c]">Book Appoinment</h2> */}
+          <div className="mt-8 space-y-6 mb-8">
+            {DOCTORS.map((doctor) => (
+              <article
+                key={doctor.id}
+                className="rounded-2xl border border-[#d8d8d8] bg-white px-6 py-5 shadow-[0_3px_10px_rgba(0,0,0,0.15)] sm:px-8"
+              >
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-10">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className="grid h-[100px] w-[100px] place-items-center rounded-full xl:h-[170px] xl:w-[170px] 
+                               sm:h-[120px] sm:w-[120px] md:h-[100px] md:w-[100px]
+                             bg-gradient-to-br from-[#d9dde4] to-[#b8c3d6] text-4xl font-semibold text-[#334155]
+                             sm:text-xl md:text-2xl lg:text-3xl xl:text-5xl"
+                    >
+                      {doctor.initials}
+                    </div>
+                    {/* <span className="mt-2 rounded-md border border-[#7ba9e8] px-3 py-1 text-sm text-[#1c71d8]">
+                              {hospital.name.toLowerCase()}
+                            </span> */}
+                  </div>
+
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-medium text-[#0a67d4] sm:text-2xl">
+                      {doctor.name}
+                    </h2>
+                    <p className="mt-2 text-lg text-[#1d1d1d] sm:text-md">
+                      {doctor.speciality}
+                    </p>
+                    <p className="mt-0.5 text-base text-[#8a8a8a] sm:text-md">
+                      {doctor.experience}
+                    </p>
+                    <p className=" max-w-3xl text-base leading-7 text-[#161616] sm:mt-1 sm:text-md">
+                      {doctor.credentials}
+                    </p>
+                    {/* <button
+                              className="px-3 py-1.5 rounded-lg text-black text-[14px] border border-[#cbcdcd]
+                                bg-[#199fd9] "
+                            >
+                              Book an doctor
+                            </button> */}
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
-
-          <h2 className="relative z-10 mb-6 text-center text-4xl font-bold text-[#00264c]">Book Appoinment</h2>
-
           <form
             onSubmit={(event) => event.preventDefault()}
-            className="relative z-10 space-y-4 xl:pl-6 xl:pr-3 [&_input]:cursor-text [&_textarea]:cursor-text"
+            className="relative z-0 space-y-4 xl:pl-6 xl:pr-3 [&_input]:cursor-text [&_textarea]:cursor-text"
           >
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <label className=" font-semibold text-[#1f1f1f]">
@@ -184,13 +237,16 @@ export default function BookingForm() {
                 <legend className="mb-1 mt-4">Gender *</legend>
                 <div className="mt-2 flex items-center gap-3 text-[10px] font-medium text-[#303030]">
                   <label className="flex items-center gap-1">
-                    <input type="radio" name="gender" className="h-3 w-3" /> MALE
+                    <input type="radio" name="gender" className="h-3 w-3" />{" "}
+                    MALE
                   </label>
                   <label className="flex items-center gap-1">
-                    <input type="radio" name="gender" className="h-3 w-3" /> Female
+                    <input type="radio" name="gender" className="h-3 w-3" />{" "}
+                    Female
                   </label>
                   <label className="flex items-center gap-1">
-                    <input type="radio" name="gender" className="h-3 w-3" /> Others
+                    <input type="radio" name="gender" className="h-3 w-3" />{" "}
+                    Others
                   </label>
                 </div>
               </fieldset>
@@ -213,7 +269,7 @@ export default function BookingForm() {
               <label className="text-xs md:text-sm font-semibold text-[#1f1f1f]">
                 Description
                 <textarea
-                  rows={3}
+                  rows={2}
                   value={description}
                   onChange={handleDescriptionChange}
                   placeholder="Tell me about the problem"
@@ -224,11 +280,12 @@ export default function BookingForm() {
 
             <div className="pt-2">
               <p className="text-lg md:text-[20px] font-semibold tracking-wide text-[#111111]">
-                SLOT* ({selectedDate} {selectedMonthName} {selectedYear}, {selectedSlot})
+                SLOT* ({selectedDate} {selectedMonthName} {selectedYear},{" "}
+                {selectedSlot})
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {/* <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               <label className="text-xs md:text-sm font-semibold text-[#1f1f1f]">
                 Date*
                 <select
@@ -285,7 +342,7 @@ export default function BookingForm() {
                   ))}
                 </select>
               </label>
-            </div>
+            </div> */}
             <button
               type="submit"
               className="mt-4 h-11 w-full rounded-md bg-[#002b5a] text-lg font-bold text-white cursor-pointer shadow-[0_10px_24px_rgba(0,43,90,0.35)] transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]"
