@@ -1,13 +1,9 @@
 "use client";
 import { useState } from "react";
 import { findHospital, type HospitalRecord } from "./hospitalSearch";
-import localFont from "next/font/local";
 import Link from "next/link";
 import Image from "next/image";
 import TopHospital from "@/components/topHospital/topHospital";
-const font1 = localFont({
-  src: "../../fonts/font1.woff2",
-});
 
 const DOCTORS = [
   {
@@ -18,6 +14,7 @@ const DOCTORS = [
     credentials:
       "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
     initials: "CR",
+    image: "/hospital/doctor1.png",
   },
   {
     id: "d-002",
@@ -27,8 +24,72 @@ const DOCTORS = [
     credentials:
       "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
     initials: "PL",
+    image: "/hospital/doctor2.png",
   },
 ];
+
+const SLOT_DAYS = [
+  {
+    id: "30-3-2026",
+    label: "30-3-2026",
+    slots: [
+      { id: "30-830", label: "8:30 AM", state: "available" },
+      { id: "30-930", label: "9:30 AM", state: "selected" },
+      { id: "30-1030", label: "10:30 AM", state: "available" },
+      { id: "30-1100", label: "11:00 AM", state: "available" },
+      { id: "30-1200", label: "12:00PM", state: "available" },
+      { id: "30-1230", label: "12:30 PM", state: "available" },
+      { id: "30-130", label: "1:30 PM", state: "available" },
+      { id: "30-200", label: "2:00PM", state: "available" },
+    ],
+  },
+  {
+    id: "31-3-2026",
+    label: "31-3-2026",
+    slots: [
+      { id: "31-930", label: "9:30 AM", state: "selected" },
+      { id: "31-1030", label: "10:30 AM", state: "available" },
+      { id: "31-1100", label: "11:00 AM", state: "available" },
+      { id: "31-1130", label: "11:30AM", state: "unavailable" },
+      { id: "31-1200", label: "12:00PM", state: "available" },
+      { id: "31-1230", label: "12:30 PM", state: "available" },
+      { id: "31-130", label: "1:30 PM", state: "available" },
+      { id: "31-200", label: "2:00PM", state: "available" },
+      { id: "31-230", label: "2:30PM", state: "available" },
+      { id: "31-430", label: "4:30PM", state: "unavailable" },
+      { id: "31-530", label: "5:30PM", state: "available" },
+      { id: "31-600", label: "6:00 PM", state: "available" },
+    ],
+  },
+  {
+    id: "1-4-2026",
+    label: "1-4-2026",
+    slots: [
+      { id: "1-900", label: "9:00 AM", state: "available" },
+      { id: "1-1000", label: "10:00 AM", state: "available" },
+      { id: "1-1100", label: "11:00 AM", state: "available" },
+      { id: "1-1200", label: "12:00PM", state: "available" },
+      { id: "1-100", label: "1:00 PM", state: "available" },
+      { id: "1-200", label: "2:00PM", state: "available" },
+      { id: "1-300", label: "3:00 PM", state: "available" },
+      { id: "1-500", label: "5:00 PM", state: "available" },
+    ],
+  },
+];
+
+const DEFAULT_SLOT_DAY_ID = SLOT_DAYS[1].id;
+
+function getSlotsForDay(dayId: string) {
+  return SLOT_DAYS.find((day) => day.id === dayId)?.slots ?? SLOT_DAYS[1].slots;
+}
+
+function getDefaultSlotId(dayId: string) {
+  return (
+    getSlotsForDay(dayId).find(
+      (slot) => slot.state === "selected" || slot.state === "available",
+    )?.id ?? ""
+  );
+}
 
 export default function HospitalSearch() {
   const [searchText, setSearchtext] = useState("");
@@ -37,11 +98,21 @@ export default function HospitalSearch() {
   const [expandedHospitalId, setExpandedHospitalId] = useState<string | null>(
     null,
   );
+  const [expandedDoctorSlots, setExpandedDoctorSlots] = useState<
+    Record<string, boolean>
+  >({});
+  const [activeSlotDayByDoctor, setActiveSlotDayByDoctor] = useState<
+    Record<string, string>
+  >({});
+  const [selectedSlotByDoctor, setSelectedSlotByDoctor] = useState<
+    Record<string, string>
+  >({});
 
   function handleClick(query: string) {
     setResult(findHospital(query.trim()));
     setNoResult(true);
     setExpandedHospitalId(null);
+    setExpandedDoctorSlots({});
   }
 
   return (
@@ -70,8 +141,7 @@ export default function HospitalSearch() {
         <button
           type="submit"
           className="cursor-pointer rounded-lg bg-[#0066cc] px-5 py-1 h-10 text-center 
-           tracking-tight text-base font-semibold text-white mt-14 "
-        >
+           tracking-tight text-base font-semibold text-white mt-14 ">
           search
         </button>
       </div>
@@ -81,8 +151,7 @@ export default function HospitalSearch() {
           handleClick(searchText);
         }}
         className="flex items-center justify-center gap-4 px-6 py-5 md:px-10 lg:px-18 xl:px-35
-      mb-6 "
-      >
+      mb-6 ">
         <input
           value={searchText}
           placeholder="search hospital/problem"
@@ -95,8 +164,7 @@ export default function HospitalSearch() {
         <button
           type="submit"
           className="cursor-pointer rounded-lg bg-[#0066cc] px-5 py-2 text-center 
-           tracking-tight text-base font-semibold text-white mt-14 "
-        >
+           tracking-tight text-base font-semibold text-white mt-14 ">
           search
         </button>
       </form>
@@ -116,8 +184,7 @@ export default function HospitalSearch() {
           return (
             <article
               key={hospital.id}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
-            >
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex items-center gap-4">
                   <div className="grid h-12 w-12 place-items-center rounded-full border border-slate-300 text-xs font-semibold tracking-[0.25em] text-slate-700">
@@ -130,8 +197,7 @@ export default function HospitalSearch() {
                 <Link
                   href="/hospital/premium"
                   type="button"
-                  className="cursor-pointer rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50"
-                >
+                  className="cursor-pointer rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50">
                   Know more
                 </Link>
               </div>
@@ -160,19 +226,24 @@ export default function HospitalSearch() {
                 <Link
                   // type="button"
                   href="/booking-form"
-                  className="rounded-lg bg-[#0066cc] px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-sky-700"
-                >
+                  className="rounded-lg bg-[#0066cc] px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-sky-700">
                   Book an appointment
                 </Link>
                 <button
                   type="button"
                   onClick={() =>
-                    setExpandedHospitalId((prev) =>
-                      prev === hospital.id ? null : hospital.id,
-                    )
+                    setExpandedHospitalId((prev) => {
+                      const nextHospitalId =
+                        prev === hospital.id ? null : hospital.id;
+
+                      if (nextHospitalId !== hospital.id) {
+                        setExpandedDoctorSlots({});
+                      }
+
+                      return nextHospitalId;
+                    })
                   }
-                  className="text-left text-base font-medium text-sky-600 transition hover:text-sky-700"
-                >
+                  className="text-left text-base font-medium text-sky-600 transition hover:text-sky-700">
                   {expandedHospitalId === hospital.id
                     ? "View Less..."
                     : "View More..."}
@@ -193,58 +264,182 @@ export default function HospitalSearch() {
                   </p>
 
                   <div className="mt-8 space-y-6">
-                    {DOCTORS.map((doctor) => (
-                      <article
-                        key={doctor.id}
-                        className="rounded-2xl border border-[#d8d8d8] bg-white px-6 py-5 shadow-[0_3px_10px_rgba(0,0,0,0.15)] sm:px-8"
-                      >
-                        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-10">
-                          <div className="flex flex-col items-center">
-                            <div className="grid h-[120px] w-[120px] place-items-center rounded-full bg-gradient-to-br from-[#d9dde4] to-[#b8c3d6] text-4xl font-semibold text-[#334155] sm:h-[150px] sm:w-[150px] sm:text-5xl">
-                              {doctor.initials}
+                    {DOCTORS.map((doctor) => {
+                      const isSlotOpen =
+                        expandedDoctorSlots[doctor.id] ?? false;
+                      const activeSlotDayId =
+                        activeSlotDayByDoctor[doctor.id] ?? DEFAULT_SLOT_DAY_ID;
+                      const visibleSlots = getSlotsForDay(activeSlotDayId);
+                      const selectedSlotId =
+                        selectedSlotByDoctor[doctor.id] ??
+                        getDefaultSlotId(activeSlotDayId);
+
+                      return (
+                        <article
+                          key={doctor.id}
+                          className="rounded-2xl border border-[#d8d8d8] bg-white px-5 py-5 shadow-[0_3px_10px_rgba(0,0,0,0.15)] sm:px-8">
+                          <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+                            <div className="flex flex-1 flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
+                              <div className="flex flex-col items-center">
+                                <Image
+                                  src={doctor.image}
+                                  alt={doctor.name}
+                                  width={150}
+                                  height={150}
+                                  className="h-[110px] w-[110px] rounded-full object-cover shadow-[0_10px_20px_rgba(15,23,42,0.12)] sm:h-[140px] sm:w-[140px]"
+                                />
+                                <span className="mt-2 rounded-md border border-[#7ba9e8] bg-white px-3 py-1 text-sm text-[#1c71d8]">
+                                  {hospital.name.toLowerCase()}
+                                </span>
+                              </div>
+
+                              <div className="flex-1">
+                                <h2 className="text-2xl font-medium text-[#0a67d4] sm:text-4xl">
+                                  {doctor.name}
+                                </h2>
+                                <p className="mt-2 text-lg text-[#1d1d1d] sm:text-xl">
+                                  {doctor.speciality}
+                                </p>
+                                <p className="mt-1 text-base text-[#8a8a8a] sm:text-lg">
+                                  {doctor.experience}
+                                </p>
+                                <p className="mt-4 max-w-3xl text-base leading-7 text-[#161616] sm:mt-5 sm:text-lg">
+                                  {doctor.credentials}
+                                </p>
+                              </div>
                             </div>
-                            <span className="mt-2 rounded-md border border-[#7ba9e8] px-3 py-1 text-sm text-[#1c71d8]">
-                              {hospital.name.toLowerCase()}
-                            </span>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setExpandedDoctorSlots((prev) => ({
+                                  ...prev,
+                                  [doctor.id]: !prev[doctor.id],
+                                }));
+                                setActiveSlotDayByDoctor((prev) => ({
+                                  ...prev,
+                                  [doctor.id]:
+                                    prev[doctor.id] ?? DEFAULT_SLOT_DAY_ID,
+                                }));
+                                setSelectedSlotByDoctor((prev) => ({
+                                  ...prev,
+                                  [doctor.id]:
+                                    prev[doctor.id] ??
+                                    getDefaultSlotId(DEFAULT_SLOT_DAY_ID),
+                                }));
+                              }}
+                              className="inline-flex min-w-[185px] items-center justify-center gap-3 self-start
+                               rounded-xl bg-[#0a67d4] px-5 py-4 text-base font-semibold text-white 
+                               shadow-xl transition hover:bg-[#085ebc] sm:text-xl">
+                              {isSlotOpen ? "Hide slots" : "Show slots"}
+                              <svg
+                                viewBox="0 0 12 8"
+                                fill="none"
+                                aria-hidden="true"
+                                className={`h-4 w-4 transition-transform ${
+                                  isSlotOpen ? "" : "rotate-180"
+                                }`}>
+                                <path
+                                  d="M1.5 6.5L6 2L10.5 6.5"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </button>
                           </div>
 
-                          <div className="flex-1">
-                            <h2 className="text-2xl font-medium text-[#0a67d4] sm:text-4xl">
-                              {doctor.name}
-                            </h2>
-                            <p className="mt-2 text-lg text-[#1d1d1d] sm:text-xl">
-                              {doctor.speciality}
-                            </p>
-                            <p className="mt-1 text-base text-[#8a8a8a] sm:text-lg">
-                              {doctor.experience}
-                            </p>
-                            <p className="mt-4 max-w-3xl text-base leading-7 text-[#161616] sm:mt-6 sm:text-lg">
-                              {doctor.credentials}
-                            </p>
-                            {/* <button
-                              className="px-3 py-1.5 rounded-lg text-black text-[14px] border border-[#cbcdcd]
-                                bg-[#199fd9] "
-                            >
-                              Book an doctor
-                            </button> */}
-                          </div>
-                        </div>
-                      </article>
-                    ))}
+                          {isSlotOpen && (
+                            <div className="mt-8 rounded-[26px] border border-[#e4ebf6] bg-[#fcfdff] px-4 py-5 shadow-[0_12px_24px_rgba(15,23,42,0.06)] sm:px-7 sm:py-7">
+                              <div className="grid grid-cols-1 gap-3 text-center sm:grid-cols-3">
+                                {SLOT_DAYS.map((day) => {
+                                  const isActiveDay =
+                                    day.id === activeSlotDayId;
+
+                                  return (
+                                    <button
+                                      key={day.id}
+                                      type="button"
+                                      onClick={() => {
+                                        setActiveSlotDayByDoctor((prev) => ({
+                                          ...prev,
+                                          [doctor.id]: day.id,
+                                        }));
+                                        setSelectedSlotByDoctor((prev) => ({
+                                          ...prev,
+                                          [doctor.id]: getDefaultSlotId(day.id),
+                                        }));
+                                      }}
+                                      className={`rounded-xl px-3 py-2 text-xl font-medium transition sm:text-2xl ${
+                                        isActiveDay
+                                          ? "bg-[#eef6ff] text-[#0a67d4]"
+                                          : "text-[#4d4d4d] hover:bg-[#f7f9fc]"
+                                      }`}>
+                                      {day.label}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                {visibleSlots.map((slot) => {
+                                  const isSelected =
+                                    selectedSlotId === slot.id &&
+                                    slot.state !== "unavailable";
+                                  const isUnavailable =
+                                    slot.state === "unavailable";
+
+                                  return (
+                                    <button
+                                      key={slot.id}
+                                      type="button"
+                                      disabled={isUnavailable}
+                                      onClick={() =>
+                                        setSelectedSlotByDoctor((prev) => ({
+                                          ...prev,
+                                          [doctor.id]: slot.id,
+                                        }))
+                                      }
+                                      className={`h-12 rounded-xl border text-lg font-medium transition sm:h-14 sm:text-[18px] ${
+                                        isSelected
+                                          ? "border-[#0a67d4] bg-[#0a67d4] text-white shadow-[0_8px_18px_rgba(10,103,212,0.22)]"
+                                          : isUnavailable
+                                            ? "cursor-not-allowed border-[#d8d8d8] text-[#c3c3c3]"
+                                            : "border-[#9fcbf7] text-[#3f8dde] hover:bg-[#f3f8ff]"
+                                      }`}>
+                                      {slot.label}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              <Link
+                                href="/booking-form"
+                                className="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl bg-[#0a67d4] px-6 text-lg font-semibold
+                                 text-white shadow-xl transition hover:bg-[#085ebc] sm:h-14 sm:text-2xl">
+                                Book a appointment
+                              </Link>
+                            </div>
+                          )}
+                        </article>
+                      );
+                    })}
                   </div>
 
                   <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <Link
                       href="/booking-form"
-                      className="w-fit rounded-lg bg-[#0066cc] px-8 py-3 text-lg font-semibold text-white shadow-[0_4px_8px_rgba(0,0,0,0.25)] sm:text-2xl"
-                    >
+                      className="w-fit rounded-lg bg-[#0066cc] px-8 py-3 text-lg font-semibold text-white shadow-[0_4px_8px_rgba(0,0,0,0.25)] sm:text-2xl">
                       Book a appointment
                     </Link>
                     <button
                       type="button"
-                      onClick={() => setExpandedHospitalId(null)}
-                      className="text-left text-2xl font-medium text-[#0a67d4] transition hover:text-[#084f9f] sm:text-3xl"
-                    >
+                      onClick={() => {
+                        setExpandedHospitalId(null);
+                        setExpandedDoctorSlots({});
+                      }}
+                      className="text-left text-2xl font-medium text-[#0a67d4] transition hover:text-[#084f9f] sm:text-3xl">
                       View less...
                     </button>
                   </div>
