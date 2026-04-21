@@ -130,11 +130,11 @@ export default function HospitalSearch() {
           />
 
           <input
-            value={searchText}
+            // value={searchText}
             placeholder="search location"
-            onChange={(e) => {
-              setSearchtext(e.target.value);
-            }}
+            // onChange={(e) => {
+            //   setSearchtext(e.target.value);
+            // }}
             className="w-full rounded-3xl border border-[#cbcdcd] py-2.5 pl-12 pr-7 font-2xl"
           />
         </div>
@@ -223,12 +223,12 @@ export default function HospitalSearch() {
               </p>
 
               <div className="mt-6 flex flex-col sm:gap-40 gap-5 sm:flex-row sm:items-center sm:justify-betwee">
-                <Link
+                {/* <Link
                   // type="button"
                   href="/booking-form"
                   className="rounded-lg bg-[#0066cc] px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-sky-700">
                   Book an appointment
-                </Link>
+                </Link> */}
                 <button
                   type="button"
                   onClick={() =>
@@ -245,7 +245,7 @@ export default function HospitalSearch() {
                   }
                   className="text-left text-base font-medium text-sky-600 transition hover:text-sky-700">
                   {expandedHospitalId === hospital.id
-                    ? "View Less..."
+                    ? ""
                     : "View More..."}
                 </button>
               </div>
@@ -418,7 +418,7 @@ export default function HospitalSearch() {
                               <Link
                                 href="/booking-form"
                                 className="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl 
-                                bg-[#0a67d4] px-6 text-lg font-semibold whitespace-nowrap
+                                bg-primary px-6 text-lg font-semibold whitespace-nowrap
                                  text-white shadow-xl transition hover:bg-[#085ebc] sm:h-14 sm:text-2xl">
                                 Book a appointment
                               </Link>
@@ -430,11 +430,11 @@ export default function HospitalSearch() {
                   </div>
 
                   <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <Link
+                    {/* <Link
                       href="/booking-form"
                       className="w-fit rounded-lg bg-[#0066cc] px-8 py-3 text-lg font-semibold text-white shadow-[0_4px_8px_rgba(0,0,0,0.25)] sm:text-2xl">
                       Book a appointment
-                    </Link>
+                    </Link> */}
                     <button
                       type="button"
                       onClick={() => {
