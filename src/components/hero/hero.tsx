@@ -4,9 +4,6 @@ import Image from "next/image";
 // import localFont from "next/font/local";
 import Link from "next/link";
 import { motion } from "framer-motion";
-// const font1=localFont({
-//   src:"../../fonts/font1.woff2"
-// })
 export default function Hero() {
   const title = "Tired of waiting for booking appointments for a doctor";
 
