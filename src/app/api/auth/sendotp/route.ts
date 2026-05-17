@@ -11,7 +11,7 @@ export async function POST(req:Request) {
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
     const ott=await sql`
     insert into otps (identifier, otp, expires_at)
-    values (${body.email},${otp},${expiresAt}) returning*
+    values (${body.phone_number},${otp},${expiresAt}) returning*
     `
     console.log("OTP",ott)
     return Response.json({message:{ott}})

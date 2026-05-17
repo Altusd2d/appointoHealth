@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
     // 🔍 Check if user exists
     const existingUser = await sql`
-      SELECT * FROM users WHERE email = ${body.email}
+      SELECT * FROM users WHERE phone_number = ${body.phone_number}
     `;
 
     if (existingUser.length > 0) {
@@ -18,12 +18,12 @@ export async function POST(req: Request) {
     }
 
     // 🔐 Hash password
-    const hashedPassword = await bcrypt.hash(body.password, 10);
+    // const hashedPassword = await bcrypt.hash(body.password, 10);
 
     // ➕ Insert user
     const user = await sql`
-      INSERT INTO users (name, email, password)
-      VALUES (${body.name}, ${body.email}, ${hashedPassword})
+      INSERT INTO users (name, phone_number)
+      VALUES (${body.name}, ${body.phone_number})
       RETURNING *
     `;
 
