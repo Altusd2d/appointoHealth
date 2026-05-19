@@ -2,6 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import sethascope from "../../../public/sign-up/sethascope.png"
 import heartrate from "../../../public/sign-up/heart_rate.png"
+export const metadata = {
+  title: "Sign Up | Appointo Health",
+  description:
+    "Create your Appointo Health account to book doctor appointments, consult specialists, and access healthcare services online.",
+};
 export default function Signup() {
   return (
     <main className=" bg-white px-4 py-10 md:px-6">
