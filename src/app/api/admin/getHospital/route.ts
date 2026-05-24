@@ -14,13 +14,13 @@ export async function POST(req:Request) {
         where name=${hospital} 
         `
         if(hos.length==0){
-            return NextResponse.json({message:"hospital could't find "},{status:404})
+            return NextResponse.json({message:"hospital could't find "},{status:400})
         }
         return NextResponse.json({message:hos},{status:200})
 
     }catch(error){
         console.log(error);
-       return  NextResponse.json({message:"inter server error"},{status:500})
+       return  NextResponse.json({message:"internal server error"},{status:500})
     }
     
 }
