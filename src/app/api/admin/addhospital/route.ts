@@ -1,13 +1,14 @@
 import sql from "@/lib/dbs"
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
 export async function POST(req:Request) {
 
     const body=await req.json();
     try {
-        const {name,location,description,is_premium}=body;
+        const {name,location,description,is_premium,gmail,password}=body;
         let {open_time,hero_image1,hero_image2,logo}=body
-        if(!name ||!location ){
+        if(!name ||!location ||!gmail || !password ){
             console.log(name,location,is_premium)
             return NextResponse.json({message:"All parameters are required"},{status:400})
         }
@@ -32,7 +33,8 @@ export async function POST(req:Request) {
          if(!logo){
             logo=null
         }
-        const appointment = await sql`
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const hospital = await sql`
       INSERT INTO hospitals (
         name,
         logo,
@@ -41,7 +43,9 @@ export async function POST(req:Request) {
         hero_image2,
         description,
         is_premium,
-        open_time
+        open_time,
+        gmail,
+        password
       )
       VALUES (
         ${name},
@@ -51,14 +55,16 @@ export async function POST(req:Request) {
         ${hero_image2},
         ${description},
         ${is_premium},
-        ${open_time}
+        ${24/7},
+        ${gmail},
+        ${hashedPassword}
       )
       RETURNING *
     `;
     return NextResponse.json(
       {
-        message: "Appointment booked successfully",
-        appointment: appointment[0],
+        message: "Hospital sucessfully added",
+        appointment: hospital[0],
       },
       { status: 201 }
     );
