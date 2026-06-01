@@ -16,8 +16,7 @@ export async function POST(req:Request) {
         const hos=await sql`
         select id from hospitals where id=${id}
         `
-
-
+        
   if (hos.length === 0) {
     return NextResponse.json(
       { message: "Hospital not found" },

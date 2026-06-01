@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { premiumDoctors } from "./premiumDoctorsData";
 
 type DoctorCard = {
   id: string;
@@ -54,15 +56,27 @@ const doctors: DoctorCard[] = [
   },
 ];
 
+const doctorSlugById = new Map(
+  premiumDoctors.map((doctor) => [doctor.id, doctor.slug]),
+);
+
 function DoctorItem({ doctor }: { doctor: DoctorCard }) {
+  const doctorSlug = doctorSlugById.get(doctor.id);
+
   return (
     <article className="relative overflow-hidden rounded-[16px] shadow-[0_8px_22px_rgba(0,0,0,0.28)]">
+      {doctorSlug ? (
+        <Link
+          href={`/hospital/premium/${doctorSlug}`}
+          aria-label={`Open ${doctor.name}`}
+          className="absolute inset-0 z-20"
+        />
+      ) : null}
       <Image
         src={doctor.image}
         alt={doctor.name}
         width={440}
         height={510}
-        // sizes="255px"
         quality={100}
         unoptimized
         className="object-cover"

@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   `;
 
   if (record.length === 0) {
-    return Response.json({ message: "OTP not found" }, { status: 400 });
+    return Response.json({ message: "OTP not found" }, { status: 404 });
   }
 
   const rec = record[0];
