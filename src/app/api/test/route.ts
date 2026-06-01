@@ -1,11 +1,13 @@
+import { initDB } from "@/lib/init-db";
+import { NextResponse } from "next/server";
 import sql from "@/lib/dbs";
 
 export async function GET() {
-  const tables = await sql`
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_schema = 'public'
-  `;
+  // await initDB();
+  const change=await sql`
+ALTER TABLE hospitals
+ADD COLUMN password text;
+`;
 
   return Response.json(tables);
 }

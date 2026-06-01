@@ -1,7 +1,9 @@
-import sql from "@/lib/dbs"
+import sql from "@/lib/dbs";
 
 import { NextResponse } from "next/server";
 
+export async function POST(req: Request) {
+  const body = await req.json();
 
 export async function POST(req:Request) {
     const body=await req.json()
@@ -27,11 +29,22 @@ export async function POST(req:Request) {
         
         const doc = await sql`
       INSERT INTO doctors (
-        name,specialist,education,experience,hospital_id
+        name,
+        specialist,
+        education,
+        experience,
+        image,
+        hospital_id,
+        availability
       )
       VALUES (
-        ${name},${specialist},${education},${experience},${id}
-        
+        ${name},
+        ${specialist},
+        ${education},
+        ${experience},
+        ${image},
+        ${hospitalId},
+        ${JSON.stringify(availability)}
       )
       RETURNING *
     `;
