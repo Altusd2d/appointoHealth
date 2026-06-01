@@ -13,7 +13,6 @@ export async function POST(req: Request) {
       experience,
       hospital,
     } = body;
-
     let { image } = body;
 
     if (
@@ -24,7 +23,7 @@ export async function POST(req: Request) {
       !hospital
     ) {
       return NextResponse.json(
-        { message: "all parameters are required" },
+        { message: "All parameters are required" },
         { status: 400 }
       );
     }
@@ -41,7 +40,7 @@ export async function POST(req: Request) {
 
     if (hospitalData.length === 0) {
       return NextResponse.json(
-        { message: "hospital with that name not found" },
+        { message: "Hospital with that name not found" },
         { status: 404 }
       );
     }
@@ -58,9 +57,7 @@ export async function POST(req: Request) {
       "Saturday",
       "Sunday",
     ];
-
     const availability: Record<string, number[]> = {};
-
     for (const day of days) {
       // 48 slots per day
       // 0 = unavailable
@@ -96,7 +93,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
     return NextResponse.json(
       {
         message: "doctor added successfully",
