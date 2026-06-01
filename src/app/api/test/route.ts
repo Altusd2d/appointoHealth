@@ -5,11 +5,12 @@ import sql from "@/lib/dbs";
 export async function GET() {
   // await initDB();
   const change=await sql`
-ALTER TABLE hospitals
-ADD COLUMN password text;
+ALTER TABLE appointments
+ADD COLUMN hospital_id UUID NOT NULL
+REFERENCES hospitals(id);
 `;
 
   return NextResponse.json({
-    message: "DB initialized",
+    message: change,
   });
 }

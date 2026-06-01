@@ -68,7 +68,8 @@ export async function POST(req: Request) {
       {
         id: hos.id,
         gmail: hos.gmail,
-        name: hos.name
+        name: hos.name,
+        role:"hospital"
       },
 
       process.env.JWT_SECRET as string,

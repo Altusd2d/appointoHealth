@@ -46,7 +46,7 @@ CREATE TABLE doctors (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   name TEXT NOT NULL,
-
+  
   specialist TEXT,
 
   education TEXT,
@@ -115,6 +115,25 @@ CREATE TABLE IF NOT EXISTS appointments (
     appointment_date DATE NOT NULL,
 
     appointment_time TIME NOT NULL,
+
+    name text not null,
+
+    age text not null,
+
+    phone_number text not null,
+
+    gender TEXT NOT NULL
+CHECK (
+    gender IN (
+        'male',
+        'female',
+        'other'
+    )
+),
+
+    description text ,
+
+
 
     status TEXT NOT NULL DEFAULT 'booked'
         CHECK (
