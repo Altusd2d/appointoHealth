@@ -12,6 +12,8 @@ export default function AddHospitalForm() {
     hero_image1: "",
     hero_image2: "",
     logo: "",
+    gmail: "",
+    password: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -62,6 +64,8 @@ export default function AddHospitalForm() {
         hero_image1: "",
         hero_image2: "",
         logo: "",
+        gmail: "",
+        password: "",
       });
     } catch (error) {
       console.log(error);
@@ -91,7 +95,32 @@ export default function AddHospitalForm() {
               required
             />
           </div>
+          <div>
+            <label className="block mb-2 font-medium">gmail</label>
 
+            <input
+              type="text"
+              name="gmail"
+              value={formData.gmail}
+              onChange={handleChange}
+              placeholder="Enter hospital name"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium">password</label>
+
+            <input
+              type="text"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter hospital name"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
           {/* Location */}
           <div>
             <label className="block mb-2 font-medium">Location</label>
