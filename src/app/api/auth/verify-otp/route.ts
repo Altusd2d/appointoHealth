@@ -26,7 +26,13 @@ export async function POST(req: Request) {
     return Response.json({ message: "OTP expired" }, { status: 400 });
   }
 
-  const users = await sql`
+
+  let users = await sql`
+  SELECT * FROM users
+  WHERE identifier = ${body.identifier}
+`;
+
+  users = await sql`
     SELECT * FROM users WHERE email = ${body.email}
   `;
 
@@ -45,7 +51,8 @@ export async function POST(req: Request) {
   }
 
   const token = jwt.sign(
-    { userId: user.id },
+    { id: user.id ,
+    role: "user"},
     process.env.JWT_SECRET!,
     { expiresIn: "1d" }
   );
@@ -54,6 +61,7 @@ export async function POST(req: Request) {
     message: "Login successful",
     user,
   });
+  console.log(process.env.JWT_SECRET);
 
   response.cookies.set("token", token, {
     httpOnly: true,

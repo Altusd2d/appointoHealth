@@ -4,7 +4,7 @@ import sql from "@/lib/dbs";
 import { cookies } from "next/headers";
 
 interface JwtPayload {
-  userId: string;
+  id: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
 
     const {
       doctor_id,
+      appointment_date,
       hospital_id,
       name,
       age,
@@ -65,24 +66,28 @@ export async function POST(req: NextRequest) {
 
     // Check already booked slot
     const existingAppointment = await sql`
-      SELECT *
-      FROM appointments
-      WHERE doctor_id = ${doctor_id}
-      AND slot_time = ${slot_time}
-      AND status = 'not_completed'
+  SELECT *
+  FROM appointments
+  WHERE doctor_id = ${doctor_id}
+  AND appointment_time = ${slot_time}
+  AND appointment_date = ${appointment_date}
+  AND status = 'booked'
+`;
+
+    
+
+    const loc=await sql`
+      SELECT location
+      FROM hospitals
+      WHERE id = ${hospital_id}
+      
     `;
 
-    const waiting = await sql`
-      SELECT *
-      FROM appointments
-      WHERE doctor_id = ${doctor_id}
-      AND slot_time = ${slot_time}
-      AND status = 'waiting'
-    `;
+    console.log(loc[0])
 
     if (
-      existingAppointment.length > 0 ||
-      waiting.length > 0
+      existingAppointment.length > 0 
+      
     ) {
       return NextResponse.json(
         { message: "Slot already booked" },
@@ -94,27 +99,29 @@ export async function POST(req: NextRequest) {
     const appointment = await sql`
       INSERT INTO appointments (
         doctor_id,
-        user_id,
+        patient_id,
         name,
         age,
         phone_number,
         gender,
         description,
-        slot_time,
+        appointment_time,
         location,
-        hospital_id
+        hospital_id,
+        appointment_date
       )
       VALUES (
         ${doctor_id},
-        ${decoded.userId},
+        ${decoded.id},
         ${name},
         ${age},
         ${phone_number},
         ${gender},
         ${description},
         ${slot_time},
-        ${location},
-        ${hospital_id}
+        ${loc[0].location},
+        ${hospital_id},
+        ${appointment_date}
       )
       RETURNING *
     `;

@@ -10,9 +10,9 @@ export async function POST(req: Request) {
     const {
       changes,
       doctor_id,
-      hospital_id
+      
     } = body;
-
+    const hospital_id= req.headers.get("user-id");
     if (!changes || changes.length === 0) {
       return NextResponse.json(
         { message: "no changes made" },
