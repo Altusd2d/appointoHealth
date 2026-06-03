@@ -46,9 +46,9 @@ CREATE TABLE doctors (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   name TEXT NOT NULL,
-  
-  specialist TEXT,
 
+  specialist TEXT,
+  
   education TEXT,
 
   experience TEXT,
@@ -111,6 +111,8 @@ CREATE TABLE IF NOT EXISTS appointments (
         REFERENCES doctors(id),
 
     patient_id UUID NOT NULL,
+
+    
 
     appointment_date DATE NOT NULL,
 

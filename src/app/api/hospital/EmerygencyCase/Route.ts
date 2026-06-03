@@ -39,31 +39,17 @@ export async function POST(req:Request) {
                     );
                   }
         
-        const {id,status}=body;
-        if( !id || !status ){
+        const {id}=body;
+        if( !id  ){
             return NextResponse.json({message:"Id required"},{status:404})
         }
 
 
-        const app=await sql`
-        select * from appointments where id=${id}
-        `
+        //send msg 
 
 
-  if (app.length === 0) {
-    return NextResponse.json(
-      { message: "Hospital not found" },
-      { status: 404 }
-    );
-  }
 
-  const change = await sql`
-  UPDATE appointments
-  SET status = ${status}
-  WHERE id = ${id}
-  
-`;
-        return NextResponse.json({message:change},{status:200})
+        return NextResponse.json({message:"changed msg"},{status:200})
 
     }catch(error){
         console.log(error);

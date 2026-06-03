@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const body = await req.json();
+  console.log("body",body)
 
   const record = await sql`
     SELECT * FROM otps
@@ -27,28 +28,18 @@ export async function POST(req: Request) {
   }
 
 
-  let users = await sql`
+  const users = await sql`
   SELECT * FROM users
-  WHERE identifier = ${body.identifier}
+  WHERE phone_number = ${body.identifier}
 `;
 
-  users = await sql`
-    SELECT * FROM users WHERE email = ${body.email}
-  `;
+ if(users.length==0){
+  return NextResponse.json({message:"user not found"},{status:404})
+ }
+  const user=users[0]
 
-  let user;
 
-  if (users.length === 0) {
-    const newUser = await sql`
-      INSERT INTO users (email)
-      VALUES (${body.email})
-      RETURNING *
-    `;
 
-    user = newUser[0];
-  } else {
-    user = users[0];
-  }
 
   const token = jwt.sign(
     { id: user.id ,
