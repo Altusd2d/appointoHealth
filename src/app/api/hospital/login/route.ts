@@ -1,8 +1,9 @@
 import sql from "@/lib/dbs";
-import { NextResponse } from "next/server";
-
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
+
+
 
 export async function POST(req: Request) {
 

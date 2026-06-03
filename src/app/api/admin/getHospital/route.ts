@@ -7,7 +7,7 @@ export async function POST(req:Request) {
     try{
         const {hospital}=body;
         if(! hospital){
-            return NextResponse.json({message:" hospital name is required"},{status:404})
+            return NextResponse.json({message:" hospital name is required"},{status:400})
         }
         const hos=await sql`
         select *  from hospitals
@@ -20,7 +20,7 @@ export async function POST(req:Request) {
 
     }catch(error){
         console.log(error);
-       return  NextResponse.json({message:"inter server error"},{status:500})
+       return  NextResponse.json({message:"Internal server error"},{status:500})
     }
     
 }
