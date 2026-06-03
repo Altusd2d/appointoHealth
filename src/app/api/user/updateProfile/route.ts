@@ -33,34 +33,48 @@ export async function DELETE(req:NextRequest) {
     // console.log("dskjjfksdjfn:", decoded);
 
    const body=await req.json();
-   const {id}=body;
-   if(!id){
-    return NextResponse.json({message:"appionemnet does selected try again"},{status:404})
-   }
-   
+   let {name,phone_number,email,age,gender,bio}=body;
+   const hos=await sql`
+        select *  from users
+        where id=${decoded.id} 
+        `
+        if(!name){
+            name=hos[0].name;
+        }
+        if(!phone_number){
+            phone_number=hos[0].phone_number;
+        }
+        if(!email){
+            email=hos[0].email;
+        }
+        if(!age){
+            age=hos[0].age;
+        }
+        if(!gender){
+            gender=hos[0].gender;
+        }
+        if(!bio){
+            bio=hos[0].bio;
+        }
 
-   //delecting appionment from user
-  const deleteAppointment = await sql`
-  DELETE FROM appointments
-  WHERE id = ${id}
-  RETURNING *
+        const updatedProfile = await sql`
+  UPDATE users
+  SET
+    name = ${name},
+    phone_number = ${phone_number},
+    email = ${email},
+    age = ${age},
+    gender = ${gender},
+    bio = ${bio}
+  WHERE id = ${decoded.id}
+  RETURNING *;
 `;
 
-
-const doc_id=deleteAppointment[0].doctor_id;
-const slot=deleteAppointment[0].doctor_appointment_time;
-const payment=deleteAppointment[0].payment;
-console.log("deleted appoinent",deleteAppointment[0])
-
-//change doctor status
-//send notify to hospital
-//refund the money
-    
    
 
     
       return NextResponse.json(
-        { message: "sucessfully deleted" },
+        { message: "sucessfully upated",updatedProfile },
         { status: 409 }
       );
     

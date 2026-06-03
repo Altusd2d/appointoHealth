@@ -1,42 +1,63 @@
-import sql from "@/lib/dbs"
 
 import { NextResponse } from "next/server";
+import sql from "@/lib/dbs";
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
+
+
+interface JwtPayload {
+  id: string;
+  role: string;
+}
 
 export async function POST(req:Request) {
     const body=await req.json();
     try{
-        console.log("calleded")
-        const {name,des,image,id}=body;
-        if(!name || ! des || !id ){
+
+       const cookieStore = await cookies();
+       const token = cookieStore.get("token")?.value;
+
+       if (!token) {
+      return NextResponse.json(
+        { message: "User not logged in" },
+        { status: 401 }
+      );
+    }
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET!
+    ) as JwtPayload;
+
+    console.log(decoded)
+
+    // optional role check
+    if (decoded.role !== "hospital") {
+      return NextResponse.json(
+        { message: "Unauthorized access" },
+        { status: 403 }
+      );
+    }
+
+
+        // console.log("calleded")
+        const {name,des,image}=body;
+        if(!name || ! des  ){
             return NextResponse.json({message:"all doctor name and hospital name is required"},{status:404})
         }
+  
 
-
-        const hos=await sql`
-        select id from hospitals where id=${id}
-        `
-
-
-  if (hos.length === 0) {
-    return NextResponse.json(
-      { message: "Hospital not found" },
-      { status: 404 }
-    );
-  }
-
-  const hospital_id = hos[0].id;
-
-        const doc = await sql`
+        const equipment = await sql`
       INSERT INTO equipments (
         name,image,description,hospital_id
       )
       VALUES (
-        ${name},${image},${des},${id}
+        ${name},${image},${des},${decoded.id}
         
       )
       RETURNING *
     `;
-        return NextResponse.json({message:`sucessfully added ${name} to ${hos[0]?.name} hospital`},{status:200})
+        return NextResponse.json({message:`sucessfully added ${name} to hospital`,equipment},{status:200})
 
     }catch(error){
         console.log(error);
