@@ -9,10 +9,12 @@ declare global {
 }
 
 export default function PhoneAuthUI() {
+  
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [confirmResult, setConfirmResult] = useState<ConfirmationResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const formattedPhone = `+91${phone}`;
 const router=useRouter();
   useEffect(() => {
     window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
@@ -23,7 +25,7 @@ const router=useRouter();
   const handleSendOtp = async () => {
     setLoading(true);
     try {
-      const result = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
+      const result = await signInWithPhoneNumber(auth,formattedPhone, window.recaptchaVerifier);
       setConfirmResult(result);
       alert("OTP Sent!");
     } catch (err) {
