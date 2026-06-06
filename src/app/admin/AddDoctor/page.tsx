@@ -47,7 +47,7 @@ export default function AddDoctorPage() {
         setMessage(data.message);
       } else {
         setMessage("Doctor added successfully");
-
+        alert("Doctor added successfully")
         setFormData({
           name: "",
           specialist: "",

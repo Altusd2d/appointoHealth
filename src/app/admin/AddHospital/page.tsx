@@ -49,11 +49,13 @@ export default function AddHospitalForm() {
       const data = await res.json();
 
       if (!res.ok) {
+        alert(data.message)
         setMessage(data.message || "Something went wrong");
         return;
       }
-
+    
       setMessage("Hospital added successfully");
+      alert("Hospital added successfully")
 
       setFormData({
         name: "",

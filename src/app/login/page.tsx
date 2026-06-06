@@ -99,12 +99,14 @@ export default function Login() {
               </div>
             </div> */}
 
+            <Link href="/verify-otp">
             <button
               type="submit"
               className="mt-4 h-11 w-full rounded-md bg-[#002b5a] text-lg font-bold text-white shadow-[0_10px_24px_rgba(0,43,90,0.35)] transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]"
             >
               Login
             </button>
+            </Link>
 
             <p className="py-2.5 text-sm text-[#0d3055]">I Don't have a account?</p>
 
