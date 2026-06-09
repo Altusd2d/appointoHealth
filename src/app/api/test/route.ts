@@ -6,8 +6,8 @@ export async function GET() {
   // await initDB();
   const change=await sql`
 ALTER TABLE appointments
-ADD COLUMN hospital_id UUID NOT NULL
-REFERENCES hospitals(id);
+ALTER COLUMN app_id TYPE TEXT;
+
 `;
 
   return NextResponse.json({

@@ -43,7 +43,17 @@ export async function POST(req:Request) {
         if( !id || !status ){
             return NextResponse.json({message:"Id required"},{status:404})
         }
+        console.log()
+        console.log()
+        console.log()
+        console.log()
+        console.log()
+         console.log("id",id)
+         console.log("status",status)
+         console.log()
+         console.log()
 
+         console.log()
 
         const app=await sql`
         select * from appointments where id=${id}
