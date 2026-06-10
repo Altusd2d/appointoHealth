@@ -56,16 +56,16 @@ export default function Page() {
               </p>
             </div>
           </Link>
-          {/* <Link href="/admin/getAllHospitals">
+          <Link href="/admin/statistics">
             <div className="cursor-pointer rounded-xl border border-gray-200 p-6 transition-all hover:-translate-y-1 hover:border-blue-500 hover:shadow-md">
               <h2 className="text-xl font-semibold text-gray-800">
-                Statis
+                Dashboard Statistics
               </h2>
               <p className="mt-2 text-sm text-gray-500">
-                Display all registered hospitals.
+                View total users, doctors, hospitals, and appointments.
               </p>
             </div>
-          </Link> */}
+          </Link>
         </div>
       </div>
     </div>
