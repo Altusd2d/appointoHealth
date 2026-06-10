@@ -1,7 +1,7 @@
 "use client";
 import logo from "../../../public/hospital/apollo_logo.jpg";
 import Image from "next/image";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState ,useEffect} from "react";
 
 type Appointment = {
   initials: string;
@@ -28,6 +28,8 @@ type TabKey =
   | "Billing"
   | "Analytics"
   | "Settings";
+
+const color:string[]=["from-emerald-500 to-teal-400","from-pink-500 to-rose-400","from-indigo-500 to-violet-400","from-sky-500 to-cyan-400","from-orange-400 to-amber-400"]
 
 const appointments: Appointment[] = [
   {
@@ -112,8 +114,6 @@ const sidebarItems: { label: TabKey; glyph: string }[] = [
   { label: "Dashboard", glyph: "DB" },
   { label: "Appointments", glyph: "AP" },
   { label: "Doctors", glyph: "DR" },
-  // { label: "Schedules", glyph: "SC" },
-  // { label: "Patients", glyph: "PT" },
   { label: "Billing", glyph: "BL" },
   { label: "Analytics", glyph: "AN" },
   { label: "Settings", glyph: "ST" },
@@ -200,7 +200,7 @@ function SimplePanel({ title }: { title: string }) {
   );
 }
 
-function SettingsPanel() {
+function SettingsPanel({ hospital }: { hospital: unknown }) {
   return (
     <article className="rounded-2xl bg-white p-5 shadow-sm md:p-6">
       <h2 className="text-2xl font-semibold">Settings</h2>
@@ -292,7 +292,124 @@ function SettingsPanel() {
   );
 }
 
-function AppointmentsPanel() {
+function AppointmentsPanel({ hospital }: { hospital: unknown }) {
+  
+
+const [hos, sethos] = useState<unknown[]>([]);
+const [searchId, setSearchId] = useState<string>("");
+const [isload,setisload]=useState<boolean>(true);
+
+const fetchAppointment=async(searchId:string)=>{
+  try{
+    // console.log()
+     const loginQuery = await fetch(
+  "/api/hospital/searchAppoinment",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      search_id:searchId
+    }),
+  });
+  const data = await loginQuery.json();
+  if (loginQuery.ok) {
+  console.log("appoinemnt is", data.appointment);
+  sethos(data.appointment);
+  // sethos([data]);
+
+} else {
+  console.log("Login failed", data.message);
+}
+
+  }catch(error){
+    console.log(error)
+    return null
+  }
+
+}
+
+
+const waitingApp=async(id:string,status:string)=>{
+  try{
+    console.log("id",id)
+    const loginQuery = await fetch(
+  "/api/hospital/changeStatus",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id:id,
+      status:status
+    }),
+  });
+
+const data = await loginQuery.json();
+
+if (loginQuery.ok) {
+  console.log("check this",data)
+  console.log("Login got appoinments", data.message);
+  // sethos(data.message);
+  
+
+} else {
+  console.log("Login failed", data.message);
+}
+// setisload(false)
+
+
+  }catch(error){
+    console.log(error);
+    return null;
+  }
+  
+}
+
+  
+  const fetchAppoiinments=async()=>{
+    
+      const loginQuery = await fetch(
+  "/api/hospital/Allappoinments",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      choice:"appointments"
+    }),
+  }
+);
+
+const data = await loginQuery.json();
+
+if (loginQuery.ok) {
+  console.log("Login got appoinments", data.message);
+  sethos(data.message);
+  
+
+} else {
+  console.log("Login failed", data.message);
+}
+setisload(false)
+
+  }
+
+  useEffect(() => {
+// setisload(true)
+fetchAppoiinments();
+  
+}, []);
+
+if(isload){
+  return(
+    <div>Loading...</div>
+  )
+}
+  
   return (
     <article className="overflow-hidden rounded-md border border-slate-300 bg-[#d9d9d9] shadow-sm max-w-3xl mx-auto">
       <div className="grid grid-cols-1 border-b border-white/50 bg-[#c4c4c4] text-center text-[#0d2f52] sm:grid-cols-2">
@@ -348,6 +465,7 @@ function AppointmentsPanel() {
                 <br />
                 Fortis Hospital, Jaipur
               </p>
+            
             </div>
           </div>
         </div>
@@ -394,11 +512,60 @@ function AppointmentsPanel() {
         </div>
       </div>
     </article>
+    ))
+  }
+    </>
   );
 }
-function DashboardPanel() {
+
+
+
+
+
+
+function DashboardPanel({ hospital }: { hospital: unknown }) {
+  console.log("hospital dashboard:",hospital)
+  const [hos, sethos] = useState<unknown[]>([]);
+  
+  const fetchAppoiinments=async()=>{
+    
+      const loginQuery = await fetch(
+  "/api/hospital/Allappoinments",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      choice:"today appoinments"
+    }),
+  }
+);
+
+const data = await loginQuery.json();
+
+if (loginQuery.ok) {
+  console.log("Login got appoinments", data);
+  sethos(data.message);
+  
+
+} else {
+  console.log("Login failed", data.message);
+}
+
+  }
+
+  useEffect(() => {
+
+fetchAppoiinments();
+  
+}, []);
+
+
   return (
+    
     <>
+    {/* {console.log("hos",hos)} */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
@@ -407,7 +574,7 @@ function DashboardPanel() {
             </div>
             {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+12%</span> */}
           </div>
-          <h2 className="text-4xl font-bold leading-none">142</h2>
+          <h2 className="text-4xl font-bold leading-none">{hos?.length}</h2>
           <p className="mt-2 text-sm text-slate-600">
             Today&apos;s Appointments
           </p>
@@ -420,7 +587,7 @@ function DashboardPanel() {
             </div>
             {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+8%</span> */}
           </div>
-          <h2 className="text-4xl font-bold leading-none">89</h2>
+          <h2 className="text-4xl font-bold leading-none">{hos.length}</h2>
           <p className="mt-2 text-sm text-slate-600">Completed Today</p>
         </div>
 
@@ -431,7 +598,7 @@ function DashboardPanel() {
             </div>
             {/* <span className="rounded-md bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">-3%</span> */}
           </div>
-          <h2 className="text-4xl font-bold leading-none">28</h2>
+          <h2 className="text-4xl font-bold leading-none">{hos.length}</h2>
           <p className="mt-2 text-sm text-slate-600">Currently Waiting</p>
         </div>
 
@@ -461,7 +628,7 @@ function DashboardPanel() {
                 </tr>
               </thead>
               <tbody>
-                {appointments.map((patient) => (
+                {hos.map((patient,index) => (
                   <tr key={patient.id} className="border-b border-slate-100">
                     <td className="py-4">
                       <div className="flex items-center gap-3">
@@ -471,21 +638,20 @@ function DashboardPanel() {
                         </div>
                         <div>
                           <div className="text-base font-semibold leading-tight">
-                            {patient.name}
+                            {patient.name} 
                           </div>
                           <div className="text-xs text-slate-500">
-                            {patient.id}
+                            {patient.app_id}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="py-4 text-sm font-medium">
-                      {patient.doctor}
+                      {patient.doctor_name}
                     </td>
                     <td className="py-4">
                       <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                        {patient.time}
-                      </span>
+                        {patient.appointment_time}</span>
                     </td>
                     <td className="py-4">
                       <span
@@ -507,18 +673,123 @@ function DashboardPanel() {
 }
 
 export default function HospitalDashboardPage() {
-  const [activeTab, setActiveTab] = useState<TabKey>("Dashboard");
 
-  const panel = useMemo(() => {
-    if (activeTab === "Dashboard") return <DashboardPanel />;
-    if (activeTab === "Appointments") return <AppointmentsPanel />;
-    if (activeTab === "Settings") return <SettingsPanel />;
-    return <SimplePanel title={activeTab} />;
-  }, [activeTab]);
+
+  
+  const [activeTab, setActiveTab] = useState<TabKey>("Dashboard");
+  const [Islogin, setIslogin] = useState<boolean | null>(null);
+  const [gmail, setgmail] = useState<string>("");
+  const [password, setpassword] = useState<string>("");
+   const [isload, setisload] = useState<boolean>(false);
+  const [hospital,sethospital]=useState(null);
+  const [mounted, setMounted] = useState(false);
+
+  const CheckLogin=async()=>{
+    setisload(true)
+      console.log(gmail,password);
+      if(gmail.length==0 || password.length==0){
+        console.log("gmail or password is required")
+      }
+      const loginQuery = await fetch(
+  "/api/hospital/login",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      gmail,
+      password,
+    }),
+  }
+);
+
+const data = await loginQuery.json();
+
+if (loginQuery.ok) {
+  localStorage.setItem("token", data.token);
+  console.log("Login successful", data);
+  setIslogin(true)
+  sethospital(data)
+
+} else {
+  console.log("Login failed", data.message);
+}
+setisload(false)
+  }
+
+
+// const fetchAppoiinments=async()=>{
+//     // setisload(true)
+//       // console.log(gmail,password);
+//       // if(gmail.length==0 || password.length==0){
+//       //   console.log("gmail or password is required")
+//       // }
+//       const loginQuery = await fetch(
+//   "/api/hospital/login",
+//   {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       gmail,
+//       password,
+//     }),
+//   }
+// );
+
+// const data = await loginQuery.json();
+
+// if (loginQuery.ok) {
+//   console.log("Login successful", data);
+//   setIslogin(true)
+
+// } else {
+//   console.log("Login failed", data.message);
+// }
+// setisload(false)
+//   }
+
+
+const panel = useMemo(() => {
+  if (activeTab === "Dashboard")
+    return <DashboardPanel hospital={hospital} />;
+
+  if (activeTab === "Appointments")
+    return <AppointmentsPanel hospital={hospital} />;
+
+  if (activeTab === "Settings")
+    return <SettingsPanel hospital={hospital} />;
+
+  return <SimplePanel title={activeTab} />;
+}, [activeTab, hospital]);
+
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  setIslogin(!!token);
+}, []);
+
+
+
+if (Islogin === null) {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      Loading...
+    </div>
+  );
+}
+
 
   return (
+
+   
+
+
     <main className="min-h-screen overflow-x-hidden bg-[#eef0f3] text-slate-900">
-      <div className="flex min-h-screen flex-col md:flex-row">
+      {Islogin?<>
+           {/* {fetchAppoiinments()} */}
+         <div className="flex min-h-screen flex-col md:flex-row">
         <aside className="w-full bg-[#141821] text-white md:w-64 md:flex-shrink-0">
           <div className="border-b border-white/10 px-6 py-6 text-3xl font-semibold tracking-tight">
             DoctorBook
@@ -566,6 +837,57 @@ export default function HospitalDashboardPage() {
           {panel}
         </section>
       </div>
+      
+      
+      
+      </>:<> <div className="flex min-h-screen items-center justify-center bg-slate-100">
+  <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-md">
+    <h2 className="mb-6 text-center text-2xl font-semibold">
+      Login
+    </h2>
+
+    <form className="space-y-4">
+      <div>
+        <label className="mb-1 block text-sm font-medium">
+          Email
+        </label>
+        <input
+          type="email"
+          placeholder="Enter your email"
+          className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+          value={gmail}
+          onChange={(e) => setgmail(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium">
+          Password
+        </label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+          value={password}
+          onChange={(e) => setpassword(e.target.value)}
+        />
+      </div>
+
+      <button
+        type="button"
+        className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700"
+        onClick={(e)=>{e.preventDefault();
+          CheckLogin()}}
+      >
+        {isload?"Loading":"Login"}
+      </button>
+    </form>
+  </div>
+</div></>}
+
+   
+
+      {/* <div>lsdlsd</div> */}
     </main>
   );
 }

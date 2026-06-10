@@ -1,5 +1,4 @@
 
-
 import { NextResponse } from "next/server";
 import sql from "@/lib/dbs";
 import jwt from "jsonwebtoken";
@@ -13,8 +12,6 @@ interface JwtPayload {
 export async function POST(req:Request) {
     const body=await req.json();
     try{
-
-
          const cookieStore = await cookies();
                const token = cookieStore.get("token")?.value;
         
@@ -44,8 +41,18 @@ export async function POST(req:Request) {
         
         if(choice=="appointments"){
         data = await sql`
-       select * from appointments 
-       where hospital_id=${decoded.id}
+     SELECT
+    to_jsonb(a) AS appointment,
+    jsonb_build_object(
+        'name', d.name,
+        'specialization', d.specialist,
+        'experience', d.experience,
+        'image', d.image
+    ) AS doctor
+FROM appointments a
+JOIN doctors d
+    ON a.doctor_id = d.id
+WHERE a.hospital_id = ${decoded.id};
        
 `;
         }
@@ -53,6 +60,20 @@ export async function POST(req:Request) {
             data = await sql`
        select * from doctors 
        where hospital_id=${decoded.id}
+       
+`;
+        }
+        else if(choice=="today appoinments"){
+            data = await sql`
+            SELECT
+    a.*,
+    d.name as Doctor_name
+  FROM appointments a
+  JOIN doctors d
+    ON a.doctor_id = d.id
+  WHERE a.hospital_id = ${decoded.id}
+  AND appointment_date = CURRENT_DATE
+       
        
 `;
         }
@@ -64,7 +85,7 @@ export async function POST(req:Request) {
 `;
         }
     if (data.length==0){
-        return NextResponse.json({message:"no data avalible"},{status:400})
+        return NextResponse.json({message:[]},{status:200})
     }
   
         return NextResponse.json({message:data},{status:200})
