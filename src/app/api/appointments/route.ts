@@ -7,6 +7,15 @@ interface JwtPayload {
   id: string;
 }
 
+const rand = () => {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  return Array.from({ length: 4 }, () =>
+    chars.charAt(Math.floor(Math.random() * chars.length))
+  ).join("");
+};
+
 export async function POST(req: NextRequest) {
   try {
     // Get token from cookies
@@ -95,6 +104,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const count=await sql`
+    select count(id) from appointments
+    where hospital_id=${hospital_id}
+    `
+    console.log(count[0].count)
+    const search_id=hospital_id.toString()+"-"+count[0].count+"-"+rand();
+
     // Insert appointment
     const appointment = await sql`
       INSERT INTO appointments (
@@ -108,7 +124,8 @@ export async function POST(req: NextRequest) {
         appointment_time,
         location,
         hospital_id,
-        appointment_date
+        appointment_date,
+        app_id
       )
       VALUES (
         ${doctor_id},
@@ -121,7 +138,8 @@ export async function POST(req: NextRequest) {
         ${slot_time},
         ${loc[0].location},
         ${hospital_id},
-        ${appointment_date}
+        ${appointment_date},
+        ${search_id}
       )
       RETURNING *
     `;
