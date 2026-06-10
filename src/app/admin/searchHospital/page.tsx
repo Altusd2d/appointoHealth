@@ -22,9 +22,8 @@ export default function HospitalSearch() {
           require: requirement,
         }),
       });
-
       const data = await res.json();
-      console.log(data)
+      console.log(data);
       if (!res.ok) {
         alert(data.message);
         return;
@@ -58,54 +57,62 @@ export default function HospitalSearch() {
           <select
             value={requirement}
             onChange={(e) => setRequirement(e.target.value)}
-            className="px-4 py-3 border rounded-lg"
-          >
+            className="px-4 py-3 border rounded-lg">
             <option value="doctors">Doctors</option>
             <option value="appointments">Appointments</option>
           </select>
 
           <button
             onClick={handleSearch}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg"
-          >
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg">
             {loading ? "Searching..." : "Search"}
           </button>
         </div>
 
-        {results.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">
-              {requirement === "doctors"
-                ? "Doctors"
-                : "Appointments"}
-            </h3>
+        <div className="mt-8">
+          {results.length > 0 ? (
+            <>
+              <h3 className="text-xl font-semibold mb-4">
+                {requirement === "doctors" ? "Doctors" : "Appointments"}
+              </h3>
 
-            <div className="grid gap-4">
-              {results.map((item) => (
-                <div
-                  key={item.id}
-                  className="border rounded-lg p-4 shadow-sm"
-                >
-                  {requirement === "doctors" ? (
-                    <>
-                      <h4 className="font-semibold text-lg">
-                        {item.name}
-                      </h4>
-                      <p>{item.specialization}</p>
-                      <p>{item.experience} Years Experience</p>
-                    </>
-                  ) : (
-                    <>
-                      <p>Appointment ID: {item.id}</p>
-                      <p>Status: {item.status}</p>
-                      <p>Date: {item.date}</p>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+              <div className="grid gap-4">
+                {results.map((item) => (
+                  <div
+                    key={item.id}
+                    className="border rounded-lg p-4 shadow-sm">
+                    {requirement === "doctors" ? (
+                      <>
+                        <span className=" text-lg">Name: {item.name}</span>
+                        {/* </div> */}
+                        <p>Education: {item.education}</p>
+                        <p>Years of Experience: {item.experience}</p>
+                        <p>specialist: {item.specialist}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p>Appointment ID: {item.id}</p>
+                        <p>Status: {item.status}</p>
+                        <p>Date: {item.date}</p>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            !loading &&
+            hospital && (
+              <div className="text-center py-10">
+                <p className="text-gray-500 text-lg font-medium">
+                  {requirement === "doctors"
+                    ? "No Doctors Found"
+                    : "No Appointments Found"}
+                </p>
+              </div>
+            )
+          )}
+        </div>
       </div>
     </div>
   );
