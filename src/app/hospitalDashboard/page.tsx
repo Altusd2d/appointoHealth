@@ -126,12 +126,76 @@ const statusStyles: Record<Appointment["status"], string> = {
 };
 
 function SimplePanel({ title }: { title: string }) {
+  const doctors = [
+    {
+      id: 1,
+      name: "Dr. Chandra Shekar Reddy",
+      specialization: "Cardiologist",
+      experience: "8 Years",
+    },
+    {
+      id: 2,
+      name: "Dr. Priya Sharma",
+      specialization: "Dermatologist",
+      experience: "5 Years",
+    },
+  ];
+
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm">
-      <h2 className="text-2xl font-semibold">{title}</h2>
-      <p className="mt-2 text-slate-600">
-        {title} content is ready for integration.
-      </p>
+      <h2 className="mb-4 text-2xl font-semibold">{title}</h2>
+
+      {title === "Doctors" && (
+  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cold-3">
+    {doctors.map((doctor) => (
+      <div
+        key={doctor.id}
+        className="rounded-xl border border-slate-200 p-4 shadow-sm"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-600">
+            {doctor.name.charAt(4)}
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-slate-800">
+              {doctor.name}
+            </h3>
+
+            <p className="text-sm text-slate-600">
+              {doctor.specialization}
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-3 text-sm text-slate-500">
+          Experience: {doctor.experience}
+        </p>
+
+        <button className="mt-4 w-full rounded-lg bg-blue-600 py-2 text-sm text-white hover:bg-blue-700">
+          View Profile
+        </button>
+      </div>
+    ))}
+  </div>
+)}
+
+      {title === "Billing" && (
+        <div className="rounded-xl border p-4">
+          <p className="font-medium">Today's Revenue</p>
+          <p className="mt-2 text-3xl font-bold text-green-600">
+            ₹45,000
+          </p>
+        </div>
+      )}
+
+      {title === "Analytics" && (
+        <div className="rounded-xl border p-4">
+          <p>Total Appointments: 120</p>
+          <p>Completed: 95</p>
+          <p>Pending: 25</p>
+        </div>
+      )}
     </article>
   );
 }
@@ -178,8 +242,7 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
             <div>
               <label
                 htmlFor="hospital-image-1"
-                className="text-sm text-slate-600"
-              >
+                className="text-sm text-slate-600">
                 Image 1
               </label>
               <input
@@ -192,8 +255,7 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
             <div>
               <label
                 htmlFor="hospital-image-2"
-                className="text-sm text-slate-600"
-              >
+                className="text-sm text-slate-600">
                 Image 2
               </label>
               <input
@@ -206,8 +268,7 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
             <div>
               <label
                 htmlFor="hospital-location"
-                className="text-sm text-slate-600"
-              >
+                className="text-sm text-slate-600">
                 Location
               </label>
               <input
@@ -222,8 +283,7 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
           </div>
           <button
             type="button"
-            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
-          >
+            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700">
             Save Settings
           </button>
         </div>
@@ -351,121 +411,103 @@ if(isload){
 }
   
   return (
-    <>
-    <form
-  onSubmit={(e) => {
-    e.preventDefault();
-    // fetchAppointment();
-  }}
-  className="flex items-center gap-2"
->
-  <input
-    type="text"
-    placeholder="Enter Appointment ID"
-    value={searchId}
-    onChange={(e) => setSearchId(e.target.value)}
-    className="rounded-md border border-slate-300 px-3 py-2"
-  />
-
-  <button
-    type="submit"
-    className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-    onClick={() => fetchAppointment(searchId)}
-  >
-    OK
-  </button>
-</form>
-    
-    {
-    hos.map((patient,index) => (
-    <article className="overflow-hidden rounded-sm border border-slate-300 bg-[#d9d9d9] shadow-sm" key={index}>
+    <article className="overflow-hidden rounded-md border border-slate-300 bg-[#d9d9d9] shadow-sm max-w-3xl mx-auto">
       <div className="grid grid-cols-1 border-b border-white/50 bg-[#c4c4c4] text-center text-[#0d2f52] sm:grid-cols-2">
-        <div className="border-r border-white/50 px-4 py-3 text-2xl font-bold max-sm:border-r-0 sm:px-6 sm:py-4 sm:text-3xl">
-          ID:{patient.appointment.app_id}
+        <div className="border-r border-white/50 px-2 py-1.5 text-base font-bold">
+          ID:202324
         </div>
-        <div className="px-4 py-3 text-base font-medium text-slate-900 sm:px-6 sm:py-4 sm:text-2xl">
-          ON:{patient.appointment.appointment_date}/<span className="font-semibold">{patient.appointment.appointment_time}</span>
+
+        <div className="px-2 py-1.5 text-xs font-medium text-slate-900 sm:text-sm">
+          ON:8-April-2026/<span className="font-semibold">9:30 AM</span>
         </div>
       </div>
 
-      <div className="p-4 md:p-7">
-        <div className="mb-5 flex flex-wrap items-start justify-between gap-4 sm:items-center">
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <Image
-              src={logo}
-              alt="Hospital logo"
-              width={100}
-              height={32}
-              className="h-8 w-auto object-contain rounded-full"
-            />
-            {/* <div className="text-lg font-bold tracking-[0.24em] text-[#173453] sm:text-2xl">APOLLO</div> */}
-            <h2 className="text-xl font-semibold text-slate-900 sm:text-2xl ">
-              Appollo Hospital,Hyderabad
-            </h2>
-          </div>
+      <div className="p-2.5">
+        <div className="mb-2 flex items-center gap-2">
+          <Image
+            src={logo}
+            alt="Hospital logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-full object-contain"
+          />
+
+          <h2 className="text-sm font-semibold text-slate-900 sm:text-base">
+            Appollo Hospital, Hyderabad
+          </h2>
         </div>
 
-        <div className="rounded-xl border border-slate-300 bg-[#efefef] p-4 shadow-[0_5px_12px_rgba(0,0,0,0.18)] md:p-5">
-          <div className="flex flex-wrap items-start gap-4 sm:items-center sm:gap-6 md:gap-8">
-            <div className="h-24 w-24 overflow-hidden rounded-full border border-slate-300 bg-white shadow-sm sm:h-28 sm:w-28 md:h-36 md:w-36">
+        <div className="rounded-md border border-slate-300 bg-[#efefef] p-2">
+          <div className="flex items-center gap-3">
+            <div className="h-14 w-14 overflow-hidden rounded-full border border-slate-300 bg-white">
               <Image
                 src="/hospital/doctor1.png"
                 alt="Doctor"
-                width={144}
-                height={144}
+                width={56}
+                height={56}
                 className="h-full w-full object-cover"
               />
             </div>
-            <div className="text-slate-900">
-              <h3 className="text-xl font-medium text-[#1363a2] sm:text-2xl lg:text-4xl">
-                Dr.{patient.doctor.name}
+
+            <div>
+              <h3 className="text-sm font-semibold text-[#1363a2]">
+                Dr.Chandra Shakar Reddy
               </h3>
-              <p className="mt-1 text-sm sm:text-base lg:text-xl">
-                {patient.doctor.specialization}
+
+              <p className="text-xs">Cardio Specialist</p>
+
+              <p className="text-[10px] text-slate-600">
+                5 Years Experience
               </p>
-              <p className="text-sm text-slate-600 sm:text-base lg:text-lg">
-                {patient.doctor.experience}
+
+              <p className="mt-1 text-[10px] leading-relaxed">
+                MBBS, MD, DM - Gastroenterology
+                <br />
+                Fortis Hospital, Jaipur
               </p>
             
             </div>
           </div>
         </div>
 
-        <div className="mt-7 grid grid-cols-1 overflow-hidden border border-white/70 bg-[#cfcfcf] text-center text-[#0d2f52] sm:grid-cols-3">
-          <div className="border-b border-white/70 px-4 py-3 text-xl font-bold sm:border-b-0 sm:border-r lg:text-4xl">
-            {patient.appointment.name}
+        <div className="mt-2 grid grid-cols-3 overflow-hidden border border-white/70 bg-[#cfcfcf] text-center text-[#0d2f52]">
+          <div className="border-r border-white/70 px-2 py-1 text-xs font-bold">
+            P.Prashanth
           </div>
-          <div className="border-b border-white/70 px-4 py-3 text-xl font-bold sm:border-b-0 sm:border-r lg:text-4xl">
-            Age:{patient.appointment.age}
+
+          <div className="border-r border-white/70 px-2 py-1 text-xs font-bold">
+            Age:20
           </div>
-          <div className="px-4 py-3 text-xl font-bold lg:text-4xl">Male</div>
+
+          <div className="px-2 py-1 text-xs font-bold">
+            Male
+          </div>
         </div>
 
-        <div className="mt-1 border border-white/70 bg-[#cfcfcf] px-4 py-6 text-center text-lg text-slate-900 sm:px-5 sm:py-8 sm:text-2xl lg:text-4xl">
-          {patient.appointment.description}
+        <div className="mt-1 border border-white/70 bg-[#cfcfcf] px-2 py-2 text-center text-xs text-slate-900">
+          Have Problem with Teeth ache Need a regular checkup
         </div>
 
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-3 sm:gap-5 md:mt-9 md:gap-12">
+        <div className="mt-3 flex flex-wrap justify-center gap-13">
           <button
             type="button"
-            className="w-full rounded-xl bg-[#f4d632] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-5 sm:py-3 sm:text-xl lg:text-3xl"
-            onClick={()=>{waitingApp(patient.appointment.id,"waiting")}}
+            className="rounded-md bg-[#f4d632] px-3 py-1 text-xs font-bold text-white"
           >
             Waiting
           </button>
+
           <button
             type="button"
-            className="w-full rounded-xl bg-[#f50000] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-6 sm:py-3 sm:text-xl lg:text-3xl"
-            // onClick={()=>{Resedule()}}
+            className="rounded-md bg-[#f50000] px-3 py-1 text-xs font-bold text-white"
           >
-            Resedule
+            Reschedule
           </button>
+
           <button
             type="button"
-            className="w-full rounded-xl bg-[#0069d1] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-5 sm:py-3 sm:text-xl lg:text-3xl"
-          onClick={()=>{waitingApp(patient.appointment.id,"completed")}}
+            className="rounded-md bg-[#0069d1] px-3 py-1 text-xs font-bold text-white"
           >
-            Mark Completed
+            Complete
           </button>
         </div>
       </div>
@@ -560,7 +602,6 @@ fetchAppoiinments();
           <p className="mt-2 text-sm text-slate-600">Currently Waiting</p>
         </div>
 
-
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.8fr,1fr]">
@@ -571,8 +612,7 @@ fetchAppoiinments();
             </h3>
             <button
               type="button"
-              className="text-sm font-semibold text-blue-600 hover:text-blue-700"
-            >
+              className="text-sm font-semibold text-blue-600 hover:text-blue-700">
               View All {"->"}
             </button>
           </div>
@@ -593,9 +633,8 @@ fetchAppoiinments();
                     <td className="py-4">
                       <div className="flex items-center gap-3">
                         <div
-                          className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r ${color[index % color.length]} text-sm font-semibold text-white`}
-                        >
-                          {patient.name[0]}
+                          className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r ${patient.color} text-sm font-semibold text-white`}>
+                          {patient.initials}
                         </div>
                         <div>
                           <div className="text-base font-semibold leading-tight">
@@ -616,8 +655,7 @@ fetchAppoiinments();
                     </td>
                     <td className="py-4">
                       <span
-                        className={`rounded-lg px-3 py-1 text-xs font-semibold `}
-                      >
+                        className={`rounded-lg px-3 py-1 text-xs font-semibold ${statusStyles[patient.status]}`}>
                         {patient.status}
                       </span>
                     </td>
@@ -628,6 +666,7 @@ fetchAppoiinments();
           </div>
         </article>
 
+        
       </div>
     </>
   );
@@ -766,8 +805,7 @@ if (Islogin === null) {
                   activeTab === item.label
                     ? "bg-[#0f253f] text-sky-400 md:border-l-2 md:border-sky-400"
                     : "text-slate-300 hover:bg-white/5"
-                }`}
-              >
+                }`}>
                 <span className="w-6 text-center text-[10px] font-semibold tracking-wider">
                   {item.glyph}
                 </span>

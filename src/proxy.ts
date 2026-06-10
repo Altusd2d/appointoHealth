@@ -119,7 +119,7 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/api/admin/:path*",
+    // "/api/admin/:path*",
     "/api/hospital/:path*",
     "/api/user/:path*"
   ]
