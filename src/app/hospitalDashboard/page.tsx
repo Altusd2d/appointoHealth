@@ -2,6 +2,9 @@
 import logo from "../../../public/hospital/apollo_logo.jpg";
 import Image from "next/image";
 import React, { useMemo, useState ,useEffect} from "react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
 
 type Appointment = {
   initials: string;
@@ -21,6 +24,12 @@ type ActiveDoctor = {
   color: string;
 };
 
+type HospitalSlugPageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
 type TabKey =
   | "Dashboard"
   | "Appointments"
@@ -31,84 +40,7 @@ type TabKey =
 
 const color:string[]=["from-emerald-500 to-teal-400","from-pink-500 to-rose-400","from-indigo-500 to-violet-400","from-sky-500 to-cyan-400","from-orange-400 to-amber-400"]
 
-const appointments: Appointment[] = [
-  {
-    initials: "RK",
-    name: "Ramesh Kumar",
-    id: "#P240515001",
-    doctor: "Dr. Rajesh Kumar",
-    time: "9:00 AM",
-    status: "Completed",
-    color: "from-emerald-500 to-teal-400",
-  },
-  {
-    initials: "PS",
-    name: "Priya Sharma",
-    id: "#P240515002",
-    doctor: "Dr. Amit Patel",
-    time: "10:30 AM",
-    status: "Waiting",
-    color: "from-pink-500 to-rose-400",
-  },
-  {
-    initials: "AS",
-    name: "Anita Singh",
-    id: "#P240515003",
-    doctor: "Dr. Priya Sharma",
-    time: "11:00 AM",
-    status: "Confirmed",
-    color: "from-indigo-500 to-violet-400",
-  },
-  {
-    initials: "MV",
-    name: "Manoj Verma",
-    id: "#P240515004",
-    doctor: "Dr. Rajesh Kumar",
-    time: "2:00 PM",
-    status: "Confirmed",
-    color: "from-sky-500 to-cyan-400",
-  },
-  {
-    initials: "SK",
-    name: "Sunita Kapoor",
-    id: "#P240515005",
-    doctor: "Dr. Amit Patel",
-    time: "4:00 PM",
-    status: "Confirmed",
-    color: "from-orange-400 to-amber-400",
-  },
-];
 
-const doctors: ActiveDoctor[] = [
-  {
-    initials: "RK",
-    name: "Dr. Rajesh Kumar",
-    specialty: "Cardiologist",
-    patients: 18,
-    color: "from-indigo-500 to-violet-500",
-  },
-  {
-    initials: "PS",
-    name: "Dr. Priya Sharma",
-    specialty: "Dermatologist",
-    patients: 22,
-    color: "from-pink-500 to-rose-400",
-  },
-  {
-    initials: "AP",
-    name: "Dr. Amit Patel",
-    specialty: "Orthopedic",
-    patients: 15,
-    color: "from-cyan-500 to-sky-400",
-  },
-  {
-    initials: "SR",
-    name: "Dr. Sneha Reddy",
-    specialty: "Pediatrician",
-    patients: 20,
-    color: "from-orange-400 to-amber-400",
-  },
-];
 
 const sidebarItems: { label: TabKey; glyph: string }[] = [
   { label: "Dashboard", glyph: "DB" },
@@ -119,24 +51,77 @@ const sidebarItems: { label: TabKey; glyph: string }[] = [
   { label: "Settings", glyph: "ST" },
 ];
 
-const statusStyles: Record<Appointment["status"], string> = {
-  Completed: "bg-slate-100 text-slate-600",
-  Waiting: "bg-amber-100 text-amber-600",
-  Confirmed: "bg-emerald-100 text-emerald-600",
-};
+
 
 function SimplePanel({ title }: { title: string }) {
+
+
+// const { slug } = await params;
+//   const hospital = findHospitalBySlug(slug);
+
+
   return (
-    <article className="rounded-2xl bg-white p-6 shadow-sm">
-      <h2 className="text-2xl font-semibold">{title}</h2>
-      <p className="mt-2 text-slate-600">
-        {title} content is ready for integration.
-      </p>
-    </article>
+     <section className="mt-10 bg-[#e9e9e9] py-5 xl:px-27 lg:px-10 sm:px-10 px-5">
+      <div className="mx-auto grid  grid-cols-1 justify-items-center gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        {/* {DOCTORS.map((doctor) => (
+          <DoctorItem key={doctor.id} doctor={doctor} />
+        ))} */}
+
+        <div className="grid max-h-[352px] max-w-[255px] place-items-center">
+          <button
+            type="button"
+            className="md:text-[40px] text-[34px] font-semibold text-[#111111]"
+          >
+            View More...
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
 
 function SettingsPanel({ hospital }: { hospital: unknown }) {
+
+  const [hos, sethos] = useState<string>("");
+  const [email, setemail] = useState<string>("");
+  const [num, setnum] = useState<string>("");
+  const [img1, setimg1] = useState<string>("");
+  const [loc, setloc] = useState<string>("");
+  const [load, setload] = useState<boolean>(false);
+
+  const sendDataToAdmin=async(hos:string,email:string,num:string,loc:string)=>{
+    try {
+    const res = await fetch(
+      "/api/hospital/changeData",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: hos,
+          email,
+          phone: num,
+          location: loc,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      return;
+    }
+
+    alert(data.message);
+  } catch (err) {
+    console.log(err);
+    alert("Failed to send request");
+  }
+
+  }
+  
   return (
     <article className="rounded-2xl bg-white p-5 shadow-sm md:p-6">
       <h2 className="text-2xl font-semibold">Settings</h2>
@@ -151,22 +136,25 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
             <div>
               <label className="text-sm text-slate-600">Hospital Name</label>
               <input
-                defaultValue="Apollo Hospital"
                 className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+                value={hos}
+                onChange={(e) => sethos(e.target.value)}
               />
             </div>
             <div>
               <label className="text-sm text-slate-600">Contact Email</label>
               <input
-                defaultValue="admin@apollohospital.com"
                 className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+                value={email}
+                onChange={(e) => setemail(e.target.value)}
               />
             </div>
             <div>
               <label className="text-sm text-slate-600">Contact Number</label>
               <input
-                defaultValue="+91 40 1234 5678"
                 className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+                value={num}
+                onChange={(e) => setnum(e.target.value)}
               />
             </div>
           </div>
@@ -212,19 +200,20 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
               </label>
               <input
                 id="hospital-location"
-                defaultValue="Hyderabad"
                 className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+                value={loc}
+                onChange={(e) => setloc(e.target.value)}
               />
             </div>
-            {/* <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>SMS Notifications</span><input type="checkbox" defaultChecked /></label>
-            <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Email Reports</span><input type="checkbox" defaultChecked /></label>
-            <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Auto-confirm Follow-ups</span><input type="checkbox" /></label> */}
+            
           </div>
           <button
             type="button"
-            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
+            className={`mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 ${load?"opacity-50 cursor-not-allowed":""}`}
+            // onClick=()=>{sendDataToAdmin(hos,email,num,loc)}
+            onClick={()=>{sendDataToAdmin(hos,email,num,loc)}}
           >
-            Save Settings
+            {load?"Sending..":"Send Changes To admin"}
           </button>
         </div>
       </div>
@@ -378,7 +367,7 @@ if(isload){
     
     {
     hos.map((patient,index) => (
-    <article className="overflow-hidden rounded-sm border border-slate-300 bg-[#d9d9d9] shadow-sm" key={index}>
+    <article className="overflow-hidden rounded-sm border border-slate-300 bg-[#d9d9d9] shadow-sm my-5" key={index}>
       <div className="grid grid-cols-1 border-b border-white/50 bg-[#c4c4c4] text-center text-[#0d2f52] sm:grid-cols-2">
         <div className="border-r border-white/50 px-4 py-3 text-2xl font-bold max-sm:border-r-0 sm:px-6 sm:py-4 sm:text-3xl">
           ID:{patient.appointment.app_id}
@@ -478,10 +467,8 @@ if(isload){
 
 
 
-
-
-
 function DashboardPanel({ hospital }: { hospital: unknown }) {
+  const[loading,setloading]=useState<boolean>(true);
   console.log("hospital dashboard:",hospital)
   const [hos, sethos] = useState<unknown[]>([]);
   
@@ -510,16 +497,23 @@ if (loginQuery.ok) {
 } else {
   console.log("Login failed", data.message);
 }
+setloading(false);
 
   }
 
   useEffect(() => {
+    setloading(true)
 
 fetchAppoiinments();
   
 }, []);
+const waitingapp = hos.filter(
+  (item) => item.status === "waiting"
+).length;
 
-
+const completedCount = hos.filter(
+  (item) => item.status === "completed"
+).length;
   return (
     
     <>
@@ -545,7 +539,7 @@ fetchAppoiinments();
             </div>
             {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+8%</span> */}
           </div>
-          <h2 className="text-4xl font-bold leading-none">{hos.length}</h2>
+          <h2 className="text-4xl font-bold leading-none">{completedCount}</h2>
           <p className="mt-2 text-sm text-slate-600">Completed Today</p>
         </div>
 
@@ -556,7 +550,7 @@ fetchAppoiinments();
             </div>
             {/* <span className="rounded-md bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">-3%</span> */}
           </div>
-          <h2 className="text-4xl font-bold leading-none">{hos.length}</h2>
+          <h2 className="text-4xl font-bold leading-none">{waitingapp}</h2>
           <p className="mt-2 text-sm text-slate-600">Currently Waiting</p>
         </div>
 
@@ -576,7 +570,8 @@ fetchAppoiinments();
               View All {"->"}
             </button>
           </div>
-
+          {loading?<div className="">Loading...</div>:<>{
+            hos.length==0?<div>No appoinemnts Today..</div>:
           <div className="max-w-full overflow-x-auto">
             <table className="w-full min-w-[560px] border-collapse sm:min-w-[650px]">
               <thead>
@@ -626,6 +621,8 @@ fetchAppoiinments();
               </tbody>
             </table>
           </div>
+          }</>
+          }
         </article>
 
       </div>
@@ -636,14 +633,36 @@ fetchAppoiinments();
 export default function HospitalDashboardPage() {
 
 
+const [step, setStep] = useState<
+  "login" |
+  "forgot-password" |
+  "verify-otp" |
+  "change-password"|
+  "reset-password"
+>("login");
+
+// const [gmail, setgmail] = useState("");
+const [otp, setOtp] = useState("");
+const [Loginpassword, setLoginpassword] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
+
+const [timeLeft, setTimeLeft] = useState(300); // 5 mins
+
+
   
   const [activeTab, setActiveTab] = useState<TabKey>("Dashboard");
+
   const [Islogin, setIslogin] = useState<boolean | null>(null);
   const [gmail, setgmail] = useState<string>("");
   const [password, setpassword] = useState<string>("");
+  const [err, seterr] = useState<string>("");
    const [isload, setisload] = useState<boolean>(false);
   const [hospital,sethospital]=useState(null);
   const [mounted, setMounted] = useState(false);
+  const [load, setload] = useState(true);
+
+  const minutes = Math.floor(timeLeft / 60);
+const seconds = timeLeft % 60;
 
   const CheckLogin=async()=>{
     setisload(true)
@@ -675,42 +694,10 @@ if (loginQuery.ok) {
 
 } else {
   console.log("Login failed", data.message);
+  seterr(data.message)
 }
 setisload(false)
   }
-
-
-// const fetchAppoiinments=async()=>{
-//     // setisload(true)
-//       // console.log(gmail,password);
-//       // if(gmail.length==0 || password.length==0){
-//       //   console.log("gmail or password is required")
-//       // }
-//       const loginQuery = await fetch(
-//   "/api/hospital/login",
-//   {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       gmail,
-//       password,
-//     }),
-//   }
-// );
-
-// const data = await loginQuery.json();
-
-// if (loginQuery.ok) {
-//   console.log("Login successful", data);
-//   setIslogin(true)
-
-// } else {
-//   console.log("Login failed", data.message);
-// }
-// setisload(false)
-//   }
 
 
 const panel = useMemo(() => {
@@ -726,12 +713,141 @@ const panel = useMemo(() => {
   return <SimplePanel title={activeTab} />;
 }, [activeTab, hospital]);
 
+
+const verifyOTP = async (
+  otp: string,
+  gmail: string
+): Promise<boolean> => {
+  try {
+    const res = await fetch(
+      "/api/hospital/verifyOtp",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          otp,
+         identifier: gmail,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+
+      
+      return false;
+    }
+    setStep("change-password");
+    alert(data.message);
+    return true;
+  } catch (err) {
+    console.log(err);
+    alert("Failed to verify OTP");
+    return false;
+  }
+};
+
+
+const changePassword=async(gmail:string,password:string)=>{
+  try {
+    const res = await fetch(
+      "/api/hospital/UpdatePassword",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        gmail,
+         password,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      return ;
+    }
+    setStep("login");
+    alert(data.message);
+    return ;
+  } catch (err) {
+    console.log(err);
+    alert("Failed to change password try again");
+    return ;
+  }
+
+
+}
+
 useEffect(() => {
+  // Islogin==true
   const token = localStorage.getItem("token");
-  setIslogin(!!token);
+  // console.log("data.token =", data.token);
+  console.log("token front front:",token)
+  if(token && token !== undefined){
+    setIslogin(true);
+  }
+  else{
+    setIslogin(false);
+  }
 }, []);
 
+useEffect(() => {
+  if (step !== "verify-otp") return;
 
+  const timer = setInterval(() => {
+    setTimeLeft((prev) => {
+      if (prev <= 1) {
+        clearInterval(timer);
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [step]);
+
+const sendOtp = async (gmail: string) => {
+  try {
+    setload(false)
+    console.log("send OTP clicked");
+
+    const res = await fetch("/api/hospital/changePassword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        gmail,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      setload(true)
+      return;
+    }
+    setload(true)
+
+    alert(data.message);
+
+    setTimeLeft(300);
+    setStep("verify-otp");
+  } catch (err) {
+    console.log(err);
+    alert("Failed to send OTP");
+  }
+};
 
 if (Islogin === null) {
   return (
@@ -742,15 +858,10 @@ if (Islogin === null) {
 }
 
 
-  return (
-
-   
-
-
-    <main className="min-h-screen overflow-x-hidden bg-[#eef0f3] text-slate-900">
-      {Islogin?<>
-           {/* {fetchAppoiinments()} */}
-         <div className="flex min-h-screen flex-col md:flex-row">
+if(Islogin){
+  return(
+    <>
+    <div className="flex min-h-screen flex-col md:flex-row">
         <aside className="w-full bg-[#141821] text-white md:w-64 md:flex-shrink-0">
           <div className="border-b border-white/10 px-6 py-6 text-3xl font-semibold tracking-tight">
             DoctorBook
@@ -766,8 +877,7 @@ if (Islogin === null) {
                   activeTab === item.label
                     ? "bg-[#0f253f] text-sky-400 md:border-l-2 md:border-sky-400"
                     : "text-slate-300 hover:bg-white/5"
-                }`}
-              >
+                }`}>
                 <span className="w-6 text-center text-[10px] font-semibold tracking-wider">
                   {item.glyph}
                 </span>
@@ -799,57 +909,244 @@ if (Islogin === null) {
           {panel}
         </section>
       </div>
-      
-      
-      
-      </>:<> <div className="flex min-h-screen items-center justify-center bg-slate-100">
-  <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-md">
-    <h2 className="mb-6 text-center text-2xl font-semibold">
-      Login
-    </h2>
+      </>
+  )
+}
 
-    <form className="space-y-4">
-      <div>
-        <label className="mb-1 block text-sm font-medium">
-          Email
-        </label>
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
-          value={gmail}
-          onChange={(e) => setgmail(e.target.value)}
-        />
-      </div>
+  return (
 
-      <div>
-        <label className="mb-1 block text-sm font-medium">
-          Password
-        </label>
-        <input
-          type="password"
-          placeholder="Enter your password"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
-          value={password}
-          onChange={(e) => setpassword(e.target.value)}
-        />
-      </div>
+ <div className="flex min-h-screen items-center justify-center bg-slate-100">
+  <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
 
-      <button
-        type="button"
-        className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700"
-        onClick={(e)=>{e.preventDefault();
-          CheckLogin()}}
-      >
-        {isload?"Loading":"Login"}
-      </button>
-    </form>
+    {/* LOGIN */}
+    {step === "login" && (
+      <>
+        <h2 className="mb-6 text-center text-2xl font-semibold">
+          Login
+        </h2>
+
+        <form className="space-y-4">
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              Email
+            </label>
+
+            <input
+              type="email"
+              value={gmail}
+              onChange={(e) => setgmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full rounded-md border border-slate-300 px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              Password
+            </label>
+
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setpassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full rounded-md border border-slate-300 px-3 py-2"
+            />
+          </div>
+
+          {err && (
+            <div className="text-red-600">
+              {err}
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="text-sm text-blue-600 hover:underline"
+            onClick={() => {
+              setgmail("");
+              setOtp("");
+              setpassword("");
+              setConfirmPassword("");
+              setStep("forgot-password");
+            }}
+          >
+            Forgot Password?
+          </button>
+
+          <button
+            type="button"
+            className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700"
+            onClick={() => CheckLogin()}
+          >
+            {isload ? "Loading..." : "Login"}
+          </button>
+        </form>
+      </>
+    )}
+
+    {/* FORGOT PASSWORD */}
+    {step === "forgot-password" && (
+      <>
+        <h2 className="mb-6 text-center text-2xl font-semibold">
+          Forgot Password
+        </h2>
+
+        <div className="space-y-4">
+          <input
+            type="email"
+            value={gmail}
+            onChange={(e) => setgmail(e.target.value)}
+            placeholder="Enter your registered email"
+            className="w-full rounded-md border border-slate-300 px-3 py-2"
+          />
+
+          <button
+            type="button"
+            className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700"
+            onClick={async () => {
+              await sendOtp(gmail);
+
+              setTimeLeft(300);
+              // setStep("verify-otp");
+            }}
+          >
+            {load?"Send OTP":"Sending..."}
+          </button>
+
+          <button
+            type="button"
+            className="w-full rounded-md border py-2"
+            onClick={() => setStep("login")}
+          >
+            Back to Login
+          </button>
+        </div>
+      </>
+    )}
+
+    {/* VERIFY OTP */}
+    {step === "verify-otp" && (
+      <>
+        <h2 className="mb-4 text-center text-2xl font-semibold">
+          Verify OTP
+        </h2>
+
+        <p className="mb-4 text-center text-sm text-slate-500">
+          OTP sent to {gmail}
+        </p>
+
+        <div className="mb-4 text-center font-medium text-red-500">
+          OTP Expires In: {minutes}:
+          {seconds.toString().padStart(2, "0")}
+        </div>
+
+        <div className="space-y-4">
+          <input
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter OTP"
+            className="w-full rounded-md border border-slate-300 px-3 py-2"
+          />
+
+          <button
+            type="button"
+            className="w-full rounded-md bg-green-600 py-2 text-white hover:bg-green-700"
+            onClick={async () => {
+              // const verified = await verifyOtp(gmail, otp);
+              verifyOTP(otp,gmail);
+
+              
+            }}
+          >
+            Verify OTP
+          </button>
+
+          <button
+            type="button"
+            disabled={timeLeft > 0}
+            className="w-full rounded-md border py-2 disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={async () => {
+              await sendOtp(gmail);
+              setTimeLeft(300);
+            }}
+          >
+            Resend OTP
+          </button>
+
+          <button
+            type="button"
+            className="w-full rounded-md border py-2"
+            onClick={() => setStep("forgot-password")}
+          >
+            Back
+          </button>
+        </div>
+      </>
+    )}
+
+    {/* CHANGE PASSWORD */}
+    {step === "change-password" && (
+      <>
+        <h2 className="mb-6 text-center text-2xl font-semibold">
+          Change Password
+        </h2>
+
+        <div className="space-y-4">
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setpassword(e.target.value)}
+            placeholder="New Password"
+            className="w-full rounded-md border border-slate-300 px-3 py-2"
+          />
+
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
+            className="w-full rounded-md border border-slate-300 px-3 py-2"
+          />
+
+          {password &&
+            confirmPassword &&
+            password !== confirmPassword && (
+              <div className="text-red-600">
+                Passwords do not match
+              </div>
+            )}
+
+          <button
+            type="button"
+            disabled={
+              !password ||
+              !confirmPassword ||
+              password !== confirmPassword
+            }
+            className="w-full rounded-md bg-blue-600 py-2 text-white disabled:opacity-50"
+            onClick={async () => {
+              
+              changePassword(gmail,password)
+
+              // setStep("login");
+            }}
+          >
+            Change Password
+          </button>
+
+          <button
+            type="button"
+            className="w-full rounded-md border py-2"
+            onClick={() => setStep("verify-otp")}
+          >
+            Back
+          </button>
+        </div>
+      </>
+    )}
   </div>
-</div></>}
-
-   
-
-      {/* <div>lsdlsd</div> */}
-    </main>
+</div>
   );
 }

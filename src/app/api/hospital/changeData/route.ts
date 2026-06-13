@@ -1,5 +1,5 @@
 import sql from "@/lib/dbs"
-
+import { sendEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
 export async function POST(req:Request) {
@@ -36,24 +36,17 @@ export async function POST(req:Request) {
         if(!logo){
             logo=hos[0].logo;
         }
+      //mail code
+      body.SearchName=hos[0].name;
+      await sendEmail({
+  to: "prashanthpathigari@gmail.com",
+  subject:`request from ${body.name}`,
+  data:body
+});
 
 
-       const updatedHospital = await sql`
-  UPDATE hospitals
-  SET
-    name = ${name},
-    logo = ${logo},
-    location = ${location},
-    description = ${description},
-    hero_image1 = ${hero_image1},
-    hero_image2 = ${hero_image2},
-    open_time = ${open_time}
-  WHERE id = ${id}
-  RETURNING *;
-`;
-
-
-        return NextResponse.json({message:updatedHospital},{status:200})
+        // return NextResponse.json({message:updatedHospital},{status:200})
+        return NextResponse.json({message:"sucessfully send requesto to support it will be changed in 2 workings days"},{status:200})
 
     }catch(error){
         console.log(error);
