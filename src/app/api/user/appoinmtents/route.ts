@@ -30,26 +30,17 @@ export async function GET() {
       process.env.JWT_SECRET!
     ) as JwtPayload;
 
-    console.log("dskjjfksdjfn:", decoded);
-
-  
-    
-
-    
+    console.log("dskjjfksdjfn:", decoded.id);
 
     // Check already booked slot
     const existingAppointment = await sql`
       SELECT *
       FROM appointments
       WHERE patient_id = ${decoded.id}
-      and status='completed'
       
     `;
     console.log(existingAppointment)
 
-   
-
-    
       return NextResponse.json(
         { message: existingAppointment },
         { status: 200 }
