@@ -30,46 +30,36 @@ export async function DELETE(req: NextRequest) {
     // console.log("dskjjfksdjfn:", decoded);
 
     const body = await req.json();
-    let { name, phone_number, email, age, gender, bio } = body;
-    const hos = await sql`
-        select *  from users
-        where id=${decoded.id} 
-        `;
-    if (!name) {
-      name = hos[0].name;
+    const { appointment_id } = body;
+    console.log(appointment_id);
+    if (!appointment_id) {
+      return NextResponse.json(
+        { message: "appointment was does not selected try again" },
+        { status: 400 },
+      );
     }
-    if (!phone_number) {
-      phone_number = hos[0].phone_number;
-    }
-    if (!email) {
-      email = hos[0].email;
-    }
-    if (!age) {
-      age = hos[0].age;
-    }
-    if (!gender) {
-      gender = hos[0].gender;
-    }
-    if (!bio) {
-      bio = hos[0].bio;
-    }
-
-    const updatedProfile = await sql`
-  UPDATE users
-  SET
-    name = ${name},
-    phone_number = ${phone_number},
-    email = ${email},
-    age = ${age},
-    gender = ${gender},
-    bio = ${bio}
-  WHERE id = ${decoded.id}
-  RETURNING *;
+    
+    //delecting appionment from user
+    const deleteAppointment = await sql`
+  UPDATE appointments
+  SET status = 'deleted'
+  WHERE id = ${appointment_id}
+  RETURNING *
 `;
 
+
+    // const doc_id = deleteAppointment[0].doctor_id;
+    // const slot = deleteAppointment[0].doctor_appointment_time;
+    // const payment = deleteAppointment[0].payment;
+    // console.log("deleted appoinent", deleteAppointment[0]);
+
+    //change doctor status
+    //send notify to hospital
+    //refund the money
+    console.log(deleteAppointment);
     return NextResponse.json(
-      { message: "sucessfully upated", updatedProfile },
-      { status: 409 },
+      { message: "sucessfully deleted" },
+      { status: 200 },
     );
   } catch (error) {
     console.log("ERROR:", error);
