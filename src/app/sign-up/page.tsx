@@ -51,7 +51,7 @@ export default function Signup() {
         });
         setMessage(data.message);
 
-        router.push("/verify-otp");
+        router.push("/login");
         console.log(data);
       } else {
         alert(data.message || "Something went wrong");
@@ -68,7 +68,7 @@ export default function Signup() {
     <main className=" bg-white px-4 py-10 md:px-6">
       <section
         className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden 
-       bg-[#efefef] md:flex-row md:shadow-2xl rounded-xl">
+       bg-[#efefef] md:flex-row md:shadow-xl rounded-xl">
         <div
           className="relative hidden md:flex w-full flex-col items-center
          justify-between bg-white px-6 pb-8 pt-10 md:w-1/2 md:px-8">
@@ -137,7 +137,7 @@ export default function Signup() {
 
           <form
             onSubmit={handleSubmit}
-            className="relative z-10 space-y-4 xl:pl-6 xl:pr-3">
+            className="relative z-50 space-y-4 xl:pl-6 xl:pr-3">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <label className=" font-semibold text-[#1f1f1f]">
                 Name *
