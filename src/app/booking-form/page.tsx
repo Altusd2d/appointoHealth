@@ -139,7 +139,7 @@ export default function BookingForm() {
                   </div>
 
                   <div className="flex-1">
-                    <h2 className="text-2xl font-medium text-[#0a67d4] sm:text-2xl">
+                    <h2 className="text-xl font-medium text-[#0a67d4] md:text-2xl">
                       {doctor.name}
                     </h2>
                     <p className="mt-2 text-lg text-[#1d1d1d] sm:text-md">
@@ -241,7 +241,8 @@ export default function BookingForm() {
 
             <button
               type="submit"
-              className=" h-11 w-full mb-1.5 rounded-md bg-[#002b5a] text-lg font-bold text-white cursor-pointer shadow-xl  transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]">
+              className=" md:h-11 h-10 w-full mb-1.5 rounded-md bg-[#002b5a] text-md md:text-lg font-bold text-white cursor-pointer shadow-xl  
+              transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]">
               Book an appointment
             </button>
           </form>
