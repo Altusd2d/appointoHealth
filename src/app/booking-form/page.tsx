@@ -91,16 +91,16 @@ export default function BookingForm() {
   ];
 
   return (
-    <main className="overflow-x-hidden bg-white px-4 py-10 md:px-6 xl:px-10">
-      <section className="mx-auto flex w-full max-w-7xl flex-col overflow-hidden rounded-xl bg-[#efefef] md:shadow-2xl lg:flex-row">
-        <div className="relative hidden w-full flex-col items-center justify-between overflow-hidden bg-white px-6 pb-8 pt-24 lg:flex lg:w-[40%] lg:px-8 xl:w-[38%]">
+    <main className="overflow-x-hidden bg-white px-4 pt-4 pb-6 md:px-6 xl:px-10">
+      <section className="mx-auto flex w-full max-w-7xl flex-col overflow-hidden rounded-xl bg-[#efefef] md:shadow-xl lg:flex-row">
+        <div className="relative hidden w-full flex-col items-center justify-between overflow-hidden bg-white px-6 pb-8 pt-2 lg:flex lg:w-[40%] lg:px-8 xl:w-[38%]">
           <h1 className="z-10 text-center text-[40px] font-bold uppercase leading-tight text-[#042b52] lg:text-5xl">
             Appointo
             <br />
             Health
           </h1>
 
-          <div className="pointer-events-none relative isolate mt-6 flex h-[320px] w-full items-center justify-center overflow-visible">
+          <div className="pointer-events-none relative isolate mt- flex h-[320px] w-full items-center justify-center overflow-visible">
             <Image
               src={heartrate}
               alt="Heartbeat line"
@@ -114,23 +114,23 @@ export default function BookingForm() {
             />
           </div>
 
-          <p className="mt-8 mb-10 text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
+          <p className=" text-center text-3xl leading-tight text-[#00264c] [font-family:serif] md:text-5xl">
             Your Life Ours
             <br />
             Responsibility
           </p>
         </div>
 
-        <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 lg:w-[60%] lg:pl-10 lg:py-10 xl:w-[62%]">
-          <div className="mt-8 space-y-6 mb-8">
+        <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 lg:w-[60%] lg:pl-10 lg:py-2 xl:w-[62%]">
+          <div className="mt- space-y- mb-5">
             {DOCTORS.map((doctor) => (
               <article
                 key={doctor.id}
-                className="rounded-2xl border border-[#d8d8d8] bg-white px-6 py-5 shadow-[0_3px_10px_rgba(0,0,0,0.15)] sm:px-8">
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-10">
+                className="rounded-2xl border border-[#d8d8d8] bg-white px-6 py-4  sm:px-8">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
                   <div className="flex flex-col items-center">
                     <div
-                      className="grid h-[100px] w-[100px] place-items-center rounded-full xl:h-[170px] xl:w-[170px] 
+                      className="grid h-[100px] w-[100px] place-items-center rounded-full xl:h-[150px] xl:w-[150px] 
                                sm:h-[120px] sm:w-[120px] md:h-[100px] md:w-[100px]
                              bg-gradient-to-br from-[#d9dde4] to-[#b8c3d6] text-4xl font-semibold text-[#334155]
                              sm:text-xl md:text-2xl lg:text-3xl xl:text-5xl">
@@ -168,7 +168,7 @@ export default function BookingForm() {
                   value={name}
                   onChange={handleNameChange}
                   placeholder="Please enter name"
-                  className="mt-3 h-9 md:text-sm w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
+                  className="mt-2 h-9 md:text-sm w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
               </label>
               <label className="font-semibold text-[#1f1f1f]">
@@ -179,7 +179,7 @@ export default function BookingForm() {
                   value={age}
                   onChange={(event) => setAge(event.target.value)}
                   placeholder="Please enter age"
-                  className="mt-3 h-9 w-full md:text-sm rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
+                  className="mt-2 h-9 w-full md:text-sm rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
               </label>
             </div>
@@ -197,12 +197,12 @@ export default function BookingForm() {
                   pattern="[0-9]{10}"
                   autoComplete="tel-national"
                   placeholder="1234567890"
-                  className="mt-3 h-9 w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
+                  className="mt-2 h-9 w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
                 />
               </label>
               <fieldset className="text-xs md:text-sm font-semibold text-[#1f1f1f]">
                 <legend className="mb-1 mt-4">Gender *</legend>
-                <div className="mt-2 flex items-center gap-3 text-[10px] font-medium text-[#303030]">
+                <div className="mt-1.5 flex items-center gap-3 text-[10px] font-medium text-[#303030]">
                   <label className="flex items-center gap-1">
                     <input type="radio" name="gender" className="h-3 w-3" />{" "}
                     MALE
@@ -232,7 +232,7 @@ export default function BookingForm() {
               </label>
             </div>
 
-            <div className="pt-2">
+            <div className="">
               <p className="text-lg md:text-[20px] font-semibold tracking-wide text-[#111111]">
                 SLOT* ({selectedDate} {selectedMonthName} {selectedYear},{" "}
                 {selectedSlot})
@@ -241,7 +241,7 @@ export default function BookingForm() {
 
             <button
               type="submit"
-              className="mt-4 h-11 w-full rounded-md bg-[#002b5a] text-lg font-bold text-white cursor-pointer shadow-[0_10px_24px_rgba(0,43,90,0.35)] transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]">
+              className=" h-11 w-full mb-1.5 rounded-md bg-[#002b5a] text-lg font-bold text-white cursor-pointer shadow-xl  transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]">
               Book an appointment
             </button>
           </form>
