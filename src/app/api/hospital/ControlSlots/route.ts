@@ -1,77 +1,73 @@
-import sql from "@/lib/dbs";
 import { NextResponse } from "next/server";
+import sql from "@/lib/dbs";
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
+
+interface JwtPayload {
+  id: string;
+  role: string;
+}
 
 export async function POST(req: Request) {
 
   try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+            
+                   if (!token) {
+                  return NextResponse.json(
+                    { message: "User not logged in" },
+                    { status: 401 }
+                  );
+                }
+            
+                const decoded = jwt.verify(
+                  token,
+                  process.env.JWT_SECRET!
+                ) as JwtPayload;
+            
+                console.log(decoded)
+            
+                // optional role check
+                if (decoded.role !== "hospital") {
+                  return NextResponse.json(
+                    { message: "Unauthorized access" },
+                    { status: 403 }
+                  );
+                }
 
-    const body = await req.json();
+    const { doctorId, availability } = await req.json();
 
-    const {
-      changes,
-      doctor_id,
-      
-    } = body;
-    const hospital_id= req.headers.get("user-id");
-    if (!changes || changes.length === 0) {
-      return NextResponse.json(
-        { message: "no changes made" },
-        { status: 200 }
-      );
-    }
+if (!doctorId || !availability) {
+  return NextResponse.json(
+    { message: "Missing data" },
+    { status: 400 }
+  );
+}
 
-    // Verify doctor belongs to hospital
-    const doctor = await sql`
-      SELECT hospital_id, availability
-      FROM doctors
-      WHERE id = ${doctor_id}
-      LIMIT 1
-    `;
+const doctor = await sql`
+  SELECT id
+  FROM doctors
+  WHERE id = ${doctorId}
+  LIMIT 1
+`;
 
-    if (doctor.length === 0) {
-      return NextResponse.json(
-        { message: "doctor not found" },
-        { status: 404 }
-      );
-    }
+if (doctor.length === 0) {
+  return NextResponse.json(
+    { message: "Doctor not found" },
+    { status: 404 }
+  );
+}
 
-    if (doctor[0].hospital_id !== hospital_id) {
-      return NextResponse.json(
-        { message: "can't do that" },
-        { status: 403 }
-      );
-    }
-
-    // Current availability JSON
-    const availability = doctor[0].availability;
-
-    // Apply all changes
-    for (const change of changes) {
-
-      const {
-        day,
-        index,
-        value
-      } = change;
-
-      // Ensure valid day exists
-      if (!availability[day]) continue;
-
-      // Update slot
-      availability[day][index] = value;
-    }
-
-    // Save updated JSON
-    await sql`
-      UPDATE doctors
-      SET availability = ${JSON.stringify(availability)}
-      WHERE id = ${doctor_id}
-    `;
-
-    return NextResponse.json(
-      { message: "successfully updated slots" },
-      { status: 200 }
-    );
+await sql`
+  UPDATE doctors
+  SET availability = ${JSON.stringify(availability)}
+  WHERE id = ${doctorId}
+`;
+return NextResponse.json(
+    { message: "slots changed sucessfully" },
+    { status: 200}
+  );
 
   } catch (error) {
 
