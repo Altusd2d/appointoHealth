@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Appointment = {
   id: string;
@@ -51,45 +51,146 @@ const presentAppointments: Appointment[] = [
   },
 ];
 
-const pastAppointments: Appointment[] = [
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital,Hyderabad",
-    doctor: "Dr.Chandra Shakar Reddy",
-    specialty: "cardio specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital,Hyderabad",
-    doctor: "Dr.Chandra Shakar Reddy",
-    specialty: "cardio specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital,Hyderabad",
-    doctor: "Dr.Chandra Shakar Reddy",
-    specialty: "cardio specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-];
+// const pastAppointments: Appointment[] = [
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital,Hyderabad",
+//     doctor: "Dr.Chandra Shakar Reddy",
+//     specialty: "cardio specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital,Hyderabad",
+//     doctor: "Dr.Chandra Shakar Reddy",
+//     specialty: "cardio specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital,Hyderabad",
+//     doctor: "Dr.Chandra Shakar Reddy",
+//     specialty: "cardio specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+// ];
 
 export default function UserDashboardPage() {
   const [activeTab, setActiveTab] = useState<"present" | "past">("present");
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [pastAppointments, setPastAppointments] = useState<any[]>([]);
+  const [presentAppointments, setPresentAppointments] = useState<[]>([]);
+  const [error, setError] = useState("");
+  const fetchPresentAppointments = async () => {
+    try {
+      const res = await fetch("/api/user/presentAppointments", {
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPresentAppointments(data.presentAppointments);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetch("/api/user/user-profile", {
+        method: "GET",
+        credentials: "include",
+      });
 
+      const data = await response.json();
+
+      if (response.ok) {
+        setUser(data.user);
+        console.log("User Profile:", data.user);
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.error("Profile Fetch Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchPastAppointments = async () => {
+    try {
+      const response = await fetch("/api/user/pastAppointment", {
+        credentials: "include",
+      });
+      const data = await response.json();
+      console.log(data.pastAppointments);
+      console.log("Is Array:", Array.isArray(data));
+      if (response.ok) {
+        if (response.ok) {
+          setPastAppointments(data.pastAppointments);
+        }
+      }
+    } catch (error: any) {
+      setError(error.message);
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchPastAppointments();
+    fetchPresentAppointments();
+    fetchUserProfile();
+  }, []);
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <h1>Loading</h1>
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="mx-auto mt-20 max-w-md rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+        <h2 className="text-lg font-semibold text-red-600">Error</h2>
+        <p className="mt-2 text-gray-600">{error}</p>
+      </div>
+    );
+  }
+  const handleDelete = async (appointment_id: number) => {
+    try {
+      const res = await fetch("/api/user/deleteAppointment", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          appointment_id,
+        }),
+      });
+      console.log(appointment_id);
+      const data = await res.json();
+      if (res.ok) {
+        // await fetchPastAppointments();
+        setPastAppointments((prev) =>
+          prev.filter((item) => item.id !== appointment_id),
+        );
+        
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <main className="min-h-screen px-3 py-6 sm:px-4 sm:py-8 md:px-10">
       <section className="mx-auto max-w-[860px] rounded-[8px] p-3 sm:p-5 md:p-8">
@@ -106,21 +207,21 @@ export default function UserDashboardPage() {
             </div>
             <div className="flex flex-col gap-2 text-[14px] leading-tight text-[#191919] sm:gap-3 sm:text-[17px] md:gap-4 md:text-[22px]">
               <p>
-                <span className="font-semibold">name:</span> Prashanth Kumar
+                <span className="font-semibold">name:</span> {user?.name}
               </p>
               <p>
-                <span className="font-semibold">Phone No:</span> 9381938193
+                <span className="font-semibold">Phone No:</span>{" "}
+                {user?.phone_number}
               </p>
               <p>
-                <span className="font-semibold">Gmail:</span>{" "}
-                Prashanthpathigari@gmail.com
+                <span className="font-semibold">Gmail:</span> {user?.gmail}
               </p>
               <p className="flex flex-row items-center gap-x-6 md:gap-x-10">
                 <span>
                   <span className="font-semibold">Age:</span> 20
                 </span>
                 <span>
-                  <span className="font-semibold">Gender:</span> M
+                  {/* <span className="font-semibold">Gender:</span> {user.gender} */}
                 </span>
               </p>
             </div>
@@ -138,8 +239,7 @@ export default function UserDashboardPage() {
                 activeTab === "present"
                   ? "bg-[#073766] text-white"
                   : "text-[#1b1b1b]"
-              }`}
-            >
+              }`}>
               Present Appointment
             </button>
             <button
@@ -148,8 +248,7 @@ export default function UserDashboardPage() {
                 activeTab === "past"
                   ? "bg-[#073766] text-white"
                   : "text-[#1b1b1b]"
-              }`}
-            >
+              }`}>
               Past Appointment
             </button>
           </div>
@@ -159,8 +258,7 @@ export default function UserDashboardPage() {
               {presentAppointments.map((appointment, index) => (
                 <article
                   key={`${appointment.id}-${index}`}
-                  className="rounded-[4px] bg-[#dfdfdf] pb-4 shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
-                >
+                  className="rounded-[4px] bg-[#dfdfdf] pb-4 shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
                   <div className="grid grid-cols-1 border-b border-[#cdcdcd] text-center text-[14px] font-semibold text-[#1d1d1d] sm:grid-cols-2 sm:text-[16px] md:text-[18px]">
                     <p className="border-r border-[#cdcdcd] py-2">
                       ID:
@@ -231,8 +329,7 @@ export default function UserDashboardPage() {
               {pastAppointments.map((appointment, index) => (
                 <article
                   key={`${appointment.id}-past-${index}`}
-                  className="rounded-[4px] bg-[#dfdfdf] pb-4 shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
-                >
+                  className="rounded-[4px] bg-[#dfdfdf] pb-4 shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
                   <div className="grid grid-cols-1 border-b border-[#cdcdcd] text-center text-[14px] font-semibold text-[#1d1d1d] sm:grid-cols-2 sm:text-[16px] md:text-[18px]">
                     <p className="border-r border-[#cdcdcd] py-2">
                       ID:
@@ -241,7 +338,7 @@ export default function UserDashboardPage() {
                     <p className="py-2">
                       ON:
                       <span className="font-normal">
-                        {appointment.dateTime}
+                        {appointment.appointment_time}
                       </span>
                     </p>
                   </div>
@@ -256,11 +353,8 @@ export default function UserDashboardPage() {
                         className="h-8 w-auto object-contain rounded-full"
                       />
                       <h3 className="px-2 text-center text-[18px] font-semibold leading-[1.1] text-[#111111] sm:text-[21px] md:text-[23px]">
-                        {appointment.hospital}
+                        {appointment.hospital_id.name}
                       </h3>
-                      {/* <button className="h-8 rounded border border-[#8a8a8a] bg-white px-3 text-[14px] font-semibold text-[#0b2a4d] shadow">
-                        Location <span aria-hidden="true">Pin</span>
-                      </button> */}
                     </div>
 
                     <div className="mx-auto mt-3 flex max-w-[560px] flex-wrap items-start gap-3 rounded-[8px] border border-[#c8c8c8] bg-[#f6f6f6] p-3 shadow sm:flex-nowrap sm:items-center sm:gap-4">
@@ -277,13 +371,17 @@ export default function UserDashboardPage() {
                         </p>
                         <p className="font-medium">{appointment.specialty}</p>
                         <p>5 years of experience</p>
-                        <p className="mt-2 font-medium">{appointment.qualification}</p>
+                        <p className="mt-2 font-medium">
+                          {appointment.qualification}
+                        </p>
                         <p className="font-medium">Fortis Hospital , Jaipur</p>
                       </div>
                     </div>
 
                     <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:gap-8">
-                      <button className="h-9 w-full rounded-md bg-[#ff1f1f] px-7 text-[13px] font-semibold text-white shadow sm:w-auto sm:text-[14px]">
+                      <button
+                        onClick={() => handleDelete(appointment.id)}
+                        className="h-9 w-full rounded-md bg-[#ff1f1f] cursor-pointer px-7 text-[13px] font-semibold text-white shadow sm:w-auto sm:text-[14px]">
                         Delete
                       </button>
                       <button className="h-9 w-full rounded-md bg-[#0d65c8] px-7 text-[13px] font-semibold text-white shadow sm:w-auto sm:text-[14px]">

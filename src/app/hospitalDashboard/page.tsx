@@ -85,6 +85,81 @@ const sidebarItems: { label: TabKey; glyph: string }[] = [
 
 
 
+function SimplePanel({ title }: { title: string }) {
+  const doctors = [
+    {
+      id: 1,
+      name: "Dr. Chandra Shekar Reddy",
+      specialization: "Cardiologist",
+      experience: "8 Years",
+    },
+    {
+      id: 2,
+      name: "Dr. Priya Sharma",
+      specialization: "Dermatologist",
+      experience: "5 Years",
+    },
+  ];
+
+  return (
+    <article className="rounded-2xl bg-white p-6 shadow-sm">
+      <h2 className="mb-4 text-2xl font-semibold">{title}</h2>
+
+      {title === "Doctors" && (
+  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cold-3">
+    {doctors.map((doctor) => (
+      <div
+        key={doctor.id}
+        className="rounded-xl border border-slate-200 p-4 shadow-sm"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-600">
+            {doctor.name.charAt(4)}
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-slate-800">
+              {doctor.name}
+            </h3>
+
+            <p className="text-sm text-slate-600">
+              {doctor.specialization}
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-3 text-sm text-slate-500">
+          Experience: {doctor.experience}
+        </p>
+
+        <button className="mt-4 w-full rounded-lg bg-blue-600 py-2 text-sm text-white hover:bg-blue-700">
+          View Profile
+        </button>
+      </div>
+    ))}
+  </div>
+)}
+
+      {title === "Billing" && (
+        <div className="rounded-xl border p-4">
+          <p className="font-medium">Today's Revenue</p>
+          <p className="mt-2 text-3xl font-bold text-green-600">
+            ₹45,000
+          </p>
+        </div>
+      )}
+
+      {title === "Analytics" && (
+        <div className="rounded-xl border p-4">
+          <p>Total Appointments: 120</p>
+          <p>Completed: 95</p>
+          <p>Pending: 25</p>
+        </div>
+      )}
+    </article>
+  );
+}
+
 function SettingsPanel({ hospital }: { hospital: unknown }) {
 
   const [hos, sethos] = useState<string>("");
@@ -211,8 +286,7 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
           </div>
           <button
             type="button"
-            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
-          >
+            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700">
             Save Settings
           </button>
         </div>
@@ -340,34 +414,7 @@ if(isload){
 }
   
   return (
-    <>
-    <form
-  onSubmit={(e) => {
-    e.preventDefault();
-    // fetchAppointment();
-  }}
-  className="flex items-center gap-2"
->
-  <input
-    type="text"
-    placeholder="Enter Appointment ID"
-    value={searchId}
-    onChange={(e) => setSearchId(e.target.value)}
-    className="rounded-md border border-slate-300 px-3 py-2"
-  />
-
-  <button
-    type="submit"
-    className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-    onClick={() => fetchAppointment(searchId)}
-  >
-    OK
-  </button>
-</form>
-    
-    {
-    hos.map((patient,index) => (
-    <article className="overflow-hidden rounded-sm border border-slate-300 bg-[#d9d9d9] shadow-sm" key={index}>
+    <article className="overflow-hidden rounded-md border border-slate-300 bg-[#d9d9d9] shadow-sm max-w-3xl mx-auto">
       <div className="grid grid-cols-1 border-b border-white/50 bg-[#c4c4c4] text-center text-[#0d2f52] sm:grid-cols-2">
         <div className="border-r border-white/50 px-2 py-1.5 text-base font-bold">
           ID:202324
@@ -468,11 +515,11 @@ if(isload){
         </div>
       </div>
     </article>
-    ))
+    )
   }
-    </>
-  );
-}
+//     </>
+//   );
+// }
 
 function DashboardPanel({ hospital }: { hospital: unknown }) {
   const[loading,setloading]=useState<boolean>(true);

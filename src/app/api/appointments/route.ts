@@ -12,7 +12,7 @@ const rand = () => {
     "0123456789";
 
   return Array.from({ length: 4 }, () =>
-    chars.charAt(Math.floor(Math.random() * chars.length))
+    chars.charAt(Math.floor(Math.random() * chars.length)),
   ).join("");
 };
 
@@ -29,15 +29,12 @@ export async function POST(req: NextRequest) {
     if (!token) {
       return NextResponse.json(
         { message: "User not logged in" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     // Verify JWT
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET!
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
     console.log("DECODED:", decoded);
 
@@ -55,6 +52,7 @@ export async function POST(req: NextRequest) {
       description,
       slot_time,
       location,
+      status
     } = body;
 
     // Validation
@@ -69,7 +67,7 @@ export async function POST(req: NextRequest) {
     ) {
       return NextResponse.json(
         { message: "All required fields must be filled" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -83,33 +81,29 @@ export async function POST(req: NextRequest) {
   AND status = 'booked'
 `;
 
-    
-
-    const loc=await sql`
+    const loc = await sql`
       SELECT location
       FROM hospitals
       WHERE id = ${hospital_id}
       
     `;
 
-    console.log(loc[0])
+    console.log(loc[0]);
 
-    if (
-      existingAppointment.length > 0 
-      
-    ) {
+    if (existingAppointment.length > 0) {
       return NextResponse.json(
         { message: "Slot already booked" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
-    const count=await sql`
+    const count = await sql`
     select count(id) from appointments
     where hospital_id=${hospital_id}
-    `
-    console.log(count[0].count)
-    const search_id=hospital_id.toString()+"-"+count[0].count+"-"+rand();
+    `;
+    console.log(count[0].count);
+    const search_id =
+      hospital_id.toString() + "-" + count[0].count + "-" + rand();
 
     // Insert appointment
     const appointment = await sql`
@@ -125,7 +119,8 @@ export async function POST(req: NextRequest) {
         location,
         hospital_id,
         appointment_date,
-        app_id
+        app_id,
+        status
       )
       VALUES (
         ${doctor_id},
@@ -139,7 +134,8 @@ export async function POST(req: NextRequest) {
         ${loc[0].location},
         ${hospital_id},
         ${appointment_date},
-        ${search_id}
+        ${search_id},
+        ${status}
       )
       RETURNING *
     `;
@@ -149,14 +145,14 @@ export async function POST(req: NextRequest) {
         message: "Appointment booked successfully",
         appointment: appointment[0],
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.log("ERROR:", error);
 
     return NextResponse.json(
       { message: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

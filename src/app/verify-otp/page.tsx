@@ -1,94 +1,167 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { auth } from '@/lib/firebase';
-import { useRouter } from 'next/navigation';
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
+
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { auth } from "@/lib/firebase";
+import {
+  ConfirmationResult,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
 
 declare global {
-  interface Window { recaptchaVerifier: RecaptchaVerifier; }
+  interface Window {
+    recaptchaVerifier?: RecaptchaVerifier;
+  }
 }
 
 export default function PhoneAuthUI() {
-  
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
-  const [confirmResult, setConfirmResult] = useState<ConfirmationResult | null>(null);
+  const router = useRouter();
+
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-  const formattedPhone = `+91${phone}`;
-const router=useRouter();
+  const [confirmResult, setConfirmResult] = useState<ConfirmationResult | null>(
+    null,
+  );
+
+  const initialized = useRef(false);
+
   useEffect(() => {
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      'size': 'invisible', // Changed to invisible for a better UX
-    });
+    if (initialized.current) return;
+
+    initialized.current = true;
+
+    const initRecaptcha = async () => {
+      try {
+        if (!window.recaptchaVerifier) {
+          window.recaptchaVerifier = new RecaptchaVerifier(
+            auth,
+            "recaptcha-container",
+            {
+              size: "normal",
+            },
+          );
+
+          await window.recaptchaVerifier.render();
+        }
+      } catch (error) {
+        console.error("reCAPTCHA Init Error:", error);
+      }
+    };
+
+    initRecaptcha();
+
+    return () => {
+      if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = undefined;
+      }
+    };
   }, []);
 
   const handleSendOtp = async () => {
-    setLoading(true);
     try {
-      const result = await signInWithPhoneNumber(auth,formattedPhone, window.recaptchaVerifier);
+      setLoading(true);
+
+      if (phone.length !== 10) {
+        alert("Please enter a valid 10-digit mobile number");
+        return;
+      }
+
+      const phoneNumber = `+91${phone}`;
+
+      const verifier = window.recaptchaVerifier;
+
+      if (!verifier) {
+        throw new Error("reCAPTCHA not initialized");
+      }
+
+      const result = await signInWithPhoneNumber(auth, phoneNumber, verifier);
+
       setConfirmResult(result);
-      alert("OTP Sent!");
-    } catch (err) {
-      console.error(err);
-      alert("Error sending OTP");
+
+      alert("OTP Sent Successfully");
+    } catch (error: any) {
+      console.error("OTP Error:", error);
+      console.log(process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN);
+      alert(error || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
-    setLoading(true);
     try {
-      await confirmResult?.confirm(otp);
-      alert("Successfully Verified!");
-      router.push("/login")
+      setLoading(true);
+    
+      if (!confirmResult) {
+        alert("Please send OTP first");
+        return;
+      }
 
-    } catch (err) {
-      alert("Invalid OTP");
+      await confirmResult.confirm(otp);
+
+      alert("Phone Number Verified Successfully");
+
+      router.push("/login");
+    } catch (error: any) {
+      console.error("Verify Error:", error);
+      console.log(process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN);
+      alert(error.message|| "Invalid OTP");
     } finally {
       setLoading(false);
+      
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          {confirmResult ? "Verify Code" : "Sign In"}
-        </h2>
-        
-        {/* Invisible ReCAPTCHA Container */}
-        <div id="recaptcha-container"></div>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+        <h1 className="mb-6 text-center text-2xl font-bold">
+          Phone Authentication
+        </h1>
 
+        <div
+          id="recaptcha-container"
+          style={{
+            minHeight: "80px",
+            border: "1px solid red",
+          }}
+        />
         {!confirmResult ? (
           <div className="space-y-4">
             <input
               type="tel"
-              placeholder="+1234567890"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              onChange={(e) => setPhone(e.target.value)}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+              maxLength={10}
+              placeholder="Enter Mobile Number"
+              className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:border-blue-500"
             />
-            <button 
+
+            <button
               onClick={handleSendOtp}
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-            >
-              {loading ? "Sending..." : "Send OTP"}
+              className="w-full rounded-lg bg-blue-600 p-3 text-white hover:bg-blue-700 disabled:opacity-50">
+              {loading ? "Sending OTP..." : "Send OTP"}
             </button>
           </div>
         ) : (
           <div className="space-y-4">
             <input
               type="text"
-              placeholder="Enter 6-digit code"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              value={otp}
               onChange={(e) => setOtp(e.target.value)}
+              maxLength={6}
+              placeholder="Enter OTP"
+              className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:border-green-500"
             />
-            <button 
+
+            <button
               onClick={handleVerifyOtp}
               disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
-            >
+              className="w-full rounded-lg bg-green-600 p-3 text-white hover:bg-green-700 disabled:opacity-50">
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
           </div>
