@@ -142,7 +142,8 @@ CHECK (
             status IN (
                 'booked',
                 'cancelled',
-                'completed'
+                'completed',
+                'waiting'
             )
         ),
     payment NUMERIC(10,2) default 0,
