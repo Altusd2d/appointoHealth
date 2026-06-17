@@ -11,10 +11,41 @@ export async function POST(req:NextRequest) {
 
    const body=await req.json();
    const {name}=body;
-   let hos = await sql`
-  SELECT *
-  FROM hospitals
-  WHERE name ILIKE ${`%${name}%`}
+   
+let hos = await sql`
+SELECT
+  a.id,
+  a.name,
+  a.logo,
+  a.location,
+  a.description,
+  a.hero_image1,
+  a.hero_image2,
+  a.is_premium,
+  a.open_time,
+
+  COALESCE(
+    json_agg(
+      json_build_object(
+        'id', b.id,
+        'name', b.name,
+        'specialist', b.specialist,
+        'education', b.education,
+        'experience', b.experience,
+        'image', b.image,
+        'availability', b.availability
+      )
+    ) FILTER (WHERE b.id IS NOT NULL),
+    '[]'
+  ) AS doctors
+
+FROM hospitals a
+LEFT JOIN doctors b
+  ON b.hospital_id = a.id
+
+WHERE a.name ILIKE ${`%${name}%`}
+
+GROUP BY a.id;
 `;
 if(hos.length==0){
      hos = await sql`
@@ -25,6 +56,8 @@ if(hos.length==0){
   WHERE d.specialist ILIKE ${`%${name}%`}
 `;
 }
+
+
   
    
 
