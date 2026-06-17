@@ -8,9 +8,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { name } = body;
     let hos = await sql`
-  SELECT *
-  FROM hospitals
-  WHERE name ILIKE ${`%${name}%`}
+SELECT
+  h.*,
+  COALESCE(
+    json_agg(d.*) FILTER (WHERE d.id IS NOT NULL),
+    '[]'
+  ) AS doctors
+FROM hospitals h
+LEFT JOIN doctors d
+  ON d.hospital_id = h.id
+WHERE h.name ILIKE ${`%${name}%`}
+GROUP BY h.id
 `;
     if (hos.length == 0) {
       hos = await sql`
