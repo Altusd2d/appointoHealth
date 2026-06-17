@@ -18,6 +18,7 @@ type Hospital = {
   hero_image2: string | null;
   is_premium: boolean;
   open_time: string | null;
+  doctors:doctor[]
 };
 
 type doctor ={
@@ -241,7 +242,7 @@ export default function HospitalSearch() {
                   </h3>
                 </div>
                 <Link
-                  href="/hospital/premium"
+                  href={`/hospital/${hospital.id}`}
                   type="button"
                   className="cursor-pointer rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50">
                   Know more
@@ -310,7 +311,10 @@ export default function HospitalSearch() {
                   </p>
 
                   <div className="mt-8 space-y-6">
-                    {DOCTORS.map((doctor) => {
+
+
+
+                    {hospital?.doctors?.map((doctor) => {
                       const isSlotOpen =
                         expandedDoctorSlots[doctor.id] ?? false;
                       const activeSlotDayId =
@@ -319,6 +323,7 @@ export default function HospitalSearch() {
                       const selectedSlotId =
                         selectedSlotByDoctor[doctor.id] ??
                         getDefaultSlotId(activeSlotDayId);
+                        console.log(doctor)
 
                       return (
                         <article
@@ -328,7 +333,7 @@ export default function HospitalSearch() {
                             <div className="flex flex-1 flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
                               <div className="flex flex-col items-center">
                                 <Image
-                                  src={doctor.image}
+                                  src="/hospital/doctor1.png"
                                   alt={doctor.name}
                                   width={150}
                                   height={150}
@@ -344,13 +349,13 @@ export default function HospitalSearch() {
                                   {doctor.name}
                                 </h2>
                                 <p className="mt-2 text-lg text-[#1d1d1d] sm:text-xl">
-                                  {doctor.speciality}
+                                  {/* {doctor.speciality} */}{doctor.education}
                                 </p>
                                 <p className="mt-1 text-base text-[#8a8a8a] sm:text-lg">
                                   {doctor.experience}
                                 </p>
                                 <p className="mt-4 max-w-3xl text-base leading-7 text-[#161616] sm:mt-5 sm:text-lg">
-                                  {doctor.credentials}
+                                  {/* {doctor.credentials} */}credentials
                                 </p>
                               </div>
                             </div>
