@@ -5,6 +5,33 @@ import Link from "next/link";
 import Image from "next/image";
 import TopHospital from "@/components/topHospital/topHospital";
 
+
+type Hospital = {
+  id: string;
+  name: string;
+  gmail: string;
+  password: string;
+  logo: string | null;
+  location: string | null;
+  description: string | null;
+  hero_image1: string | null;
+  hero_image2: string | null;
+  is_premium: boolean;
+  open_time: string | null;
+};
+
+type doctor ={
+  id: string;
+  name: string;
+  specialist: string | null;
+  education: string | null;
+  experience: string | null;
+  image: string | null;
+  hospital_id: string | null;
+  availability: Record<string, number[]> | null;
+}
+type Availability = Record<string, number[]>;
+
 const DOCTORS = [
   {
     id: "d-001",
@@ -77,6 +104,7 @@ const SLOT_DAYS = [
   },
 ];
 
+
 const DEFAULT_SLOT_DAY_ID = SLOT_DAYS[1].id;
 
 function getSlotsForDay(dayId: string) {
@@ -93,8 +121,9 @@ function getDefaultSlotId(dayId: string) {
 
 export default function HospitalSearch() {
   const [searchText, setSearchtext] = useState("");
-  const [result, setResult] = useState<HospitalRecord[]>([]);
+  const [result, setResult] = useState<Hospital[]>([]);
   const [noResult, setNoResult] = useState(false);
+  const [loading, setloading] = useState<boolean>(false);
   const [expandedHospitalId, setExpandedHospitalId] = useState<string | null>(
     null,
   );
@@ -108,17 +137,33 @@ export default function HospitalSearch() {
     Record<string, string>
   >({});
 
-  function handleClick(query: string) {
-    setResult(findHospital(query.trim()));
-    setNoResult(true);
-    setExpandedHospitalId(null);
-    setExpandedDoctorSlots({});
+ async function handleClick(hospital: string) {
+  console.log(hospital);
+  setloading(true);
+
+  try {
+    const res = await fetch("/api/home/getHospital", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name:hospital }),
+    });
+
+    const data = await res.json();
+    console.log(data);
+    setResult(data.message)
+  } catch (err) {
+    console.log(err);
+  }finally{
+    setloading(false);
   }
+}
 
   return (
     <div id="hospitalSearch">
-      <TopHospital />
-      <div className="flex justify-center gap-4 items-center max-sm:px-6 -mb-7 ">
+      {/* <TopHospital /> */}
+      {/* <div className="flex justify-center gap-4 items-center max-sm:px-6 -mb-7 ">
         <div className="relative mt-14 sm:w-[37vw] w-[68vw]">
           <Image
             src="/google map.png"
@@ -144,7 +189,7 @@ export default function HospitalSearch() {
            tracking-tight text-base font-semibold text-white mt-14 ">
           search
         </button>
-      </div>
+      </div> */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -163,23 +208,24 @@ export default function HospitalSearch() {
         />
         <button
           type="submit"
-          className="cursor-pointer rounded-lg bg-[#0066cc] px-5 py-2 text-center 
-           tracking-tight text-base font-semibold text-white mt-14 ">
-          search
+          className={`cursor-pointer rounded-lg bg-[#0066cc] px-5 py-2 text-center
+                    tracking-tight text-base font-semibold text-white mt-14
+                    ${loading || searchText.length==0 ? "opacity-50 pointer-events-none":""}`}>
+           {loading?"searching":"search"}
         </button>
       </form>
-      {noResult && result.length == 0 && (
+      {noResult && (!result || result.length === 0)  && (
         <p className="mx-6 rounded-xl border border-amber-200 bg-amber-50 px-6 py-3 text-amber-700 md:mx-10 lg:mx-18 xl:mx-35">
           No hospitals found for.
         </p>
       )}
       <div className="space-y-5 xl:px-35 lg:px-18 md:px-10 px-6 mb-14">
-        {result.map((hospital) => {
-          const openText = hospital.services.some((service) =>
-            service.toLowerCase().includes("emergency"),
-          )
-            ? "Open: 24/7 services"
-            : "Open: Check hospital timings";
+        {result.map((hospital:Hospital) => {
+          // const openText = hospital.services.some((service) =>
+          //   service.toLowerCase().includes("emergency"),
+          // )
+          //   ? "Open: 24/7 services"
+          //   : "Open: Check hospital timings";
 
           return (
             <article
@@ -203,8 +249,8 @@ export default function HospitalSearch() {
               </div>
 
               <p className="mt-6 text-lg leading-8 text-slate-600">
-                {hospital.name} in {hospital.city} provides specialized care for{" "}
-                {hospital.specilist.slice(0, 3).join(", ")}.
+                {hospital.name} in {hospital.location} provides specialized care for{" "}
+                {/* {hospital.specilist.slice(0, 3).join(", ")}. */}
                 <span className="ml-2 inline-flex cursor-pointer items-center gap-1 text-sky-600 hover:text-sky-700">
                   View in maps
                   <Image
@@ -219,7 +265,7 @@ export default function HospitalSearch() {
               </p>
 
               <p className="mt-5 text-3xl font-medium text-slate-900">
-                {openText}
+                openText:24/7
               </p>
 
               <div className="mt-6 flex flex-col sm:gap-40 gap-5 sm:flex-row sm:items-center sm:justify-betwee">
@@ -253,14 +299,14 @@ export default function HospitalSearch() {
               {expandedHospitalId === hospital.id && (
                 <div className="mt-8 rounded-2xl bg-[#efefef] px-4 py-6 sm:px-8">
                   <p className="max-w-4xl text-lg leading-[1.45] text-[#4a4a4a] sm:text-2xl">
-                    {hospital.city} branch is a major center with experienced
+                    {hospital.location} branch is a major center with experienced
                     doctors and advanced treatment facilities.
                     <span className="ml-2 text-[#0a67d4]">view in maps</span>
                     <span className="ml-2">map pin</span>
                   </p>
 
                   <p className="mt-6 text-3xl font-medium text-[#111111] sm:text-5xl">
-                    {openText}
+                    openText:24/7
                   </p>
 
                   <div className="mt-8 space-y-6">
