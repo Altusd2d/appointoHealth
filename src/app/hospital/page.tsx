@@ -214,7 +214,7 @@ export default function HospitalSearch() {
            {loading?"searching":"search"}
         </button>
       </form>
-      {noResult && result.length == 0 && (
+      {noResult && (!result || result.length === 0)  && (
         <p className="mx-6 rounded-xl border border-amber-200 bg-amber-50 px-6 py-3 text-amber-700 md:mx-10 lg:mx-18 xl:mx-35">
           No hospitals found for.
         </p>
