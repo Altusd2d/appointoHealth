@@ -2,6 +2,22 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { findHospitalBySlug } from "../hospitalSearch";
 
+
+type Hospital = {
+  id: string;
+  name: string;
+  gmail: string;
+  password: string;
+  logo: string | null;
+  location: string | null;
+  description: string | null;
+  hero_image1: string | null;
+  hero_image2: string | null;
+  is_premium: boolean;
+  open_time: string | null;
+};
+
+
 type HospitalSlugPageProps = {
   params: Promise<{
     slug: string;

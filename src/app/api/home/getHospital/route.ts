@@ -7,7 +7,7 @@ export async function POST(req:NextRequest) {
   try {
 
 
-    // console.log("dskjjfksdjfn:", decoded);
+  
 
    const body=await req.json();
    const {name}=body;
