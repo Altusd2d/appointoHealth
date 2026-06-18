@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { name } = body;
+    
     let hos = await sql`
 SELECT
   h.*,
@@ -20,6 +21,7 @@ LEFT JOIN doctors d
 WHERE h.name ILIKE ${`%${name}%`}
 GROUP BY h.id
 `;
+
     if (hos.length == 0) {
       hos = await sql`
   SELECT DISTINCT h.*

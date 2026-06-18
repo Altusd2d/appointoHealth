@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { findHospital, type HospitalRecord } from "./hospitalSearch";
 import Link from "next/link";
 import Image from "next/image";
@@ -138,6 +138,33 @@ export default function HospitalSearch() {
     Record<string, string>
   >({});
 
+
+    const formatDate = (date: Date) =>
+    `${String(date.getDate()).padStart(2, "0")}-${String(
+    date.getMonth() + 1
+    ).padStart(2, "0")}-${date.getFullYear()}`;
+
+  const ChangeDate=(today:Date)=>{
+     const yesterday = new Date(today);
+     yesterday.setDate(yesterday.getDate() - 1);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const defaultDates = [yesterday, today, tomorrow]
+    setslotdates(defaultDates);
+
+  }
+
+
+
+const [slotsdate, setslotdates] = useState<Date []>([]);
+
+console.log(slotsdate);
+console.log(slotsdate[0]);
+console.log(typeof slotsdate[0]);
+console.log(slotsdate[0] instanceof Date);
+
  async function handleClick(hospital: string) {
   console.log(hospital);
   setloading(true);
@@ -160,6 +187,40 @@ export default function HospitalSearch() {
     setloading(false);
   }
 }
+
+
+ async function GetSlots(hospital: string) {
+  console.log(hospital);
+  setloading(true);
+
+  try {
+    const res = await fetch("/api/home/getHospital", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name:hospital }),
+    });
+
+    const data = await res.json();
+    console.log(data);
+    setResult(data.message)
+  } catch (err) {
+    console.log(err);
+  }finally{
+    setloading(false);
+  }
+}
+
+
+useEffect(() => {
+  const today = new Date();
+  ChangeDate(today)
+  console.log(slotsdate)
+}, []);
+
+
+
 
   return (
     <div id="hospitalSearch">
@@ -307,7 +368,7 @@ export default function HospitalSearch() {
                   </p>
 
                   <p className="mt-6 text-3xl font-medium text-[#111111] sm:text-5xl">
-                    openText:24/7
+                    openTiming:24/7
                   </p>
 
                   <div className="mt-8 space-y-6">
@@ -323,7 +384,7 @@ export default function HospitalSearch() {
                       const selectedSlotId =
                         selectedSlotByDoctor[doctor.id] ??
                         getDefaultSlotId(activeSlotDayId);
-                        console.log(doctor)
+                        // console.log(doctor)
 
                       return (
                         <article
@@ -405,34 +466,32 @@ export default function HospitalSearch() {
                             <div className="mt-8 rounded-[26px] border border-[#e4ebf6] bg-[#fcfdff] md:px-4 px-2 
                             py-5 shadow-[0_12px_24px_rgba(15,23,42,0.06)] sm:px-7 sm:py-7">
                               <div className="grid grid-cols-1 gap-3 text-center sm:grid-cols-3">
-                                {SLOT_DAYS.map((day) => {
-                                  const isActiveDay =
-                                    day.id === activeSlotDayId;
+                                {slotsdate.map((day,index:number) => {
+                                  const isActiveDay =true
+                                    
+
+                                    console.log("day",slotsdate)
 
                                   return (
                                     <button
-                                      key={day.id}
+                                      key={index}
                                       type="button"
                                       onClick={() => {
-                                        setActiveSlotDayByDoctor((prev) => ({
-                                          ...prev,
-                                          [doctor.id]: day.id,
-                                        }));
-                                        setSelectedSlotByDoctor((prev) => ({
-                                          ...prev,
-                                          [doctor.id]: getDefaultSlotId(day.id),
-                                        }));
+                                        ChangeDate(day)
                                       }}
                                       className={`rounded-xl px-3 py-2 text-xl font-medium transition sm:text-2xl ${
-                                        isActiveDay
+                                        index==1
                                           ? "bg-[#eef6ff] text-[#0a67d4]"
                                           : "text-[#4d4d4d] hover:bg-[#f7f9fc]"
                                       }`}>
-                                      {day.label}
+                                      {formatDate(day)}
                                     </button>
                                   );
                                 })}
                               </div>
+
+
+
 
                               <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
                                 {visibleSlots.map((slot) => {
@@ -465,6 +524,8 @@ export default function HospitalSearch() {
                                   );
                                 })}
                               </div>
+
+
 
                               <Link
                                 href="/booking-form"
