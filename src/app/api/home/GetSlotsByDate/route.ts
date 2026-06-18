@@ -24,10 +24,6 @@ const day = Date_day.toLocaleDateString("en-US", {
   weekday: "long",
 });
 
-
-
-  
-
   const slots = await sql`
     SELECT availability
     FROM doctors
