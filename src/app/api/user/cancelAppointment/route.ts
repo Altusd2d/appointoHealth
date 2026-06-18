@@ -15,6 +15,7 @@ export async function PUT(Req: Request) {
         { status: 404 },
       );
     }
+    console.log("Appointment Id "+appointment_id+" canceled")
     return NextResponse.json(
       { message: "Successfully cancelled appointment" },
       { status: 200 },
