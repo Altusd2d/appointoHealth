@@ -3,28 +3,24 @@ import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-    try{
+  try {
+    const body = await req.json();
+    console.log("body", body);
 
-        const body = await req.json();
-  console.log("body",body)
+    const updated_password = await hash(body.password, 10);
 
-const updated_password = await hash(body.password, 10);
-
-await sql`
+    await sql`
   UPDATE hospitals
   SET password = ${updated_password}
   WHERE gmail = ${body.gmail}
 `;
 
-
-  return NextResponse.json({message:"sucessfully password changed login once again"},{status:200});
-
-
-
-
-    }catch(error){
-        console.log(error)
-        NextResponse.json({message:"inter nal server error"},{status:500})
-    }
-  
+    return NextResponse.json(
+      { message: "sucessfully password changed login once again" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log(error);
+    NextResponse.json({ message: "inter nal server error" }, { status: 500 });
+  }
 }
