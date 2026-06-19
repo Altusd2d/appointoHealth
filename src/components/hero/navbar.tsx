@@ -8,18 +8,18 @@ const font1 = localFont({
 
 export default function Navbar() {
   return (
-    <header className={`${font1.className} sticky top-0 z-50 bg-[#00264c] pt-4 pb-6 xl:px-20 md:px-12 px-6`}>
+    <header className={`${font1.className} sticky top-0 z-50 bg-[#00264c] pt-3 pb-2 xl:px-20 md:px-12 px-6`}>
       <nav className="mx-auto flex  w-full items-center justify-between rounded-sm  bg-[#00264c]  ">
-        <span className="text-xl font-semibold tracking-tight text-white sm:text-3xl ">
+        {/* <span className="text-xl font-semibold tracking-tight text-white sm:text-3xl ">
           logo
-        </span>
-        {/* <Image
+        </span> */}
+        <Image
         alt=""
          src={logo}
-         width={1600*0.04}
-         height={896*0.1}
+         width={1536*0.068}
+         height={1024*0.068}
          className="object-cover"
-         /> */}
+         />
 
         {/* <div className="flex justify-"> */}
             <span className="text-center text-[14px] font-semibold  text-white 
