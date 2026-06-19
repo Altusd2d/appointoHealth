@@ -3,14 +3,13 @@ import sql from "@/lib/dbs";
 
 export async function POST(req:Request) {
 //   const { id } = await params;
+try{
  const body=await req.json();
-
   const {id,date}=body;
-//   console.log(date);
+  console.log(date);
   if(!id || !date){
     return NextResponse.json({message:"date, id required "},{status:404})
   }
-
   const Date_day = new Date(date);
   
 if (isNaN(new Date(date).getTime())) {
@@ -19,7 +18,6 @@ if (isNaN(new Date(date).getTime())) {
     { status: 400 }
   );
 }
-
 const day = Date_day.toLocaleDateString("en-US", {
   weekday: "long",
 });
@@ -36,4 +34,9 @@ const availability = slots[0].availability;
 
 // console.log(availability[day])
   return NextResponse.json({message:availability[day]},{status:200});
+}
+catch(err){
+  console.log(err);
+  return NextResponse.json({message:"internal server error"},{status:500})
+}
 }
