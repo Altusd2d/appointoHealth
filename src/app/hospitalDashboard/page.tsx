@@ -1,4 +1,5 @@
 "use client";
+import Spinner from "@/components/ui/Spinner";
 import logo from "../../../public/hospital/apollo_logo.jpg";
 import Image from "next/image";
 import React, { useMemo, useState ,useEffect} from "react";
@@ -409,7 +410,7 @@ fetchAppoiinments();
 
 if(isload){
   return(
-    <div>Loading...</div>
+    <Spinner />
   )
 }
   
@@ -622,7 +623,7 @@ const completedCount = hos.filter(
               View All {"->"}
             </button>
           </div>
-          {loading?<div className="">Loading...</div>:<>{
+          {loading?<Spinner />:<>{
             hos.length==0?<div>No appoinemnts Today..</div>:
           <div className="max-w-full overflow-x-auto">
             <table className="w-full min-w-[560px] border-collapse sm:min-w-[650px]">
@@ -719,7 +720,7 @@ const seconds = timeLeft % 60;
         console.log("gmail or password is required")
       }
       const loginQuery = await fetch(
-  "/api/hospital/login",
+  "/api/services/login",
   {
     method: "POST",
     headers: {
@@ -768,7 +769,7 @@ const verifyOTP = async (
 ): Promise<boolean> => {
   try {
     const res = await fetch(
-      "/api/hospital/verifyOtp",
+      "/api/services/verifyOtp",
       {
         method: "POST",
         headers: {
@@ -803,7 +804,7 @@ const verifyOTP = async (
 const changePassword=async(gmail:string,password:string)=>{
   try {
     const res = await fetch(
-      "/api/hospital/UpdatePassword",
+      "/api/services/UpdatePassword",
       {
         method: "POST",
         headers: {
@@ -868,7 +869,7 @@ const sendOtp = async (gmail: string) => {
     setload(false)
     console.log("send OTP clicked");
 
-    const res = await fetch("/api/hospital/changePassword", {
+    const res = await fetch("/api/services/changePassword", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -899,9 +900,12 @@ const sendOtp = async (gmail: string) => {
 
 if (Islogin === null) {
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <>
+    <Spinner />
+    {/* <div className="flex min-h-screen items-center justify-center">
       Loading...
-    </div>
+    </div> */}
+    </>
   );
 }
 
@@ -1023,12 +1027,17 @@ if(Islogin){
           </button>
 
           <button
-            type="button"
-            className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700"
-            onClick={() => CheckLogin()}
-          >
-            {isload ? "Loading..." : "Login"}
-          </button>
+  type="button"
+  disabled={isload}
+  className={`w-full rounded-md py-2 text-white ${
+    isload
+      ? "cursor-not-allowed bg-blue-400"
+      : "bg-blue-600 hover:bg-blue-700"
+  }`}
+  onClick={() => CheckLogin()}
+>
+  {isload ? "Logging..." : "Login"}
+</button>
         </form>
       </>
     )}
@@ -1333,7 +1342,7 @@ useEffect(() => {
 
 
 if(loadingDoctors){
-  return(<>loading...</>)
+  return(<Spinner />)
 }
 
 
