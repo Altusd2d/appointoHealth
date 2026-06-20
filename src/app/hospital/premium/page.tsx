@@ -5,7 +5,9 @@ import Equipment from "@/components/hospitalPremium/equipment";
 export default function Premium() {
   return (
     <div>
-     not avaliable
+      <Hero />
+      <Doctors />
+      <Equipment />
     </div>
   );
 }
