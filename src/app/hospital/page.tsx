@@ -1,11 +1,10 @@
 "use client";
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { findHospital, type HospitalRecord } from "./hospitalSearch";
 import Link from "next/link";
 import Image from "next/image";
 import TopHospital from "@/components/topHospital/topHospital";
-
-
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 type Hospital = {
   id: string;
   name: string;
@@ -18,19 +17,19 @@ type Hospital = {
   hero_image2: string | null;
   is_premium: boolean;
   open_time: string | null;
-  doctors:doctor[]
+  doctors: doctor[];
 };
 
-type doctor ={
+type doctor = {
   id: string;
   name: string;
   specialist: string | null;
   education: string | null;
   experience: string | null;
-  image: string | null;
+  image: string | StaticImport ;
   hospital_id: string | null;
   availability: Record<string, number[]> | null;
-}
+};
 type Availability = Record<string, number[]>;
 
 const DOCTORS = [
@@ -105,7 +104,6 @@ const SLOT_DAYS = [
   },
 ];
 
-
 const DEFAULT_SLOT_DAY_ID = SLOT_DAYS[1].id;
 
 function getSlotsForDay(dayId: string) {
@@ -138,120 +136,83 @@ export default function HospitalSearch() {
     Record<string, string>
   >({});
 
-
-    const formatDate = (date: Date) =>
+  const formatDate = (date: Date) =>
     `${String(date.getDate()).padStart(2, "0")}-${String(
-    date.getMonth() + 1
+      date.getMonth() + 1,
     ).padStart(2, "0")}-${date.getFullYear()}`;
 
-  const ChangeDate=(today:Date)=>{
-     const yesterday = new Date(today);
-     yesterday.setDate(yesterday.getDate() - 1);
+  const ChangeDate = (today: Date) => {
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
 
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const defaultDates = [yesterday, today, tomorrow]
+    const defaultDates = [yesterday, today, tomorrow];
     setslotdates(defaultDates);
+  };
 
+  const [slotsdate, setslotdates] = useState<Date[]>([]);
+
+  console.log(slotsdate);
+  console.log(slotsdate[0]);
+  console.log(typeof slotsdate[0]);
+  console.log(slotsdate[0] instanceof Date);
+
+  async function handleClick(hospital: string) {
+    console.log(hospital);
+    setloading(true);
+
+    try {
+      const res = await fetch("/api/home/getHospital", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: hospital }),
+      });
+
+      const data = await res.json();
+      console.log(data);
+      setResult(data.message);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setloading(false);
+    }
   }
 
+  async function GetSlots(hospital: string) {
+    console.log(hospital);
+    setloading(true);
 
+    try {
+      const res = await fetch("/api/home/getHospital", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: hospital }),
+      });
 
-const [slotsdate, setslotdates] = useState<Date []>([]);
-
-console.log(slotsdate);
-console.log(slotsdate[0]);
-console.log(typeof slotsdate[0]);
-console.log(slotsdate[0] instanceof Date);
-
- async function handleClick(hospital: string) {
-  console.log(hospital);
-  setloading(true);
-
-  try {
-    const res = await fetch("/api/home/getHospital", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name:hospital }),
-    });
-
-    const data = await res.json();
-    console.log(data);
-    setResult(data.message)
-  } catch (err) {
-    console.log(err);
-  }finally{
-    setloading(false);
+      const data = await res.json();
+      console.log(data);
+      setResult(data.message);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setloading(false);
+    }
   }
-}
 
-
- async function GetSlots(hospital: string) {
-  console.log(hospital);
-  setloading(true);
-
-  try {
-    const res = await fetch("/api/home/getHospital", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name:hospital }),
-    });
-
-    const data = await res.json();
-    console.log(data);
-    setResult(data.message)
-  } catch (err) {
-    console.log(err);
-  }finally{
-    setloading(false);
-  }
-}
-
-
-useEffect(() => {
-  const today = new Date();
-  ChangeDate(today)
-  console.log(slotsdate)
-}, []);
-
-
-
+  useEffect(() => {
+    const today = new Date();
+    ChangeDate(today);
+    console.log(slotsdate);
+  }, []);
 
   return (
     <div id="hospitalSearch">
-      {/* <TopHospital /> */}
-      {/* <div className="flex justify-center gap-4 items-center max-sm:px-6 -mb-7 ">
-        <div className="relative mt-14 sm:w-[37vw] w-[68vw]">
-          <Image
-            src="/google map.png"
-            alt=""
-            aria-hidden="true"
-            width={18}
-            height={18}
-            className="absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2"
-          />
-
-          <input
-            // value={searchText}
-            placeholder="search location"
-            // onChange={(e) => {
-            //   setSearchtext(e.target.value);
-            // }}
-            className="w-full rounded-3xl border border-[#cbcdcd] py-2.5 pl-12 pr-7 font-2xl"
-          />
-        </div>
-        <button
-          type="submit"
-          className="cursor-pointer rounded-lg bg-[#0066cc] px-5 py-1 h-10 text-center 
-           tracking-tight text-base font-semibold text-white mt-14 ">
-          search
-        </button>
-      </div> */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -272,23 +233,17 @@ useEffect(() => {
           type="submit"
           className={`cursor-pointer rounded-lg bg-[#0066cc] px-5 py-2 text-center
                     tracking-tight text-base font-semibold text-white mt-14
-                    ${loading || searchText.length==0 ? "opacity-50 pointer-events-none":""}`}>
-           {loading?"searching":"search"}
+                    ${loading || searchText.length == 0 ? "opacity-50 pointer-events-none" : ""}`}>
+          {loading ? "searching" : "search"}
         </button>
       </form>
-      {noResult && (!result || result.length === 0)  && (
+      {noResult && (!result || result.length === 0) && (
         <p className="mx-6 rounded-xl border border-amber-200 bg-amber-50 px-6 py-3 text-amber-700 md:mx-10 lg:mx-18 xl:mx-35">
           No hospitals found for.
         </p>
       )}
       <div className="space-y-5 xl:px-35 lg:px-18 md:px-10 px-6 mb-14">
-        {result.map((hospital:Hospital) => {
-          // const openText = hospital.services.some((service) =>
-          //   service.toLowerCase().includes("emergency"),
-          // )
-          //   ? "Open: 24/7 services"
-          //   : "Open: Check hospital timings";
-
+        {result.map((hospital: Hospital) => {
           return (
             <article
               key={hospital.id}
@@ -311,8 +266,8 @@ useEffect(() => {
               </div>
 
               <p className="mt-6 text-lg leading-8 text-slate-600">
-                {hospital.name} in {hospital.location} provides specialized care for{" "}
-                {/* {hospital.specilist.slice(0, 3).join(", ")}. */}
+                {hospital.name} in {hospital.location} provides specialized care
+                for {/* {hospital.specilist.slice(0, 3).join(", ")}. */}
                 <span className="ml-2 inline-flex cursor-pointer items-center gap-1 text-sky-600 hover:text-sky-700">
                   View in maps
                   <Image
@@ -327,7 +282,7 @@ useEffect(() => {
               </p>
 
               <p className="mt-5 text-3xl font-medium text-slate-900">
-                openText:24/7
+                open:24/7 services
               </p>
 
               <div className="mt-6 flex flex-col sm:gap-40 gap-5 sm:flex-row sm:items-center sm:justify-betwee">
@@ -352,29 +307,24 @@ useEffect(() => {
                     })
                   }
                   className="text-left text-base font-medium text-sky-600 transition hover:text-sky-700">
-                  {expandedHospitalId === hospital.id
-                    ? ""
-                    : "View More..."}
+                  {expandedHospitalId === hospital.id ? "" : "View More..."}
                 </button>
               </div>
 
               {expandedHospitalId === hospital.id && (
                 <div className="mt-8 rounded-2xl bg-[#efefef] px-4 py-6 sm:px-8">
                   <p className="max-w-4xl text-lg leading-[1.45] text-[#4a4a4a] sm:text-2xl">
-                    {hospital.location} branch is a major center with experienced
-                    doctors and advanced treatment facilities.
-                    <span className="ml-2 text-[#0a67d4]">view in maps</span>
-                    <span className="ml-2">map pin</span>
+                    {hospital.location} branch is a major center with
+                    experienced doctors and advanced treatment facilities.
+                    {/* <span className="ml-2 text-[#0a67d4]">view in maps</span>
+                    <span className="ml-2">map pin</span> */}
                   </p>
 
-                  <p className="mt-6 text-3xl font-medium text-[#111111] sm:text-5xl">
+                  {/* <p className="mt-6 text-3xl font-medium text-[#111111] sm:text-5xl">
                     openTiming:24/7
-                  </p>
+                  </p> */}
 
                   <div className="mt-8 space-y-6">
-
-
-
                     {hospital?.doctors?.map((doctor) => {
                       const isSlotOpen =
                         expandedDoctorSlots[doctor.id] ?? false;
@@ -384,7 +334,7 @@ useEffect(() => {
                       const selectedSlotId =
                         selectedSlotByDoctor[doctor.id] ??
                         getDefaultSlotId(activeSlotDayId);
-                        // console.log(doctor)
+                      // console.log(doctor)
 
                       return (
                         <article
@@ -394,7 +344,7 @@ useEffect(() => {
                             <div className="flex flex-1 flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
                               <div className="flex flex-col items-center">
                                 <Image
-                                  src="/hospital/doctor1.png"
+                                  src={doctor.image}
                                   alt={doctor.name}
                                   width={150}
                                   height={150}
@@ -407,16 +357,17 @@ useEffect(() => {
 
                               <div className="flex-1">
                                 <h2 className="text-2xl font-medium text-[#0a67d4] sm:text-4xl">
-                                  {doctor.name}
+                                  Dr.{doctor.name}
                                 </h2>
-                                <p className="mt-2 text-lg text-[#1d1d1d] sm:text-xl">
-                                  {/* {doctor.speciality} */}{doctor.education}
+                                <p className="mt-4 max-w-3xl text-base leading-0.25 text-[#161616] sm:mt-5 sm:text-lg">
+                                  {doctor.specialist} specialist
                                 </p>
-                                <p className="mt-1 text-base text-[#8a8a8a] sm:text-lg">
-                                  {doctor.experience}
+                                <p className="mt-4 text-base text-[#8a8a8a] sm:text-lg">
+                                  {doctor.experience} years of experience
                                 </p>
-                                <p className="mt-4 max-w-3xl text-base leading-7 text-[#161616] sm:mt-5 sm:text-lg">
-                                  {/* {doctor.credentials} */}credentials
+
+                                <p className="mt-3 text-lg text-[#1d1d1d] sm:text-xl">
+                                  {doctor.education}
                                 </p>
                               </div>
                             </div>
@@ -441,7 +392,7 @@ useEffect(() => {
                                 }));
                               }}
                               className="inline-flex min-w-[185px] items-center justify-center gap-3 self-start
-                               rounded-xl bg-[#0a67d4] px-5 py-4 text-base font-semibold text-white 
+                               rounded-xl bg-[#0a67d4] px-3 py-3 text-base font-semibold text-white 
                                shadow-xl transition hover:bg-[#085ebc] sm:text-xl">
                               {isSlotOpen ? "Hide slots" : "Show slots"}
                               <svg
@@ -463,24 +414,24 @@ useEffect(() => {
                           </div>
 
                           {isSlotOpen && (
-                            <div className="mt-8 rounded-[26px] border border-[#e4ebf6] bg-[#fcfdff] md:px-4 px-2 
+                            <div
+                              className="mt-8 rounded-[26px] border border-[#e4ebf6] bg-[#fcfdff] md:px-4 px-2 
                             py-5 shadow-[0_12px_24px_rgba(15,23,42,0.06)] sm:px-7 sm:py-7">
                               <div className="grid grid-cols-1 gap-3 text-center sm:grid-cols-3">
-                                {slotsdate.map((day,index:number) => {
-                                  const isActiveDay =true
-                                    
+                                {slotsdate.map((day, index: number) => {
+                                  const isActiveDay = true;
 
-                                    console.log("day",slotsdate)
+                                  console.log("day", slotsdate);
 
                                   return (
                                     <button
                                       key={index}
                                       type="button"
                                       onClick={() => {
-                                        ChangeDate(day)
+                                        ChangeDate(day);
                                       }}
                                       className={`rounded-xl px-3 py-2 text-xl font-medium transition sm:text-2xl ${
-                                        index==1
+                                        index == 1
                                           ? "bg-[#eef6ff] text-[#0a67d4]"
                                           : "text-[#4d4d4d] hover:bg-[#f7f9fc]"
                                       }`}>
@@ -489,9 +440,6 @@ useEffect(() => {
                                   );
                                 })}
                               </div>
-
-
-
 
                               <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
                                 {visibleSlots.map((slot) => {
@@ -524,8 +472,6 @@ useEffect(() => {
                                   );
                                 })}
                               </div>
-
-
 
                               <Link
                                 href="/booking-form"

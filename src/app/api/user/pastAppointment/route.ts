@@ -14,7 +14,7 @@ export async function GET() {
 
     const token = cookieStore.get("token")?.value;
 
-    console.log("TOKEN:", token);
+    // console.log("TOKEN:", token);
 
     // Check token
     if (!token) {
@@ -27,7 +27,7 @@ export async function GET() {
     // Verify JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
-    console.log("dskjjfksdjfn:", decoded);
+    // console.log("dskjjfksdjfn:", decoded);
 
     // Check already booked slot
     // const existingAppointment = await sql`
@@ -37,20 +37,32 @@ export async function GET() {
     //   and status='completed '
 
     // `;
-    const pastAppointments = await sql`
-  SELECT *
-FROM appointments
-WHERE patient_id = ${decoded.userId}
-  AND status != 'deleted'
+    
+  const pastAppointments = await sql`
+SELECT
+  a.*,
+  jsonb_build_object(
+    'id', d.id,
+    'name', d.name,
+    'specialist', d.specialist,
+    'experience', d.experience,
+    'education',d.education,
+    'image', d.image
+  ) AS doctor
+FROM appointments a
+JOIN doctors d
+  ON a.doctor_id = d.id
+WHERE a.patient_id = ${decoded.userId}
+  AND a.status != 'deleted'
   AND (
-    status IN ('completed', 'cancelled')
-    OR appointment_date::DATE < CURRENT_DATE
-  )
+    a.status IN ('completed', 'cancelled')
+    OR a.appointment_date::DATE < CURRENT_DATE
+  );
 `;
 
     // ORDER BY appointment_date DESC
-    console.log(pastAppointments);
-    console.log();
+    // console.log(pastAppointments);
+    // console.log();
     return NextResponse.json({ pastAppointments }, { status: 200 });
   } catch (error) {
     console.log("ERROR:", error);

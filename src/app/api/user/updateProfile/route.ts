@@ -2,30 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import sql from "@/lib/dbs";
 import { cookies } from "next/headers";
+import { getUserFromToken } from "@/lib/getUserFromToken";
 
-interface JwtPayload {
-  id: string;
-}
+// interface JwtPayload {
+//   userId: string;
+// }
 
 export async function DELETE(req: NextRequest) {
   try {
-    // Get token from cookies
-    const cookieStore = await cookies();
-
-    const token = cookieStore.get("token")?.value;
-
-    console.log("TOKEN:", token);
-
-    // Check token
-    if (!token) {
-      return NextResponse.json(
-        { message: "User not logged in" },
-        { status: 401 },
-      );
-    }
-
-    // Verify JWT
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    
+    const decoded = await getUserFromToken()
 
     // console.log("dskjjfksdjfn:", decoded);
 
@@ -33,7 +19,7 @@ export async function DELETE(req: NextRequest) {
     let { name, phone_number, email, age, gender, bio } = body;
     const hos = await sql`
         select *  from users
-        where id=${decoded.id} 
+        where id=${decoded.userId} 
         `;
     if (!name) {
       name = hos[0].name;
@@ -63,7 +49,7 @@ export async function DELETE(req: NextRequest) {
     age = ${age},
     gender = ${gender},
     bio = ${bio}
-  WHERE id = ${decoded.id}
+  WHERE id = ${decoded.userId}
   RETURNING *;
 `;
 

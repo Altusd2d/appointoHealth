@@ -133,9 +133,9 @@ const policySections: PolicySection[] = [
     ],
     contact: [
       "Grievance Officer: [Name of Grievance Officer]",
-      "Email: support@Appointohealth.in",
-      "Website: www.Appointohealth.in",
-      "Address: [Registered Office Address, Hyderabad, Telangana, India]",
+      "Email:  support@appointohealth.in",
+      "Website: www.appointohealth.in",
+      "Address:  Hyderabad, Telangana, India",
     ],
     note: "We will address your grievance within 30 days of receipt.",
   },
@@ -151,7 +151,7 @@ const policySections: PolicySection[] = [
       "Company Name: Appointo Health",
       "Website: www.Appointohealth.in",
       "Email: support@Appointohealth.in",
-      "Phone: +91 XXXXX XXXXX [Please update with actual number]",
+      "Phone: +91 6300383053 ",
     ],
   },
   {

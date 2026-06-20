@@ -31,7 +31,7 @@ export async function DELETE(req: NextRequest) {
 
     const body = await req.json();
     const { appointment_id } = body;
-    console.log(appointment_id);
+    // console.log(appointment_id);
     if (!appointment_id) {
       return NextResponse.json(
         { message: "appointment was does not selected try again" },
@@ -56,7 +56,7 @@ export async function DELETE(req: NextRequest) {
     //change doctor status
     //send notify to hospital
     //refund the money
-    console.log(deleteAppointment);
+    // console.log(deleteAppointment);
     return NextResponse.json(
       { message: "sucessfully deleted" },
       { status: 200 },

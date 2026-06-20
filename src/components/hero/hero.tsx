@@ -4,10 +4,26 @@ import Image from "next/image";
 // import localFont from "next/font/local";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect,useState } from "react";
 // const font1=localFont({
 //   src:"../../fonts/font1.woff2"
 // })
+
 export default function Hero() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+useEffect(() => {
+  const checkAuth = async () => {
+    const res = await fetch("/api/auth/check-auth");
+
+    setIsLoggedIn(res.ok);
+  };
+
+  checkAuth();
+}, []);
+
   const title = "Tired of waiting for booking appointments for a doctor";
 
   const handleBookAppointmentClick = () => {
@@ -56,11 +72,15 @@ export default function Hero() {
             >
               Book an appointment
             </button>
-            <Link href="/sign-up">
+           {
+            !isLoggedIn &&(
+               <Link href="/sign-up">
               <div className="bg-[#0066cc] rounded-lg py-2 px-3 text-center tracking-normal text-white">
                 Login/Signup
               </div>
             </Link>
+            )
+           }
           </div>
         </div>
         <Image src={phones} alt="" width={577 * 1.5} height={433 * 1.5} />

@@ -5,7 +5,7 @@
 // export default function Login() {
 //   return (
 //     <main className=" bg-white px-4 py-10 md:px-6">
-//       <section className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden 
+//       <section className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden
 //        bg-[#efefef] md:flex-row md:shadow-2xl rounded-xl">
 //         <div className="relative hidden md:flex w-full flex-col items-center
 //          justify-between bg-white px-6 pb-8 pt-10 md:w-1/2 md:px-8">
@@ -30,8 +30,8 @@
 //             alt="Stethoscope"
 //             // width={210}
 //             // height={280}
-//             className=" 
-//              md:w-[20vwpx] h-[290px] -ml-15 object-contain 
+//             className="
+//              md:w-[20vwpx] h-[290px] -ml-15 object-contain
 //              absolute top-[16%] lg:left-[60%] z-20 left[50%] xl:left-[64%]"
 //             priority
 //           />
@@ -69,8 +69,7 @@
 
 //           <form className="relative z-10 space-y-4">
 //             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              
-              
+
 //             </div>
 
 //             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 ">
@@ -82,7 +81,7 @@
 //                   className="mt-3 h-9 w-full rounded bg-white px-2 text-xs text-[#1d1d1d] outline-none ring-1 ring-[#d7d7d7] placeholder:text-[#bcbcbc]"
 //                 />
 //               </label>
-            
+
 //             </div>
 
 //             {/* <div>
@@ -123,15 +122,13 @@
 //   );
 // }
 
-
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 export default function Login() {
   const [phone_number, setPhoneNumber] = useState("");
-  const router=useRouter();
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -151,10 +148,10 @@ export default function Login() {
       }
       alert("Login successful");
       console.log(data);
-      router.push("/user-dashboard")
+      router.push("/user-dashboard");
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+      alert(error);
     }
   };
 
@@ -166,15 +163,20 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block mb-2 font-medium">Phone Number</label>
+            <div className="flex">
+              <div className="flex items-center rounded-l-lg border border-r-0 bg-gray-100 px-4 text-gray-700">
+                +91
+              </div>
 
-            <input
-              type="tel"
-              value={phone_number}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="Enter your phone number"
-              required
-              className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              <input
+                type="tel"
+                value={phone_number}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Enter your phone number"
+                required
+                className="w-full rounded-r-lg border bg-gray-100 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
 
           <button

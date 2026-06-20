@@ -31,7 +31,9 @@ GROUP BY h.id
   WHERE d.specialist ILIKE ${`%${name}%`}
 `;
     }
-
+hos.forEach((hospital) => {
+  console.log(hospital.doctors);
+});
     return NextResponse.json({ message: hos }, { status: 200 });
   } catch (error) {
     console.log("ERROR:", error);

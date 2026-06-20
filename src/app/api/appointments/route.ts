@@ -4,7 +4,7 @@ import sql from "@/lib/dbs";
 import { cookies } from "next/headers";
 
 interface JwtPayload {
-  id: string;
+  userId: string;
 }
 
 const rand = () => {
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       
     `;
 
-    console.log(loc[0]);
+    // console.log(loc[0]);
 
     if (existingAppointment.length > 0) {
       return NextResponse.json(
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
     select count(id) from appointments
     where hospital_id=${hospital_id}
     `;
-    console.log(count[0].count);
+    // console.log(count[0].count);
     const search_id =
       hospital_id.toString() + "-" + count[0].count + "-" + rand();
 
@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
       )
       VALUES (
         ${doctor_id},
-        ${decoded.id},
+        ${decoded.userId},
         ${name},
         ${age},
         ${phone_number},
@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
       )
       RETURNING *
     `;
-
+console.log(appointment)
     return NextResponse.json(
       {
         message: "Appointment booked successfully",
