@@ -2,7 +2,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import TopHospital from "@/components/topHospital/topHospital";
+import { useBookingStore } from "@/store/bookingStore";
 
 
 type Hospital = {
@@ -29,85 +31,17 @@ type doctor = {
   image: string | null;
   hospital_id: string | null;
   availability: Record<string, number[]> | null;
+  slot:string | null
 };
-type Availability = Record<string, number[]>;
 
 type slots = {
   time: string;
   status: number;
 };
 
-const DOCTORS = [
-  {
-    id: "d-001",
-    name: "Dr.Chandra Shakar Reddy",
-    speciality: "cardio specialist",
-    experience: "5 years of experience",
-    credentials:
-      "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
-    initials: "CR",
-    image: "/hospital/doctor1.png",
-  },
-  {
-    id: "d-002",
-    name: "Dr.Padma Latha",
-    speciality: "cardio specialist",
-    experience: "15 years of experience",
-    credentials:
-      "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
-    initials: "PL",
-    image: "/hospital/doctor2.png",
-  },
-];
 
-const SLOT_DAYS = [
-  {
-    id: "30-3-2026",
-    label: "30-3-2026",
-    slots: [
-      { id: "30-830", label: "8:30 AM", state: "available" },
-      { id: "30-930", label: "9:30 AM", state: "selected" },
-      { id: "30-1030", label: "10:30 AM", state: "available" },
-      { id: "30-1100", label: "11:00 AM", state: "available" },
-      { id: "30-1200", label: "12:00PM", state: "available" },
-      { id: "30-1230", label: "12:30 PM", state: "available" },
-      { id: "30-130", label: "1:30 PM", state: "available" },
-      { id: "30-200", label: "2:00PM", state: "available" },
-    ],
-  },
-  {
-    id: "31-3-2026",
-    label: "31-3-2026",
-    slots: [
-      { id: "31-930", label: "9:30 AM", state: "selected" },
-      { id: "31-1030", label: "10:30 AM", state: "available" },
-      { id: "31-1100", label: "11:00 AM", state: "available" },
-      { id: "31-1130", label: "11:30AM", state: "unavailable" },
-      { id: "31-1200", label: "12:00PM", state: "available" },
-      { id: "31-1230", label: "12:30 PM", state: "available" },
-      { id: "31-130", label: "1:30 PM", state: "available" },
-      { id: "31-200", label: "2:00PM", state: "available" },
-      { id: "31-230", label: "2:30PM", state: "available" },
-      { id: "31-430", label: "4:30PM", state: "unavailable" },
-      { id: "31-530", label: "5:30PM", state: "available" },
-      { id: "31-600", label: "6:00 PM", state: "available" },
-    ],
-  },
-  {
-    id: "1-4-2026",
-    label: "1-4-2026",
-    slots: [
-      { id: "1-900", label: "9:00 AM", state: "available" },
-      { id: "1-1000", label: "10:00 AM", state: "available" },
-      { id: "1-1100", label: "11:00 AM", state: "available" },
-      { id: "1-1200", label: "12:00PM", state: "available" },
-      { id: "1-100", label: "1:00 PM", state: "available" },
-      { id: "1-200", label: "2:00PM", state: "available" },
-      { id: "1-300", label: "3:00 PM", state: "available" },
-      { id: "1-500", label: "5:00 PM", state: "available" },
-    ],
-  },
-];
+
+
 
 const timings = [
   "12:00AM",
@@ -160,19 +94,7 @@ const timings = [
   "11:30PM",
 ];
 
-const DEFAULT_SLOT_DAY_ID = SLOT_DAYS[1].id;
 
-function getSlotsForDay(dayId: string) {
-  return SLOT_DAYS.find((day) => day.id === dayId)?.slots ?? SLOT_DAYS[1].slots;
-}
-
-function getDefaultSlotId(dayId: string) {
-  return (
-    getSlotsForDay(dayId).find(
-      (slot) => slot.state === "selected" || slot.state === "available",
-    )?.id ?? ""
-  );
-}
 
 export default function HospitalSearch() {
   const [searchText, setSearchtext] = useState("");
@@ -186,9 +108,9 @@ export default function HospitalSearch() {
   const [expandedDoctorSlots, setExpandedDoctorSlots] = useState<
     Record<string, boolean>
   >({});
-  const [activeSlotDayByDoctor, setActiveSlotDayByDoctor] = useState<
-    Record<string, string>
-  >({});
+  const [DoctorDataForBooking, setDataForBooking] = useState<
+   doctor 
+  >();
   const [selectedSlotByDoctor, setSelectedSlotByDoctor] = useState<
     Record<string, string>
   >({});
@@ -217,9 +139,15 @@ export default function HospitalSearch() {
   };
 
   const [slotsdate, setslotdates] = useState<Date[]>([]);
-  const [v, setv] = useState<slots[]>([]);
 
   const [slotload, setslotload] = useState<boolean>(false);
+
+  const setBooking = useBookingStore(
+  (state) => state.setBooking
+)
+
+  const router = useRouter();
+    
 
   async function handleClick(hospital: string) {
     console.log(hospital);
@@ -289,6 +217,38 @@ setvisibleSlots(temp);
       setslotload(false);
     }
   }
+
+
+async function BookAnAppoinment(
+  hospital: Hospital,
+  date: Date,
+  slots: Record<string, string>,
+  doc: doctor
+) {
+  const selectedSlot = slots[doc.id];
+
+  if (!selectedSlot) {
+    alert("Please select a slot");
+    return;
+  }
+
+  setBooking({
+    hospitalId: hospital.id,
+    hospitalName: hospital.name,
+    hospitalLocation: hospital.location ?? "",
+
+    doctorId: doc.id,
+    doctorName: doc.name,
+    specialist: doc.specialist ?? "",
+    education: doc.education ?? "",
+    experience: doc.experience ?? "",
+
+    slotDate: date.toISOString(),
+    slotTime: selectedSlot,
+  });
+
+  router.push("/booking-form");
+}
 
   useEffect(() => {
     const today = new Date();
@@ -409,12 +369,7 @@ setvisibleSlots(temp);
               </p>
 
               <div className="mt-6 flex flex-col sm:gap-40 gap-5 sm:flex-row sm:items-center sm:justify-betwee">
-                {/* <Link
-                  // type="button"
-                  href="/booking-form"
-                  className="rounded-lg bg-[#0066cc] px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-sky-700">
-                  Book an appointment
-                </Link> */}
+                
                 <button
                   type="button"
                   onClick={() =>
@@ -452,13 +407,8 @@ setvisibleSlots(temp);
                     {hospital?.doctors?.map((doctor) => {
                       const isSlotOpen =
                         expandedDoctorSlots[doctor.id] ?? false;
-                      const activeSlotDayId =
-                        activeSlotDayByDoctor[doctor.id] ?? DEFAULT_SLOT_DAY_ID;
-
-                      const selectedSlotId =
-                        selectedSlotByDoctor[doctor.id] ??
-                        getDefaultSlotId(activeSlotDayId);
-                      // console.log(doctor)
+                      
+                      console.log(doctor)
 
                       return (
                         <article
@@ -500,21 +450,13 @@ setvisibleSlots(temp);
                             <button
                               type="button"
                               onClick={() => {
+                                setDataForBooking(doctor);
                                 setExpandedDoctorSlots((prev) => ({
-                                  ...prev,
+                                  
                                   [doctor.id]: !prev[doctor.id],
                                 }));
-                                setActiveSlotDayByDoctor((prev) => ({
-                                  ...prev,
-                                  [doctor.id]:
-                                    prev[doctor.id] ?? DEFAULT_SLOT_DAY_ID,
-                                }));
-                                setSelectedSlotByDoctor((prev) => ({
-                                  ...prev,
-                                  [doctor.id]:
-                                    prev[doctor.id] ??
-                                    getDefaultSlotId(DEFAULT_SLOT_DAY_ID),
-                                }));
+                               
+                               
                               }}
                               className="inline-flex min-w-[185px] items-center justify-center gap-3 self-start
                                rounded-xl bg-[#0a67d4] px-5 py-4 text-base font-semibold text-white 
@@ -547,9 +489,6 @@ setvisibleSlots(temp);
                             >
                               <div className="grid grid-cols-1 gap-3 text-center sm:grid-cols-3">
                                 {slotsdate.map((day, index: number) => {
-                                  const isActiveDay = true;
-
-                                  // console.log("day", slotsdate);
 
                                   return (
                                     <button
@@ -576,10 +515,11 @@ setvisibleSlots(temp);
                                   <div>Loading...</div>
                                 ) : (
                                   <>
+                                  
                                     {visibleSlots.length > 0 ? (
                                       visibleSlots.map((slot) => {
-                                        const isSelected =
-                                          selectedSlotId === slot.time;
+                                        const isSelected =false
+                                         
                                         const isUnavailable = slot.status === 2;
 
                                         return (
@@ -588,14 +528,14 @@ setvisibleSlots(temp);
                                             type="button"
                                             onClick={() =>
                                               setSelectedSlotByDoctor(
-                                                (prev) => ({
-                                                  ...prev,
+                                                () => ({
+                                                  
                                                   [doctor.id]: slot.time,
                                                 }),
                                               )
                                             }
                                             className={`h-12 rounded-xl border text-lg font-medium transition sm:h-14 sm:text-[18px] ${
-                                              isSelected
+                                              selectedSlotByDoctor[doctor.id]==slot.time
                                                 ? "border-[#0a67d4] bg-[#0a67d4] text-white shadow-[0_8px_18px_rgba(10,103,212,0.22)]"
                                                 : isUnavailable
                                                   ? "cursor-not-allowed border-[#d8d8d8] text-[#c3c3c3]"
@@ -613,14 +553,34 @@ setvisibleSlots(temp);
                                 )}
                               </div>
 
-                              <Link
-                                href="/booking-form"
+                              <button>
+
+                              <div
+                                
                                 className="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl 
                                 bg-primary px-6 text-lg font-semibold whitespace-nowrap
                                  text-white shadow-xl transition hover:bg-[#085ebc] sm:h-14 sm:text-2xl"
+                                
+
+                                 onClick={() => {
+                                    if (!DoctorDataForBooking) {
+    alert("Please select a doctor");
+    return;
+  }
+  BookAnAppoinment(
+    hospital,
+    slotsdate[1],
+    selectedSlotByDoctor,
+    DoctorDataForBooking
+  );
+}}
+
+
+
                               >
                                 Book a appointment
-                              </Link>
+                              </div>
+                              </button>
                             </div>
                           )}
                         </article>

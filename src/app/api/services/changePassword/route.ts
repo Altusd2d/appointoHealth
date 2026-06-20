@@ -37,7 +37,10 @@ const otp=generateOTP();
   data:`OTP for changing password is ${otp} `
 });
 
-
+await sql`
+  DELETE FROM otps
+  WHERE identifier = ${gmail}
+`;
 
 
     const ott=await sql`
