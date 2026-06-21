@@ -32,7 +32,7 @@ const day = Date_day.toLocaleDateString("en-US", {
 console.log(Date_day,",",day)
 const availability = slots[0].availability;
 
-// console.log(availability[day])
+console.log(availability[day])
   return NextResponse.json({message:availability[day]},{status:200});
 }
 catch(err){

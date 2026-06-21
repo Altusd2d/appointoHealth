@@ -5,6 +5,7 @@ import Doctors from "@/components/hospitalPremium/doctors";
 import Equipment from "@/components/hospitalPremium/equipment";
 import { useEffect ,useState} from "react";
 import { useParams } from "next/navigation";
+import Spinner from "@/components/ui/Spinner";
 // import { data } from "framer-motion/client";
 interface Hospital {
   id: string;
@@ -40,15 +41,15 @@ const [hospital, setHospital] = useState<Hospital | null>(null);
 
 
   if (!hospital) {
-  return <div>Loading...</div>;
+  return <Spinner />;
 }
 
   return (
     
     <div>
       
-      {/* <Hero data={hospital} /> */}
-      {/* <Doctors id={hospital.id}/> */}
+      <Hero data={hospital} />
+      <Doctors id={hospital.id}/>
       <Equipment id={hospital.id}/>
     </div>
   );

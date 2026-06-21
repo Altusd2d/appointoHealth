@@ -47,7 +47,7 @@ export async function GET() {
   JOIN doctors d
     ON a.doctor_id = d.id
   WHERE a.hospital_id = ${decoded.id}
-    AND a.appointment_date = '2026-03-09'
+    AND a.appointment_date = CURRENT_DATE
 `;
 
 // AND a.date = CURRENT_DATE
