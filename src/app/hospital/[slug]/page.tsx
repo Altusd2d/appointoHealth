@@ -53,7 +53,7 @@ const [hospital, setHospital] = useState<Hospital | null>(null);
       <Equipment />
       <Hero data={hospital} />
       <Doctors id={hospital.id}/>
-      <Equipment id={hospital.id}/>
+      {/* <Equipment id={hospital.id}/> */}
     </div>
   );
 }
