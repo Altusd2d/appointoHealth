@@ -1,18 +1,17 @@
 "use client";
-
 import Spinner from "@/components/ui/Spinner";
 import logo from "../../../public/hospital/apollo_logo.jpg";
 import Image from "next/image";
-import React, { useMemo, useState ,useEffect} from "react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import  { useMemo, useState ,useEffect} from "react";
+import { jwtDecode } from "jwt-decode";
 
 
-type HospitalSlugPageProps = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
+
+interface DecodedToken {
+  id: string;
+  role: string;
+  exp: number;
+}
 
 
 type Availability = {
@@ -29,7 +28,6 @@ type Availability = {
 type Doctor = {
   description: string;
   id: string;
-  gmail: string;
   name: string;
   specialist: string;
   education: string;
@@ -39,29 +37,43 @@ type Doctor = {
   availability: Availability;
 };
 
-
-
-export type Appointment = {
-  id: string;
-  doctor_id: string;
-  patient_id: string;
-  appointment_date: string; // DATE
-  appointment_time: string; // TIME
-  name: string;
-  age: string;
-  phone_number: string;
-  gender: "male" | "female" | "other";
-  description: string | null;
-  status:  | "booked"
-  | "cancelled"
-  | "completed"
-  | "waiting"
-  | "deleted";
+export type TodayBilling = {
+  app_id: string;
+  doctor_name: string;
   payment: number;
-  created_at: string; // TIMESTAMP
-  app_id:string;
-  doctor_name:string;
+};
 
+export interface MonthlyBilling {
+  appointment_date: string;
+  total_appointments: number;
+  total_amount: number;
+}
+
+
+type Appointment = {
+  age: string;
+  app_id: string;
+  appointment_date: string;
+  appointment_time: string;
+  created_at: string;
+  description: string;
+  doctor_id: string;
+  gender: "male" | "female" | "other";
+  hospital_id: string;
+  id: string;
+  location: string;
+  name: string;
+  patient_id: string;
+  payment: number;
+  phone_number: string;
+  status: "booked" | "cancelled" | "completed";
+};
+
+
+
+type AppointmentWithDoctor = {
+  appointment: Appointment;
+  doctor: Doctor;
 };
 
 type TabKey =
@@ -76,92 +88,17 @@ const color:string[]=["from-emerald-500 to-teal-400","from-pink-500 to-rose-400"
 
 
 
-  
-  const sidebarItems: { label: TabKey; glyph: string }[] = [
+
+const sidebarItems: { label: TabKey; glyph: string }[] = [
   { label: "Dashboard", glyph: "DB" },
   { label: "Appointments", glyph: "AP" },
   { label: "Doctors", glyph: "DR" },
   { label: "Billing", glyph: "BL" },
   { label: "Analytics", glyph: "AN" },
   { label: "Settings", glyph: "ST" },
-  ];
+];
 
 
-
-function SimplePanel({ title }: { title: string }) {
-  const doctors = [
-    {
-      id: 1,
-      name: "Dr. Chandra Shekar Reddy",
-      specialization: "Cardiologist",
-      experience: "8 Years",
-    },
-    {
-      id: 2,
-      name: "Dr. Priya Sharma",
-      specialization: "Dermatologist",
-      experience: "5 Years",
-    },
-  ];
-
-  return (
-    <article className="rounded-2xl bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-2xl font-semibold">{title}</h2>
-
-      {title === "Doctors" && (
-  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cold-3">
-    {doctors.map((doctor) => (
-      <div
-        key={doctor.id}
-        className="rounded-xl border border-slate-200 p-4 shadow-sm"
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-600">
-            {doctor.name.charAt(4)}
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-slate-800">
-              {doctor.name}
-            </h3>
-
-            <p className="text-sm text-slate-600">
-              {doctor.specialization}
-            </p>
-          </div>
-        </div>
-
-        <p className="mt-3 text-sm text-slate-500">
-          Experience: {doctor.experience}
-        </p>
-
-        <button className="mt-4 w-full rounded-lg bg-blue-600 py-2 text-sm text-white hover:bg-blue-700">
-          View Profile
-        </button>
-      </div>
-    ))}
-  </div>
-)}
-
-      {title === "Billing" && (
-        <div className="rounded-xl border p-4">
-          <p className="font-medium">Today's Revenue</p>
-          <p className="mt-2 text-3xl font-bold text-green-600">
-            ₹45,000
-          </p>
-        </div>
-      )}
-
-      {title === "Analytics" && (
-        <div className="rounded-xl border p-4">
-          <p>Total Appointments: 120</p>
-          <p>Completed: 95</p>
-          <p>Pending: 25</p>
-        </div>
-      )}
-    </article>
-  );
-}
 
 function SettingsPanel({ hospital }: { hospital: unknown }) {
 
@@ -171,6 +108,7 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
   const [img1, setimg1] = useState<string>("");
   const [loc, setloc] = useState<string>("");
   const [load, setload] = useState<boolean>(false);
+  console.log(hospital)
 
   const sendDataToAdmin=async(hos:string,email:string,num:string,loc:string)=>{
     try {
@@ -182,6 +120,7 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          id:hospital.id,
           name: hos,
           email,
           phone: num,
@@ -289,7 +228,9 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
           </div>
           <button
             type="button"
-            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700">
+            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
+            onClick={()=>{sendDataToAdmin(hos,email,num,loc)}}
+            >
             Save Settings
           </button>
         </div>
@@ -301,7 +242,7 @@ function SettingsPanel({ hospital }: { hospital: unknown }) {
 function AppointmentsPanel({ hospital }: { hospital: unknown }) {
   
 
-const [hos, sethos] = useState<unknown[]>([]);
+const [hos, sethos] = useState<AppointmentWithDoctor []>([]);
 const [searchId, setSearchId] = useState<string>("");
 const [isload,setisload]=useState<boolean>(true);
 
@@ -354,6 +295,11 @@ const waitingApp=async(id:string,status:string)=>{
   });
 
 const data = await loginQuery.json();
+
+
+if(data.staus==403){
+  setStep("login")
+}
 
 if (loginQuery.ok) {
   console.log("check this",data)
@@ -416,113 +362,124 @@ if(isload){
   )
 }
   
-  return (
-    <article className="overflow-hidden rounded-md border border-slate-300 bg-[#d9d9d9] shadow-sm max-w-3xl mx-auto">
-      <div className="grid grid-cols-1 border-b border-white/50 bg-[#c4c4c4] text-center text-[#0d2f52] sm:grid-cols-2">
-        <div className="border-r border-white/50 px-2 py-1.5 text-base font-bold">
-          ID:202324
+    return (
+  <div className="space-y-4">
+    {hos.map((appointment) => (
+      <article
+        key={appointment.appointment.id}
+        className="overflow-hidden rounded-md border border-slate-300 bg-[#d9d9d9] shadow-sm max-w-3xl mx-auto"
+      >
+        <div className="grid grid-cols-1 border-b border-white/50 bg-[#c4c4c4] text-center text-[#0d2f52] sm:grid-cols-2">
+          <div className="border-r border-white/50 px-2 py-1.5 text-base font-bold">
+            ID:{appointment.appointment.app_id}
+          </div>
+
+          <div className="px-2 py-1.5 text-xs font-medium text-slate-900 sm:text-sm">
+            {appointment.appointment.appointment_date}/
+            <span className="font-semibold">
+              {appointment.appointment.appointment_time}
+            </span>
+          </div>
         </div>
 
-        <div className="px-2 py-1.5 text-xs font-medium text-slate-900 sm:text-sm">
-          ON:8-April-2026/<span className="font-semibold">9:30 AM</span>
-        </div>
-      </div>
+        <div className="p-2.5">
+          <div className="mb-2 flex items-center gap-2">
+            <Image
+              src={logo}
+              alt="Hospital logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-full object-contain"
+            />
 
-      <div className="p-2.5">
-        <div className="mb-2 flex items-center gap-2">
-          <Image
-            src={logo}
-            alt="Hospital logo"
-            width={32}
-            height={32}
-            className="h-8 w-8 rounded-full object-contain"
-          />
+            <h2 className="text-sm font-semibold text-slate-900 sm:text-base">
+              {appointment.appointment.hospital_id}
+            </h2>
+          </div>
 
-          <h2 className="text-sm font-semibold text-slate-900 sm:text-base">
-            Appollo Hospital, Hyderabad
-          </h2>
-        </div>
+          <div className="rounded-md border border-slate-300 bg-[#efefef] p-2">
+            <div className="flex items-center gap-3">
+              <div className="h-14 w-14 overflow-hidden rounded-full border border-slate-300 bg-white">
+                <Image
+                  src="/hospital/doctor1.png"
+                  alt="Doctor"
+                  width={56}
+                  height={56}
+                  className="h-full w-full object-cover"
+                />
+              </div>
 
-        <div className="rounded-md border border-slate-300 bg-[#efefef] p-2">
-          <div className="flex items-center gap-3">
-            <div className="h-14 w-14 overflow-hidden rounded-full border border-slate-300 bg-white">
-              <Image
-                src="/hospital/doctor1.png"
-                alt="Doctor"
-                width={56}
-                height={56}
-                className="h-full w-full object-cover"
-              />
+              <div>
+                <h3 className="text-sm font-semibold text-[#1363a2]">
+                  {appointment.doctor.name}
+                </h3>
+
+                <p className="text-xs">
+                  {appointment.doctor.specialist}
+                </p>
+
+                <p className="text-[10px] text-slate-600">
+                  {appointment.doctor.experience}
+                </p>
+
+                <p className="mt-1 text-[10px] leading-relaxed">
+                  {appointment.doctor.education}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2 grid grid-cols-3 overflow-hidden border border-white/70 bg-[#cfcfcf] text-center text-[#0d2f52]">
+            <div className="border-r border-white/70 px-2 py-1 text-xs font-bold">
+              {appointment.appointment.name}
             </div>
 
-            <div>
-              <h3 className="text-sm font-semibold text-[#1363a2]">
-                Dr.Chandra Shakar Reddy
-              </h3>
+            <div className="border-r border-white/70 px-2 py-1 text-xs font-bold">
+              Age:{appointment.appointment.age}
+            </div>
 
-              <p className="text-xs">Cardio Specialist</p>
-
-              <p className="text-[10px] text-slate-600">
-                5 Years Experience
-              </p>
-
-              <p className="mt-1 text-[10px] leading-relaxed">
-                MBBS, MD, DM - Gastroenterology
-                <br />
-                Fortis Hospital, Jaipur
-              </p>
-            
+            <div className="px-2 py-1 text-xs font-bold">
+              {appointment.appointment.gender}
             </div>
           </div>
-        </div>
 
-        <div className="mt-2 grid grid-cols-3 overflow-hidden border border-white/70 bg-[#cfcfcf] text-center text-[#0d2f52]">
-          <div className="border-r border-white/70 px-2 py-1 text-xs font-bold">
-            P.Prashanth
+          <div className="mt-1 border border-white/70 bg-[#cfcfcf] px-2 py-2 text-center text-xs text-slate-900">
+            {appointment.appointment.description}
           </div>
 
-          <div className="border-r border-white/70 px-2 py-1 text-xs font-bold">
-            Age:20
+          <div className="mt-3 flex flex-wrap justify-center gap-13">
+            <button
+              onClick={() =>
+                waitingApp(appointment.id, "booked")
+              }
+              className="rounded-md bg-[#f4d632] px-3 py-1 text-xs font-bold text-white"
+            >
+              Waiting
+            </button>
+
+            <button
+              className="rounded-md bg-[#f50000] px-3 py-1 text-xs font-bold text-white"
+            >
+              Reschedule
+            </button>
+
+            <button
+              onClick={() =>
+                waitingApp(appointment.appointment.id, "completed")
+              }
+              className="rounded-md bg-[#0069d1] px-3 py-1 text-xs font-bold text-white"
+            >
+              Complete
+            </button>
           </div>
-
-          <div className="px-2 py-1 text-xs font-bold">
-            Male
-          </div>
         </div>
-
-        <div className="mt-1 border border-white/70 bg-[#cfcfcf] px-2 py-2 text-center text-xs text-slate-900">
-          Have Problem with Teeth ache Need a regular checkup
-        </div>
-
-        <div className="mt-3 flex flex-wrap justify-center gap-13">
-          <button
-            type="button"
-            className="rounded-md bg-[#f4d632] px-3 py-1 text-xs font-bold text-white"
-          >
-            Waiting
-          </button>
-
-          <button
-            type="button"
-            className="rounded-md bg-[#f50000] px-3 py-1 text-xs font-bold text-white"
-          >
-            Reschedule
-          </button>
-
-          <button
-            type="button"
-            className="rounded-md bg-[#0069d1] px-3 py-1 text-xs font-bold text-white"
-          >
-            Complete
-          </button>
-        </div>
-      </div>
-    </article>
-    )
+      </article>
+    ))}
+  </div>
+);
+    
   }
-//     </>
-//   );
-// }
+
 
 function DashboardPanel({ hospital }: { hospital: unknown }) {
   const[loading,setloading]=useState<boolean>(true);
@@ -564,6 +521,7 @@ setloading(false);
 fetchAppoiinments();
   
 }, []);
+
 const waitingapp = hos.filter(
   (item) => item.status === "waiting"
 ).length;
@@ -702,21 +660,20 @@ const [timeLeft, setTimeLeft] = useState(300); // 5 mins
 
   
   const [activeTab, setActiveTab] = useState<TabKey>("Dashboard");
+
   const [Islogin, setIslogin] = useState<boolean | null>(null);
   const [gmail, setgmail] = useState<string>("");
   const [password, setpassword] = useState<string>("");
   const [err, seterr] = useState<string>("");
-  const [isload, setisload] = useState<boolean>(false);
+   const [isload, setisload] = useState<boolean>(false);
   const [hospital,sethospital]=useState(null);
-  const [load, setload] = useState(false);
-  const[name,setname]=useState<string>("")
-  const[id,setid]=useState<string>("")
-  const[mail,setmail]=useState<string>("")
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
+  const [mounted, setMounted] = useState(false);
+  const [load, setload] = useState(true);
 
-  const CheckLogin=async()=>
-  {
+  const minutes = Math.floor(timeLeft / 60);
+const seconds = timeLeft % 60;
+
+  const CheckLogin=async()=>{
     setisload(true)
       console.log(gmail,password);
       if(gmail.length==0 || password.length==0){
@@ -743,30 +700,27 @@ if (loginQuery.ok) {
   console.log("Login successful", data);
   setIslogin(true)
   sethospital(data)
-  
-} 
-else {
+
+} else {
   console.log("Login failed", data.message);
   seterr(data.message)
 }
 setisload(false)
-}
+  }
 
 
 const panel = useMemo(() => {
   if (activeTab === "Dashboard")
-    return <TodayAppoinments />
-
+    return <DashboardPanel hospital={hospital} />;
 
   if (activeTab === "Appointments")
-  return <AllAppoinments />
-
-  if (activeTab === "Doctors")
-   return <Doctors />
+    return <AppointmentsPanel hospital={hospital} />;
 
   if (activeTab === "Settings")
-    // return <SettingsPanel hospital={hospital} />;
-  return <Setting mail={mail} id={id}/>
+    return <SettingsPanel hospital={hospital} />;
+
+  if (activeTab === "Billing")
+    return <BillingPanel />;
 
   return <SimplePanel title={activeTab} />;
 }, [activeTab, hospital]);
@@ -776,7 +730,6 @@ const verifyOTP = async (
   otp: string,
   gmail: string
 ): Promise<boolean> => {
-  setload(true)
   try {
     const res = await fetch(
       "/api/services/verifyOtp",
@@ -795,31 +748,24 @@ const verifyOTP = async (
     const data = await res.json();
 
     if (!res.ok) {
-      setload(false);
       alert(data.message);
 
       
       return false;
     }
-    setload(false)
     setStep("change-password");
     alert(data.message);
     return true;
   } catch (err) {
     console.log(err);
-    setload(false)
     alert("Failed to verify OTP");
     return false;
-  }
-  finally{
-    setload(false);
   }
 };
 
 
 const changePassword=async(gmail:string,password:string)=>{
   try {
-    setload(true)
     const res = await fetch(
       "/api/services/UpdatePassword",
       {
@@ -835,7 +781,6 @@ const changePassword=async(gmail:string,password:string)=>{
     );
 
     const data = await res.json();
-    setload(false)
 
     if (!res.ok) {
       alert(data.message);
@@ -855,33 +800,35 @@ const changePassword=async(gmail:string,password:string)=>{
 
 
 
-
 useEffect(() => {
   const token = localStorage.getItem("token");
+
+  console.log("token:", token);
 
   if (token) {
     try {
       const decoded = jwtDecode<DecodedToken>(token);
-      console.log("Token",decoded.gmail)
-      setname(decoded.name)
-      setid(decoded.id);
-      setmail(decoded.gmail)
 
-      if (decoded.role === "hospital") {
+      console.log("Decoded Token:", decoded);
+
+      
+       if (decoded.role === "hospital") {
         setIslogin(true);
-      }
-    } catch {
+        console.log("Hospital User");
+      } 
+    } catch (error) {
+      console.error("Invalid token:", error);
       localStorage.removeItem("token");
       setIslogin(false);
     }
-  } else {
+  }
+  else{
     setIslogin(false);
+    // setload(false)
     setStep("login");
   }
+  console.log("islogin",Islogin)
 }, []);
-
-
-
 
 useEffect(() => {
   if (step !== "verify-otp") return;
@@ -899,11 +846,10 @@ useEffect(() => {
   return () => clearInterval(timer);
 }, [step]);
 
-
-
 const sendOtp = async (gmail: string) => {
   try {
-    setload(true)
+    setload(false)
+    console.log("send OTP clicked");
 
     const res = await fetch("/api/services/changePassword", {
       method: "POST",
@@ -918,11 +864,11 @@ const sendOtp = async (gmail: string) => {
     const data = await res.json();
 
     if (!res.ok) {
-      setload(false)
       alert(data.message);
+      setload(true)
       return;
     }
-    setload(false)
+    setload(true)
 
     alert(data.message);
 
@@ -932,20 +878,19 @@ const sendOtp = async (gmail: string) => {
     console.log(err);
     alert("Failed to send OTP");
   }
-  finally{
-    setload(false)
-  }
 };
 
 if (Islogin === null) {
   return (
     <>
     <Spinner />
+    {/* <div className="flex min-h-screen items-center justify-center">
+      Loading...
+    </div> */}
     </>
   );
 }
 
-console.log("hospital",hospital)
 
 if(Islogin){
   return(
@@ -953,7 +898,7 @@ if(Islogin){
     <div className="flex min-h-screen flex-col md:flex-row">
         <aside className="w-full bg-[#141821] text-white md:w-64 md:flex-shrink-0">
           <div className="border-b border-white/10 px-6 py-6 text-3xl font-semibold tracking-tight">
-             Apponto Health
+            DoctorBook
           </div>
 
           <nav className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 md:grid-cols-1 md:gap-1 md:p-0 md:py-4">
@@ -974,17 +919,6 @@ if(Islogin){
               </button>
             ))}
           </nav>
-            <div className="p-3 border-t border-slate-700">
-    <button
-      onClick={() => {
-        localStorage.removeItem("token");
-        window.location.reload();
-      }}
-      className="flex w-full items-center justify-center gap-2 rounded-md bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
-    >
-      Logout
-    </button>
-  </div>
         </aside>
 
         <section className="min-w-0 flex-1 p-4 md:p-6 lg:p-8">
@@ -992,7 +926,7 @@ if(Islogin){
             <div>
               <h1 className="text-3xl font-semibold">{activeTab}</h1>
               <p className="mt-1 text-base text-slate-600">
-                Welcome back, <span className="text-xl font-bold uppercase">{name}</span>
+                Welcome back, Apollo Hospital
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -1005,6 +939,7 @@ if(Islogin){
               </div>
             </div>
           </header>
+
           {panel}
         </section>
       </div>
@@ -1013,7 +948,6 @@ if(Islogin){
 }
 
   return (
-
  <div className="flex min-h-screen items-center justify-center bg-slate-100">
   <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
 
@@ -1107,11 +1041,7 @@ if(Islogin){
 
           <button
             type="button"
-            className={`w-full rounded-md py-2 text-white ${
-    load
-      ? "bg-gray-400 cursor-not-allowed"
-      : "bg-blue-600 hover:bg-blue-700"
-  }`}
+            className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700"
             onClick={async () => {
               await sendOtp(gmail);
 
@@ -1119,7 +1049,7 @@ if(Islogin){
               // setStep("verify-otp");
             }}
           >
-            {load?"Sending...":"Send OTP"}
+            {load?"Send OTP":"Sending..."}
           </button>
 
           <button
@@ -1155,38 +1085,33 @@ if(Islogin){
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
             placeholder="Enter OTP"
-            className={`w-full rounded-md border border-slate-300 px-3 py-2
-           
-      
-      `}
+            className="w-full rounded-md border border-slate-300 px-3 py-2"
           />
 
           <button
-  type="button"
-  disabled={load}
-  className={`w-full rounded-md py-2 text-white ${
-    load
-      ? "bg-gray-400 cursor-not-allowed"
-      : "bg-green-600 hover:bg-green-700"
-  }`}
-  onClick={async () => {
-    await verifyOTP(otp, gmail);
-  }}
->
-  {load ? "Verifying..." : "Verify OTP"}
-</button>
+            type="button"
+            className="w-full rounded-md bg-green-600 py-2 text-white hover:bg-green-700"
+            onClick={async () => {
+              // const verified = await verifyOtp(gmail, otp);
+              verifyOTP(otp,gmail);
+
+              
+            }}
+          >
+            Verify OTP
+          </button>
 
           <button
-  type="button"
-  disabled={timeLeft > 0 || load}
-  className="w-full rounded-md border py-2 disabled:cursor-not-allowed disabled:opacity-50"
-  onClick={async () => {
-    await sendOtp(gmail);
-    setTimeLeft(300);
-  }}
->
-  {load ? "Sending..." : "Resend OTP"}
-</button>
+            type="button"
+            disabled={timeLeft > 0}
+            className="w-full rounded-md border py-2 disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={async () => {
+              await sendOtp(gmail);
+              setTimeLeft(300);
+            }}
+          >
+            Resend OTP
+          </button>
 
           <button
             type="button"
@@ -1232,20 +1157,22 @@ if(Islogin){
             )}
 
           <button
-  type="button"
-  disabled={
-    load ||
-    !password ||
-    !confirmPassword ||
-    password !== confirmPassword
-  }
-  className="w-full rounded-md bg-blue-600 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
-  onClick={async () => {
-    await changePassword(gmail, password);
-  }}
->
-  {load ? "Changing Password..." : "Change Password"}
-</button>
+            type="button"
+            disabled={
+              !password ||
+              !confirmPassword ||
+              password !== confirmPassword
+            }
+            className="w-full rounded-md bg-blue-600 py-2 text-white disabled:opacity-50"
+            onClick={async () => {
+              
+              changePassword(gmail,password)
+
+              // setStep("login");
+            }}
+          >
+            Change Password
+          </button>
 
           <button
             type="button"
@@ -1265,8 +1192,6 @@ if(Islogin){
 
 function SimplePanel({ title }: { title: string }) {
 
-
-  
 
 const [availability, setAvailability] = useState({
   Sunday: Array(48).fill(0),
@@ -1330,13 +1255,6 @@ const days = [
   "Friday",
   "Saturday",
 ];
-// let Sunday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
-// let Monday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
-// let Tuesday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
-// let Wednesday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
-// let Thurday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
-// let Friday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
-// let Saturday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
 
 
 const timeSlots = Array.from({ length: 24 }, (_, i) => {
@@ -1664,3 +1582,325 @@ if(doctors==undefined || doctors.length==0){
     </article>
   );
 }
+
+
+
+ function BillingPanel() {
+  const appointments = [
+    {
+      appointmentId: "APT001",
+      doctorName: "Dr. John",
+      amount: 5000,
+    },
+    {
+      appointmentId: "APT002",
+      doctorName: "Dr. Sarah",
+      amount: 700,
+    },
+    {
+      appointmentId: "APT003",
+      doctorName: "Dr. Michael",
+      amount: 600,
+    },
+    {
+      appointmentId: "APT004",
+      doctorName: "Dr. Emily",
+      amount: 800,
+    },
+  ];
+
+  const monthlyData = [
+    {
+      date: "2026-06-01",
+      totalAppointments: 12,
+      totalAmount: 6000,
+    },
+    {
+      date: "2026-06-02",
+      totalAppointments: 8,
+      totalAmount: 4000,
+    },
+    {
+      date: "2026-06-03",
+      totalAppointments: 15,
+      totalAmount: 7500,
+    },
+    {
+      date: "2026-06-04",
+      totalAppointments: 10,
+      totalAmount: 5000,
+    },
+    {
+      date: "2026-06-05",
+      totalAppointments: 18,
+      totalAmount: 9000,
+    },
+  ];
+
+
+  const [loading, setloading] = useState<boolean>(false);
+const [TodayBilling, SetTodayBilling] = useState<TodayBilling []>([]);
+const [MonthlyBilling, SetMonthlyBilling] = useState<MonthlyBilling []>([]);
+
+  const totalAmount = TodayBilling.reduce(
+    (sum, appointment) => sum + Number(appointment.payment),0
+  );
+
+   const totalAppointments = MonthlyBilling.reduce(
+    (sum, item) => sum + Number(item.total_appointments),
+    0
+  );
+
+  const totalAmountMonth = MonthlyBilling.reduce(
+    (sum, item) => sum + Number(item.total_amount),
+    0
+  );
+
+
+
+
+  const FetchTodayBilling=async()=>{
+
+    try {
+    console.log("entered")
+    const res = await fetch(
+      "/api/hospital/Billing",
+      {
+        method: "GET",
+      }
+    );
+
+    const data = await res.json();
+    console.log(data)
+
+    if (!res.ok) {
+      console.log(data.message);
+     
+      return;
+    }
+    // console.log(data.message)
+    SetTodayBilling(data.Today);
+    SetMonthlyBilling(data.Month)
+  } catch (error) {
+    console.log(error);
+  } finally {
+    
+    // setLoadingDoctors(false);
+  }
+
+
+  }
+
+  
+
+
+
+useEffect(() => {
+  FetchTodayBilling();
+  
+}, []);
+  
+
+useEffect(() => {
+  // FetchTodayBilling();
+  console.log("month",MonthlyBilling);
+  console.log("Today",TodayBilling)
+  
+}, [MonthlyBilling]);
+
+  return (
+    <>
+     <div className="min-h-screen bg-slate-100 p-6 flex justify-center items-start">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
+          <h1 className="text-3xl font-bold text-white">
+            Appointment Summary
+          </h1>
+          <p className="text-blue-100 mt-1">
+            Hospital Billing Report
+          </p>
+        </div>
+
+        {/* Table */}
+        <div className="p-8">
+          <div className="overflow-hidden rounded-xl border border-slate-200">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-slate-50">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase">
+                    Appointment ID
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase">
+                    Doctor Name
+                  </th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 uppercase">
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {TodayBilling.map((appointment, index) => (
+                  <tr
+                    key={appointment.app_id}
+                    className={`hover:bg-slate-50 transition ${
+                      index !== appointments.length - 1
+                        ? "border-b border-slate-200"
+                        : ""
+                    }`}
+                  >
+                    <td className="px-6 py-5 font-medium text-slate-800">
+                      {appointment.app_id}
+                    </td>
+
+                    <td className="px-6 py-5 text-slate-600">
+                      {appointment.doctor_name}
+                    </td>
+
+                    <td className="px-6 py-5 text-right font-semibold text-slate-800">
+                      ₹{appointment.payment.toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+
+              <tfoot>
+                <tr className="bg-blue-50 border-t-2 border-blue-200">
+                  <td
+                    colSpan={2}
+                    className="px-6 py-5 text-right text-lg font-bold text-slate-800"
+                  >
+                    Total Amount
+                  </td>
+
+                  <td className="px-6 py-5 text-right text-2xl font-bold text-blue-700">
+                    ₹{totalAmount.toLocaleString()}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          {/* Summary Card */}
+          <div className="mt-6 flex justify-end">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl px-6 py-4">
+              <p className="text-sm text-slate-500">
+                Total Appointments
+              </p>
+              <p className="text-2xl font-bold text-slate-800">
+                {appointments.length}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+ <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-8 py-6">
+        <h2 className="text-2xl font-bold text-white">
+          Monthly Appointment Summary
+        </h2>
+        <p className="text-emerald-100">
+          June 2026 Overview
+        </p>
+      </div>
+
+      {/* Table */}
+      <div className="p-8">
+        <div className="overflow-hidden rounded-xl border border-slate-200">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-slate-50">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase">
+                  Date
+                </th>
+
+                <th className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase">
+                  Appointments
+                </th>
+
+                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 uppercase">
+                  Total Amount
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {MonthlyBilling.map((item) => (
+                <tr
+                  key={item.appointment_date}
+                  className="border-b border-slate-200 hover:bg-slate-50 transition"
+                >
+                  <td className="px-6 py-4 font-medium text-slate-800">
+                    {new Date(item.appointment_date).toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </td>
+
+                  <td className="px-6 py-4 text-center">
+                    <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 font-semibold">
+                      {item.total_appointments}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4 text-right font-semibold text-slate-800">
+                    ₹{item.total_amount.toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+
+            <tfoot>
+              <tr className="bg-emerald-50 border-t-2 border-emerald-200">
+                <td className="px-6 py-5 font-bold text-slate-800">
+                  Month Total
+                </td>
+
+                <td className="px-6 py-5 text-center font-bold text-emerald-700 text-lg">
+                  {totalAppointments}
+                </td>
+
+                <td className="px-6 py-5 text-right font-bold text-2xl text-emerald-700">
+                  ₹{totalAmount.toLocaleString()}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+            <p className="text-sm text-slate-500">
+              Total Appointments This Month
+            </p>
+            <p className="text-3xl font-bold text-slate-800 mt-1">
+              {totalAppointments}
+            </p>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+            <p className="text-sm text-slate-500">
+              Total Revenue This Month
+            </p>
+            <p className="text-3xl font-bold text-emerald-600 mt-1">
+              ₹{totalAmountMonth.toLocaleString()}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    </>
+  );
+}
+
+

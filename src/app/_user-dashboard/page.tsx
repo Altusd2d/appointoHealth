@@ -1,91 +1,91 @@
 "use client";
 
-import Image from "next/image";
-import { useState, useEffect } from "react";
+// import Image from "next/image";
+// import { useState, useEffect } from "react";
 
-type Appointment = {
-  id: string;
-  dateTime: string;
-  hospital: string;
-  doctor: string;
-  specialty: string;
-  qualification: string;
-  location: string;
-  logo: string;
-  doctorPhoto: string;
-};
+// type Appointment = {
+//   id: string;
+//   dateTime: string;
+//   hospital: string;
+//   doctor: string;
+//   specialty: string;
+//   qualification: string;
+//   location: string;
+//   logo: string;
+//   doctorPhoto: string;
+// };
 
-const presentAppointments: Appointment[] = [
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital Hyderabad",
-    doctor: "Dr. Chandra Shakar Reddy",
-    specialty: "Cardio Specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital, Hyderabad",
-    doctor: "Dr. Chandra Shakar Reddy",
-    specialty: "Cardio Specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital, Hyderabad",
-    doctor: "Dr. Chandra Shakar Reddy",
-    specialty: "Cardio Specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-];
+// const presentAppointments: Appointment[] = [
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital Hyderabad",
+//     doctor: "Dr. Chandra Shakar Reddy",
+//     specialty: "Cardio Specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital, Hyderabad",
+//     doctor: "Dr. Chandra Shakar Reddy",
+//     specialty: "Cardio Specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital, Hyderabad",
+//     doctor: "Dr. Chandra Shakar Reddy",
+//     specialty: "Cardio Specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+// ];
 
-const pastAppointments: Appointment[] = [
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital,Hyderabad",
-    doctor: "Dr.Chandra Shakar Reddy",
-    specialty: "cardio specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital,Hyderabad",
-    doctor: "Dr.Chandra Shakar Reddy",
-    specialty: "cardio specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-  {
-    id: "202324",
-    dateTime: "8-April-2026 / 9:30 AM",
-    hospital: "Apollo Hospital,Hyderabad",
-    doctor: "Dr.Chandra Shakar Reddy",
-    specialty: "cardio specialist",
-    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-    location: "Hyderabad",
-    logo: "/hospital/apollo_logo.jpg",
-    doctorPhoto: "/hospital/doctor1.png",
-  },
-];
+// const pastAppointments: Appointment[] = [
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital,Hyderabad",
+//     doctor: "Dr.Chandra Shakar Reddy",
+//     specialty: "cardio specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital,Hyderabad",
+//     doctor: "Dr.Chandra Shakar Reddy",
+//     specialty: "cardio specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+//   {
+//     id: "202324",
+//     dateTime: "8-April-2026 / 9:30 AM",
+//     hospital: "Apollo Hospital,Hyderabad",
+//     doctor: "Dr.Chandra Shakar Reddy",
+//     specialty: "cardio specialist",
+//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+//     location: "Hyderabad",
+//     logo: "/hospital/apollo_logo.jpg",
+//     doctorPhoto: "/hospital/doctor1.png",
+//   },
+// ];
 
 
 export default function UserDashboardPage() {
