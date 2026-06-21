@@ -80,9 +80,9 @@ export default function Footer() {
           <div>
             <h3 className="text-base font-semibold">Get in Touch</h3>
             <div className="mt-4 space-y-2 text-sm text-white/75">
-              <p>Email: support@Appointohealth.com</p>
-              <p>Phone: +91 98765 43210</p>
-              <p>Mon - Sat: 9:00 AM to 8:00 PM</p>
+              <p>Email: support@appointohealth.com</p>
+              <p>Phone: 91 6300383053</p>
+              <p>Mon - Sat: 10:00 AM to 5:30 PM</p>
             </div>
           </div>
         </div>

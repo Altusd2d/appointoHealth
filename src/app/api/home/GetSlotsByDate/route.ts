@@ -30,7 +30,13 @@ const day = Date_day.toLocaleDateString("en-US", {
   `;
 
 console.log(Date_day,",",day)
-const availability = slots[0].availability;
+// const availability = slots[0].availability;
+const availability = JSON.parse(slots[0].availability);
+// console.log(Object.keys(availability));
+// console.log("sunday"+ availability["Sunday"])
+// console.log("sunday"+ availability["sunday"])
+// console.log( availability[day])
+// const availability = slots[0].availability;
 
 console.log(availability[day])
   return NextResponse.json({message:availability[day]},{status:200});

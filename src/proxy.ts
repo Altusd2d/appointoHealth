@@ -10,9 +10,7 @@ type JwtPayload = {
 };
 
 export function proxy(req: NextRequest) {
-
   try {
-
     const pathname = req.nextUrl.pathname;
 
     // Public routes (NO LOGIN REQUIRED)
@@ -26,7 +24,7 @@ export function proxy(req: NextRequest) {
 
     // Get token from cookies
     const token = req.cookies.get("token")?.value;
-    console.log("token",token)
+    console.log("token", token);
     // No token
     if (!token) {
       return NextResponse.json(
@@ -34,61 +32,55 @@ export function proxy(req: NextRequest) {
           message: "Unauthorized please login again"
         },
         {
-          status: 401
+          status: 403
         }
       );
+      // return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
 
     // Verify token
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET as string
+      process.env.JWT_SECRET as string,
     ) as JwtPayload;
 
     // Admin routes
-    if (
-      pathname.startsWith("/api/admin") &&
-      decoded.role !== "admin"
-    ) {
+    if (pathname.startsWith("/admin-features") && decoded.role !== "admin") {
+      return NextResponse.redirect(new URL("/unauthorized", req.url));
+   }
+    if (pathname.startsWith("/api/admin") && decoded.role !== "admin") {
       return NextResponse.json(
         {
-          message: "Admin only"
+          message: "Admin only",
         },
         {
-          status: 403
-        }
+          status: 403,
+        },
       );
     }
-
     // Hospital routes
-    if (
-      pathname.startsWith("/api/hospital") &&
-      decoded.role !== "hospital"
-    ) {
+    if (pathname.startsWith("/api/hospital") && decoded.role !== "hospital") {
       return NextResponse.json(
         {
           message:
-            "Hospital only can change the data unauthorized please login again"
+            "Hospital only can change the data unauthorized please login again",
         },
         {
-          status: 403
-        }
+          status: 403,
+        },
       );
     }
 
     // User routes
-    if (
-      pathname.startsWith("/api/user") &&
-      decoded.role !== "user"
-    ) {
+    if (pathname.startsWith("/api/user") && decoded.role !== "user") {
       return NextResponse.json(
         {
-          message:
-            "User only unauthorized please login again"
+          message: "User only unauthorized please login again",
         },
         {
-          status: 403
-        }
+          status: 403,
+        },
+        // new URL("/unauthorized", req.url)
       );
     }
 
@@ -101,28 +93,27 @@ export function proxy(req: NextRequest) {
 
     return NextResponse.next({
       request: {
-        headers
-      }
+        headers,
+      },
     });
-
   } catch (error) {
-
     return NextResponse.json(
       {
-        message: "Invalid token"
+        message: "Invalid token",
       },
       {
-        status: 401
-      }
+        status: 401,
+      },
     );
   }
 }
 
 export const config = {
   matcher: [
-    "/api/admin/:path*",
+    // "/api/admin/:path*",
     "/api/hospital/:path*",
     "/api/user/:path*",
-    "/admin-features"
-  ]
+    "/admin-features",
+    "/user-dashboard/:path*",
+  ],
 };

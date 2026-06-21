@@ -6,8 +6,7 @@ import sethascope from "../../../public/sign-up/sethascope.png";
 import heartrate from "../../../public/sign-up/heart_rate.png";
 import { useSearchParams } from "next/navigation";
 import { useBookingStore } from "@/store/bookingStore";
-
-
+import { useRouter } from "next/navigation";
 type doctor = {
   id: string;
   name: string;
@@ -17,7 +16,7 @@ type doctor = {
   image: string | null;
   hospital_id: string | null;
   availability: Record<string, number[]> | null;
-  slot:string | null
+  slot: string | null;
 };
 
 const MONTHS = [
@@ -42,24 +41,17 @@ const TIME_SLOTS = Array.from({ length: 13 }, (_, index) => {
   return `${hour12}:00 ${meridiem}`;
 });
 
-
 const getDaysInMonth = (year: number, monthIndex: number) =>
   new Date(year, monthIndex + 1, 0).getDate();
 
 export default function BookingForm() {
-
-
-  
-
-
   const today = new Date();
   const currentYear = today.getFullYear();
 
   const [selectedMonth] = useState(today.getMonth());
   const [selectedYear] = useState(currentYear);
   const [selectedDate, setSelectedDate] = useState(today.getDate());
-  
-  const [selectedSlot] = useState(TIME_SLOTS[0]);
+  // const [selectedSlot, setSelectedSlot] = useState(TIME_SLOTS[0]);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [phone, setPhone] = useState("");
@@ -102,100 +94,88 @@ export default function BookingForm() {
 
   const [error, setError] = useState("");
   const [gender, setGender] = useState("male");
+  const route = useRouter();
+  
+  const booking = useBookingStore((state) => state.booking);
+  const SelectedSlot=booking?.slotTime;
+  const SelectedDate = booking?.slotDate?.split("T")[0];
+  const BookAnAppoinment = async () => {
+    setError("");
 
-  const DOCTORS = [
-    {
-      id: "d-002",
-      name: "Dr.Padma Latha",
-      speciality: "cardio specialist",
-      experience: "15 years of experience",
-      credentials:
-        "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
-      initials: "PL",
-    },
-  ];
-
-const booking = useBookingStore(
-  (state) => state.booking
-);
-
-const BookAnAppoinment = async () => {
-  setError("");
-
-  if (!booking) {
-    setError("Booking information missing");
-    return;
-  }
-
-  if (!name.trim()) {
-    setError("Please enter name");
-    return;
-  }
-
-  if (!age.trim()) {
-    setError("Please enter age");
-    return;
-  }
-
-  if (Number(age) <= 0) {
-    setError("Please enter valid age");
-    return;
-  }
-
-  if (phone.length !== 10) {
-    setError("Please enter valid phone number");
-    return;
-  }
-
-  try {
-    const payload = {
-      doctor_id: booking.doctorId,
-      hospital_id: booking.hospitalId,
-
-      name: name.trim(),
-
-      age: Number(age),
-
-      phone_number: phone,
-
-      gender: gender.toLowerCase(),
-
-      slot_time: booking.slotTime,
-
-      location: booking.hospitalLocation,
-
-      description: description.trim(),
-
-      appointment_date: booking.slotDate.split("T")[0],
-    };
-
-    console.log(payload);
-
-    const res = await fetch("/api/appointments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setError(data.message || "Failed to book appointment");
+    if (!booking) {
+      setError("Booking information missing");
       return;
     }
 
-    alert("Appointment booked successfully");
-  } catch (err) {
-    console.log(err);
-    setError("Something went wrong");
-  }
-};
+    if (!name.trim()) {
+      setError("Please enter name");
+      return;
+    }
+
+    if (!age.trim()) {
+      setError("Please enter age");
+      return;
+    }
+
+    if (Number(age) <= 0) {
+      setError("Please enter valid age");
+      return;
+    }
+
+    if (phone.length !== 10) {
+      setError("Please enter valid phone number");
+      return;
+    }
+
+    try {
+      const payload = {
+        doctor_id: booking.doctorId,
+        hospital_id: booking.hospitalId,
+
+        name: name.trim(),
+
+        age: Number(age),
+
+        phone_number: phone,
+
+        gender: gender.toLowerCase(),
+
+        slot_time: booking.slotTime,
+
+        location: booking.hospitalLocation,
+
+        description: description.trim(),
+
+        appointment_date: booking.slotDate.split("T")[0],
+      };
+      //  setSelectedSlot(slot_time)
+      console.log(payload);
+
+      const res = await fetch("/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Failed to book appointment");
+        return;
+      }
+
+      alert("Appointment booked successfully");
+      route.push("/user-dashboard");
+    } catch (err) {
+      console.log(err);
+      setError("Something went wrong");
+    }
+  };
 
   return (
     <main className="overflow-x-hidden bg-white px-4 pt-4 pb-6 md:px-6 xl:px-10">
-      
       <section className="mx-auto flex w-full max-w-7xl flex-col overflow-hidden rounded-xl bg-[#efefef] md:shadow-xl lg:flex-row">
         <div className="relative hidden w-full flex-col items-center justify-between overflow-hidden bg-white px-6 pb-8 pt-2 lg:flex lg:w-[40%] lg:px-8 xl:w-[38%]">
           <h1 className="z-10 text-center text-[40px] font-bold uppercase leading-tight text-[#042b52] lg:text-5xl">
@@ -203,7 +183,6 @@ const BookAnAppoinment = async () => {
             <br />
             Health
           </h1>
-          
 
           <div className="pointer-events-none relative isolate mt- flex h-[320px] w-full items-center justify-center overflow-visible">
             <Image
@@ -228,44 +207,41 @@ const BookAnAppoinment = async () => {
 
         <div className="relative w-full overflow-hidden bg-[#e7e7e7] px-6 py-8 lg:w-[60%] lg:pl-10 lg:py-2 xl:w-[62%]">
           <div className="mb-5">
-  <article className="rounded-2xl border border-[#d8d8d8] bg-white px-6 py-4 sm:px-8">
-    <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
-
-      <div className="flex flex-col items-center">
-        <div
-          className="grid h-[100px] w-[100px] place-items-center rounded-full
+            <article className="rounded-2xl border border-[#d8d8d8] bg-white px-6 py-4 sm:px-8">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
+                <div className="flex flex-col items-center">
+                  <div
+                    className="grid h-[100px] w-[100px] place-items-center rounded-full
           xl:h-[150px] xl:w-[150px]
           sm:h-[120px] sm:w-[120px]
           md:h-[100px] md:w-[100px]
           bg-gradient-to-br from-[#d9dde4] to-[#b8c3d6]
           text-4xl font-semibold text-[#334155]
-          sm:text-xl md:text-2xl lg:text-3xl xl:text-5xl"
-        >
-          {booking?.doctorName?.charAt(0)}
-        </div>
-      </div>
+          sm:text-xl md:text-2xl lg:text-3xl xl:text-5xl">
+                    {booking?.doctorName?.charAt(0)}
+                  </div>
+                </div>
 
-      <div className="flex-1">
-        <h2 className="text-xl font-medium text-[#0a67d4] md:text-2xl">
-          {booking?.doctorName}
-        </h2>
+                <div className="flex-1">
+                  <h2 className="text-xl font-medium text-[#0a67d4] md:text-2xl">
+                    {booking?.doctorName}
+                  </h2>
 
-        <p className="mt-2 text-lg text-[#1d1d1d] sm:text-md">
-          Specialist: {booking?.specialist}
-        </p>
+                  <p className="mt-2 text-lg text-[#1d1d1d] sm:text-md">
+                    Specialist: {booking?.specialist}
+                  </p>
 
-        <p className="mt-0.5 text-base text-[#8a8a8a] sm:text-md">
-          Experience: {booking?.experience}
-        </p>
+                  <p className="mt-0.5 text-base text-[#8a8a8a] sm:text-md">
+                    Experience: {booking?.experience}
+                  </p>
 
-        <p className="max-w-3xl text-base leading-7 text-[#161616] sm:mt-1 sm:text-md">
-          Achievement: {booking?.education}
-        </p>
-      </div>
-
-    </div>
-  </article>
-</div>
+                  <p className="max-w-3xl text-base leading-7 text-[#161616] sm:mt-1 sm:text-md">
+                    Qualification: {booking?.education}
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
           <form
             onSubmit={(event) => event.preventDefault()}
             className="relative z-0 space-y-4 xl:pl-6 xl:pr-3 [&_input]:cursor-text [&_textarea]:cursor-text">
@@ -313,42 +289,42 @@ const BookAnAppoinment = async () => {
               <fieldset className="text-xs md:text-sm font-semibold text-[#1f1f1f]">
                 <legend className="mb-1 mt-4">Gender *</legend>
                 <div className="mt-1.5 flex items-center gap-3 text-[10px] font-medium text-[#303030]">
-  <label className="flex items-center gap-1">
-    <input
-      type="radio"
-      name="gender"
-      value="Male"
-      checked={gender === "Male"}
-      onChange={(e) => setGender(e.target.value)}
-      className="h-3 w-3"
-    />
-    MALE
-  </label>
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Male"
+                      checked={gender === "Male"}
+                      onChange={(e) => setGender(e.target.value)}
+                      className="h-3 w-3"
+                    />
+                    MALE
+                  </label>
 
-  <label className="flex items-center gap-1">
-    <input
-      type="radio"
-      name="gender"
-      value="Female"
-      checked={gender === "Female"}
-      onChange={(e) => setGender(e.target.value)}
-      className="h-3 w-3"
-    />
-    Female
-  </label>
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Female"
+                      checked={gender === "Female"}
+                      onChange={(e) => setGender(e.target.value)}
+                      className="h-3 w-3"
+                    />
+                    Female
+                  </label>
 
-  <label className="flex items-center gap-1">
-    <input
-      type="radio"
-      name="gender"
-      value="Others"
-      checked={gender === "Others"}
-      onChange={(e) => setGender(e.target.value)}
-      className="h-3 w-3"
-    />
-    Others
-  </label>
-</div>
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Others"
+                      checked={gender === "Others"}
+                      onChange={(e) => setGender(e.target.value)}
+                      className="h-3 w-3"
+                    />
+                    Others
+                  </label>
+                </div>
               </fieldset>
             </div>
 
@@ -367,25 +343,21 @@ const BookAnAppoinment = async () => {
 
             <div className="">
               <p className="text-lg md:text-[20px] font-semibold tracking-wide text-[#111111]">
-                SLOT* ({selectedDate} {selectedMonthName} {selectedYear},{" "}
-                {selectedSlot})
+                SLOT* ({SelectedDate} ,{" "}
+                {SelectedSlot})
               </p>
-              {
-  error && (
-    <p className="text-red-600 text-sm font-medium">
-      {error}
-    </p>
-  )
-}
+              {error && (
+                <p className="text-red-600 text-sm font-medium">{error}</p>
+              )}
             </div>
-            
 
             <button
               type="submit"
               className=" md:h-11 h-10 w-full mb-1.5 rounded-md bg-[#002b5a] text-md md:text-lg font-bold text-white cursor-pointer shadow-xl  
               transition-shadow duration-200 hover:shadow-[0_14px_30px_rgba(0,43,90,0.45)]"
-              onClick={()=>{BookAnAppoinment()}}
-              >
+              onClick={() => {
+                BookAnAppoinment();
+              }}>
               Book an appointment
             </button>
           </form>
@@ -393,5 +365,4 @@ const BookAnAppoinment = async () => {
       </section>
     </main>
   );
-
 }

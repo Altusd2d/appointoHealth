@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { adminname, password } = body;
-    console.log(adminname,password)
+    console.log(adminname, password);
     if (!adminname || !password) {
       return NextResponse.json(
         { message: "All parameters are required" },

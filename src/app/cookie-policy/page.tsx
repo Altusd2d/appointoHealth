@@ -120,9 +120,9 @@ const sections: PolicySection[] = [
     title: "9. CONTACT US",
     paragraphs: ["If you have any questions or concerns about our use of cookies, please contact us at:"],
     contact: [
-      "Email: support@Appointohealth.in",
-      "Website: www.Appointohealth.in",
-      "Grievance Officer: [Name] - support@Appointohealth.in",
+      "Email:  support@appointohealth.in",
+      "Website: www.appointohealth.in",
+      "Grievance Officer:  support@appointohealth.in",
     ],
   },
 ];

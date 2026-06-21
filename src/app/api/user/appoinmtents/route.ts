@@ -39,7 +39,7 @@ export async function GET() {
       WHERE patient_id = ${decoded.id}
       
     `;
-    console.log(existingAppointment)
+    // console.log(existingAppointment)
 
       return NextResponse.json(
         { message: existingAppointment },

@@ -12,11 +12,12 @@ export async function POST(req:Request) {
     try{
         // let {mail,id}=body;
         const{gmail}=body
-        
+        console.log(gmail)
         const hos=await sql`
         select *  from hospitals
         where gmail=${gmail} 
         `
+        console.log(hos.length)
         if(hos.length==0){
             return NextResponse.json({message:"could't find hospital"},{status:404})
         }

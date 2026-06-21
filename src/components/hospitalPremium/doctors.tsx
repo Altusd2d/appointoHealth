@@ -39,8 +39,6 @@ type Doctor = {
   availability: Availability;
 };
 
-
-
 const doctorSlugById = new Map(
   premiumDoctors.map((doctor) => [doctor.id, doctor.slug]),
 );
@@ -58,7 +56,7 @@ function DoctorItem({ doctor }: { doctor: Doctor }) {
         />
       ) : null}
       <Image
-        src= "/hospital/doctor1.png"
+        src="/hospital/doctor1.png"
         alt={doctor.name}
         width={440}
         height={510}
@@ -89,41 +87,32 @@ function DoctorItem({ doctor }: { doctor: Doctor }) {
 }
 
 export default function Doctors({ id }: { id: string }) {
-  const [doctors,setdoctors]=useState<Doctor[] >([]);
+  const [doctors, setdoctors] = useState<Doctor[]>([]);
 
+  const fetchHospital = async () => {
+    const res = await fetch(`/api/home/getDoctors`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+    });
+    const data = await res.json();
+    console.log("data", data);
+    setdoctors(data.message);
+  };
 
-  const fetchHospital=async()=>{
-    const res = await fetch(`/api/home/getDoctors`,
-          {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-        id:id
-        }),
-      }
-        );
-        const data = await res.json();
-        console.log("data",data)
-        setdoctors(data.message);
+  useEffect(() => {
+    console.log("id", id);
 
-  }
+    fetchHospital();
+  }, []);
 
-    useEffect(() => {
-      console.log("id",id)
-
-     fetchHospital() 
-        
-      
-      
-    }, []);
-
-
-     useEffect(() => {
-  console.log(doctors);
-}, [doctors]);
-
+  useEffect(() => {
+    console.log(doctors);
+  }, [doctors]);
 
   return (
     <section className="mt-10 bg-[#e9e9e9] py-5 xl:px-27 lg:px-10 sm:px-10 px-5">
@@ -131,22 +120,18 @@ export default function Doctors({ id }: { id: string }) {
         {doctors.map((doctor) => (
           <DoctorItem key={doctor.id} doctor={doctor} />
         ))}
-        {doctors.length==5 &&
-        <div className="grid max-h-[352px] max-w-[255px] place-items-center">
-          <button
-            type="button"
-            className="md:text-[40px] text-[34px] font-semibold text-[#111111]"
-          >
-            View More...
-          </button>
-        </div>
-        }
+        {doctors.length == 5 && (
+          <div className="grid max-h-[352px] max-w-[255px] place-items-center">
+            <button
+              type="button"
+              className="md:text-[40px] text-[34px] font-semibold text-[#111111]">
+              View More...
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
 }
-
-
-
 
 //"/hospital/doctor1.png"

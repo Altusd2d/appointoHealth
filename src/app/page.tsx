@@ -14,13 +14,13 @@ const roboto = Roboto({
 export default function Home() {
   return (
     <div className={`overflow-x-hidden ${roboto.className}`}>
-      {/* <Hero /> */}
-      {/* <AboutUs /> */}
-      {/* <CoreService /> */}
-      {/* <Process /> */}
-       <HospitalSearch/> 
+      <Hero />
+      <AboutUs />
+      <CoreService />
+      <Process />
+      <HospitalSearch/>
       {/* <BlogPage/> */}
-      {/* <Faq/>  */}
-     </div> 
+      <Faq/>
+    </div>
   );
 }
