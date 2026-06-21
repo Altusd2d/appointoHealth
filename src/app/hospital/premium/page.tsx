@@ -5,9 +5,7 @@ import Equipment from "@/components/hospitalPremium/equipment";
 export default function Premium() {
   return (
     <div>
-      {/* <Hero />
-      <Doctors /> */}
-      <Equipment />
+     not accepted
     </div>
   );
 }

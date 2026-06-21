@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-type EquipmentCard = {
+type  EquipmentCard= {
   id: string;
   title: string;
   description: string;
@@ -54,7 +54,7 @@ function EquipmentItem({ item }: { item: EquipmentCard }) {
   );
 }
 
-export default function Equipment() {
+export default function Equipment({ id }: { id: string }) {
   return (
     <section className="bg-[#ececec]  py-8 md:px-16 xl:px-32 lg:px-28 md:px-20 px-5">
       <div className="mx-auto w-full flex flex-col items-center">
