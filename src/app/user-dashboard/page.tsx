@@ -419,7 +419,7 @@ export default function UserDashboardPage() {
                           className="h-8 w-auto object-contain rounded-full"
                         />
                         <h3 className="px-2 text-center text-[18px] font-semibold leading-[1.1] text-[#111111] sm:text-[21px] md:text-[23px]">
-                          {appointment.hospital_id.name}
+                          {/* {appointment.hospital_id.name} */}
                         </h3>
                       </div>
 
