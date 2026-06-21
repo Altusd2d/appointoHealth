@@ -7,7 +7,7 @@ export async function GET() {
     const presentAppointments = await sql`
       SELECT *
       FROM appointments
-      WHERE patient_id = ${user.userId} AND (
+      WHERE patient_id = ${user.userId} AND status!='cancelled' AND (
       appointment_date::DATE >= CURRENT_DATE 
       OR status= 'booked'
       )
