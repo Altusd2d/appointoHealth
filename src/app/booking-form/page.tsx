@@ -58,6 +58,7 @@ export default function BookingForm() {
   const [selectedMonth] = useState(today.getMonth());
   const [selectedYear] = useState(currentYear);
   const [selectedDate, setSelectedDate] = useState(today.getDate());
+  
   const [selectedSlot] = useState(TIME_SLOTS[0]);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
