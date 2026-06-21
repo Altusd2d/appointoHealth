@@ -106,40 +106,40 @@ export async function POST(req: NextRequest) {
       hospital_id.toString() + "-" + count[0].count + "-" + rand();
 
     // Insert appointment
-    const appointment = await sql`
-      INSERT INTO appointments (
-        doctor_id,
-        patient_id,
-        name,
-        age,
-        phone_number,
-        gender,
-        description,
-        appointment_time,
-        location,
-        hospital_id,
-        appointment_date,
-        app_id,
-        status
-      )
-      VALUES (
-        ${doctor_id},
-        ${decoded.userId},
-        ${name},
-        ${age},
-        ${phone_number},
-        ${gender},
-        ${description},
-        ${slot_time},
-        ${loc[0].location},
-        ${hospital_id},
-        ${appointment_date},
-        ${search_id},
-        ${status}
-      )
-      RETURNING *
-    `;
-console.log(appointment)
+const appointment = await sql`
+  INSERT INTO appointments (
+    doctor_id,
+    patient_id,
+    name,
+    age,
+    phone_number,
+    gender,
+    description,
+    appointment_time,
+    location,
+    hospital_id,
+    appointment_date,
+    app_id,
+    status
+  )
+  VALUES (
+    ${doctor_id},
+    ${decoded.userId},
+    ${name},
+    ${age},
+    ${phone_number},
+    ${gender},
+    ${description},
+    ${slot_time},
+    ${loc[0].location},
+    ${hospital_id},
+    ${appointment_date},
+    ${search_id},
+    ${"booked"}
+  )
+  RETURNING *
+`;
+
     return NextResponse.json(
       {
         message: "Appointment booked successfully",

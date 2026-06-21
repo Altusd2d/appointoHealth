@@ -168,31 +168,55 @@ export default function UserDashboardPage() {
       setDeleteLoading(null);
     }
   };
-  const handleCancelAppointment = async (appointment_id: number) => {
-    try {
-      setCancelLoading(appointment_id);
-      const res = await fetch("/api/user/cancelAppointment", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          appointment_id: appointment_id,
-        }),
-      });
-      const data = await res.json();
+  // const handleCancelAppointment = async (appointment_id: number) => {
+  //   try {
+  //     setCancelLoading(appointment_id);
+  //     const res = await fetch("/api/user/cancelAppointment", {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         appointment_id: appointment_id,
+  //       }),
+  //     });
+  //     const data = await res.json();
+  //     if (res.ok) {
+  //       await fetchPastAppointments();
+  //       setPresentAppointments((prev) =>
+  //         prev.filter((item) => item.id !== appointment_id),
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setCancelLoading(null);
+  //   }
+  // };
+  const handleCancelAppointment=async(appointment_id:number)=>{
+    try{
+      const res=await fetch("/api/user/cancelAppointment",{
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        appointment_id:appointment_id
+      })
+    })
+     const data = await res.json();
       if (res.ok) {
         await fetchPastAppointments();
         setPresentAppointments((prev) =>
           prev.filter((item) => item.id !== appointment_id),
         );
+        
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setCancelLoading(null);
     }
-  };
+    catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <main className="min-h-screen px-3 py-6 sm:px-4 sm:py-8 md:px-10">
       <section className="mx-auto max-w-[860px] rounded-[8px] p-3 sm:p-5 md:p-8">

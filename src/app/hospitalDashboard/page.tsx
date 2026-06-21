@@ -2,7 +2,16 @@
 import Spinner from "@/components/ui/Spinner";
 import logo from "../../../public/hospital/apollo_logo.jpg";
 import Image from "next/image";
-import  { useMemo, useState ,useEffect} from "react";
+import React, { useMemo, useState ,useEffect} from "react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+
+type HospitalSlugPageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
 
 
 type Availability = {
@@ -27,18 +36,6 @@ type Doctor = {
   hospital_id: string;
   availability: Availability;
 };
-
-export type TodayBilling = {
-  app_id: string;
-  doctor_name: string;
-  payment: number;
-};
-
-export interface MonthlyBilling {
-  appointment_date: string;
-  total_appointments: number;
-  total_amount: number;
-}
 
 
 
@@ -87,6 +84,82 @@ const sidebarItems: { label: TabKey; glyph: string }[] = [
   { label: "Settings", glyph: "ST" },
 ];
 
+
+
+function SimplePanel({ title }: { title: string }) {
+  const doctors = [
+    {
+      id: 1,
+      name: "Dr. Chandra Shekar Reddy",
+      specialization: "Cardiologist",
+      experience: "8 Years",
+    },
+    {
+      id: 2,
+      name: "Dr. Priya Sharma",
+      specialization: "Dermatologist",
+      experience: "5 Years",
+    },
+  ];
+
+  return (
+    <article className="rounded-2xl bg-white p-6 shadow-sm">
+      <h2 className="mb-4 text-2xl font-semibold">{title}</h2>
+
+      {title === "Doctors" && (
+  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cold-3">
+    {doctors.map((doctor) => (
+      <div
+        key={doctor.id}
+        className="rounded-xl border border-slate-200 p-4 shadow-sm"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-600">
+            {doctor.name.charAt(4)}
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-slate-800">
+              {doctor.name}
+            </h3>
+
+            <p className="text-sm text-slate-600">
+              {doctor.specialization}
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-3 text-sm text-slate-500">
+          Experience: {doctor.experience}
+        </p>
+
+        <button className="mt-4 w-full rounded-lg bg-blue-600 py-2 text-sm text-white hover:bg-blue-700">
+          View Profile
+        </button>
+      </div>
+    ))}
+  </div>
+)}
+
+      {title === "Billing" && (
+        <div className="rounded-xl border p-4">
+          <p className="font-medium">Today's Revenue</p>
+          <p className="mt-2 text-3xl font-bold text-green-600">
+            ₹45,000
+          </p>
+        </div>
+      )}
+
+      {title === "Analytics" && (
+        <div className="rounded-xl border p-4">
+          <p>Total Appointments: 120</p>
+          <p>Completed: 95</p>
+          <p>Pending: 25</p>
+        </div>
+      )}
+    </article>
+  );
+}
 
 function SettingsPanel({ hospital }: { hospital: unknown }) {
 
@@ -445,7 +518,9 @@ if(isload){
     </article>
     )
   }
-
+//     </>
+//   );
+// }
 
 function DashboardPanel({ hospital }: { hospital: unknown }) {
   const[loading,setloading]=useState<boolean>(true);
@@ -683,9 +758,6 @@ const panel = useMemo(() => {
 
   if (activeTab === "Settings")
     return <SettingsPanel hospital={hospital} />;
-
-  if (activeTab === "Billing")
-    return <BillingPanel />;
 
   return <SimplePanel title={activeTab} />;
 }, [activeTab, hospital]);
@@ -1204,6 +1276,13 @@ const days = [
   "Friday",
   "Saturday",
 ];
+// let Sunday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
+// let Monday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
+// let Tuesday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
+// let Wednesday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
+// let Thurday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
+// let Friday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
+// let Saturday=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0]
 
 
 const timeSlots = Array.from({ length: 24 }, (_, i) => {
@@ -1532,322 +1611,3 @@ if(doctors==undefined || doctors.length==0){
   );
 }
 
-
-
- function BillingPanel() {
-  const appointments = [
-    {
-      appointmentId: "APT001",
-      doctorName: "Dr. John",
-      amount: 5000,
-    },
-    {
-      appointmentId: "APT002",
-      doctorName: "Dr. Sarah",
-      amount: 700,
-    },
-    {
-      appointmentId: "APT003",
-      doctorName: "Dr. Michael",
-      amount: 600,
-    },
-    {
-      appointmentId: "APT004",
-      doctorName: "Dr. Emily",
-      amount: 800,
-    },
-  ];
-
-  const monthlyData = [
-    {
-      date: "2026-06-01",
-      totalAppointments: 12,
-      totalAmount: 6000,
-    },
-    {
-      date: "2026-06-02",
-      totalAppointments: 8,
-      totalAmount: 4000,
-    },
-    {
-      date: "2026-06-03",
-      totalAppointments: 15,
-      totalAmount: 7500,
-    },
-    {
-      date: "2026-06-04",
-      totalAppointments: 10,
-      totalAmount: 5000,
-    },
-    {
-      date: "2026-06-05",
-      totalAppointments: 18,
-      totalAmount: 9000,
-    },
-  ];
-
-
-  const [loading, setloading] = useState<boolean>(false);
-const [TodayBilling, SetTodayBilling] = useState<TodayBilling []>([]);
-const [MonthlyBilling, SetMonthlyBilling] = useState<MonthlyBilling []>([]);
-
-  const totalAmount = TodayBilling.reduce(
-    (sum, appointment) => sum + Number(appointment.payment),0
-  );
-
-   const totalAppointments = MonthlyBilling.reduce(
-    (sum, item) => sum + Number(item.total_appointments),
-    0
-  );
-
-  const totalAmountMonth = MonthlyBilling.reduce(
-    (sum, item) => sum + Number(item.total_amount),
-    0
-  );
-
-
-
-
-  const FetchTodayBilling=async()=>{
-
-    try {
-    console.log("entered")
-    const res = await fetch(
-      "/api/hospital/Billing",
-      {
-        method: "GET",
-      }
-    );
-
-    const data = await res.json();
-    console.log(data)
-
-    if (!res.ok) {
-      console.log(data.message);
-     
-      return;
-    }
-    // console.log(data.message)
-    SetTodayBilling(data.Today);
-    SetMonthlyBilling(data.Month)
-  } catch (error) {
-    console.log(error);
-  } finally {
-    
-    // setLoadingDoctors(false);
-  }
-
-
-  }
-
-  
-
-
-
-useEffect(() => {
-  FetchTodayBilling();
-  
-}, []);
-  
-
-useEffect(() => {
-  // FetchTodayBilling();
-  console.log("month",MonthlyBilling);
-  console.log("Today",TodayBilling)
-  
-}, [MonthlyBilling]);
-
-  return (
-    <>
-     <div className="min-h-screen bg-slate-100 p-6 flex justify-center items-start">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
-          <h1 className="text-3xl font-bold text-white">
-            Appointment Summary
-          </h1>
-          <p className="text-blue-100 mt-1">
-            Hospital Billing Report
-          </p>
-        </div>
-
-        {/* Table */}
-        <div className="p-8">
-          <div className="overflow-hidden rounded-xl border border-slate-200">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-slate-50">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase">
-                    Appointment ID
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase">
-                    Doctor Name
-                  </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 uppercase">
-                    Amount
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {TodayBilling.map((appointment, index) => (
-                  <tr
-                    key={appointment.app_id}
-                    className={`hover:bg-slate-50 transition ${
-                      index !== appointments.length - 1
-                        ? "border-b border-slate-200"
-                        : ""
-                    }`}
-                  >
-                    <td className="px-6 py-5 font-medium text-slate-800">
-                      {appointment.app_id}
-                    </td>
-
-                    <td className="px-6 py-5 text-slate-600">
-                      {appointment.doctor_name}
-                    </td>
-
-                    <td className="px-6 py-5 text-right font-semibold text-slate-800">
-                      ₹{appointment.payment.toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-
-              <tfoot>
-                <tr className="bg-blue-50 border-t-2 border-blue-200">
-                  <td
-                    colSpan={2}
-                    className="px-6 py-5 text-right text-lg font-bold text-slate-800"
-                  >
-                    Total Amount
-                  </td>
-
-                  <td className="px-6 py-5 text-right text-2xl font-bold text-blue-700">
-                    ₹{totalAmount.toLocaleString()}
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-
-          {/* Summary Card */}
-          <div className="mt-6 flex justify-end">
-            <div className="bg-slate-50 border border-slate-200 rounded-xl px-6 py-4">
-              <p className="text-sm text-slate-500">
-                Total Appointments
-              </p>
-              <p className="text-2xl font-bold text-slate-800">
-                {appointments.length}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
- <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-8 py-6">
-        <h2 className="text-2xl font-bold text-white">
-          Monthly Appointment Summary
-        </h2>
-        <p className="text-emerald-100">
-          June 2026 Overview
-        </p>
-      </div>
-
-      {/* Table */}
-      <div className="p-8">
-        <div className="overflow-hidden rounded-xl border border-slate-200">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-slate-50">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase">
-                  Date
-                </th>
-
-                <th className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase">
-                  Appointments
-                </th>
-
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 uppercase">
-                  Total Amount
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {MonthlyBilling.map((item) => (
-                <tr
-                  key={item.appointment_date}
-                  className="border-b border-slate-200 hover:bg-slate-50 transition"
-                >
-                  <td className="px-6 py-4 font-medium text-slate-800">
-                    {new Date(item.appointment_date).toLocaleDateString("en-IN", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </td>
-
-                  <td className="px-6 py-4 text-center">
-                    <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 font-semibold">
-                      {item.total_appointments}
-                    </span>
-                  </td>
-
-                  <td className="px-6 py-4 text-right font-semibold text-slate-800">
-                    ₹{item.total_amount.toLocaleString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-
-            <tfoot>
-              <tr className="bg-emerald-50 border-t-2 border-emerald-200">
-                <td className="px-6 py-5 font-bold text-slate-800">
-                  Month Total
-                </td>
-
-                <td className="px-6 py-5 text-center font-bold text-emerald-700 text-lg">
-                  {totalAppointments}
-                </td>
-
-                <td className="px-6 py-5 text-right font-bold text-2xl text-emerald-700">
-                  ₹{totalAmount.toLocaleString()}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-            <p className="text-sm text-slate-500">
-              Total Appointments This Month
-            </p>
-            <p className="text-3xl font-bold text-slate-800 mt-1">
-              {totalAppointments}
-            </p>
-          </div>
-
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-            <p className="text-sm text-slate-500">
-              Total Revenue This Month
-            </p>
-            <p className="text-3xl font-bold text-emerald-600 mt-1">
-              ₹{totalAmountMonth.toLocaleString()}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    </>
-  );
-}
