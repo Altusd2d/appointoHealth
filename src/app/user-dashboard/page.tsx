@@ -366,7 +366,7 @@ export default function UserDashboardPage() {
                                 handleCancelAppointment(appointment.id)
                               }
                               disabled={cancelLoading === appointment.id}
-                              className="h-9 w-full rounded-md bg-[#ff1f1f] px-5 text-[13px] font-semibold text-white shadow sm:w-auto sm:px-6 sm:text-[14px]">
+                              className="h-9 w-full rounded-md cursor-pointer bg-[#ff1f1f] px-5 text-[13px] font-semibold text-white shadow sm:w-auto sm:px-6 sm:text-[14px]">
                               {cancelLoading === appointment.id
                                 ? "Cancelling..."
                                 : "Cancel Appointment"}

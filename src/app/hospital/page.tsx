@@ -533,7 +533,7 @@ async function BookAnAppoinment(
                                                 }),
                                               )
                                             }
-                                            className={`h-12 rounded-xl border text-lg font-medium transition sm:h-14 sm:text-[18px] ${
+                                            className={`h-8 rounded-xl border text-lg mx-2 my-2 px-1 font-medium transition sm:h-14 sm:text-[18px] ${
                                               selectedSlotByDoctor[doctor.id]==slot.time
                                                 ? "border-[#0a67d4] bg-[#0a67d4] text-white shadow-[0_8px_18px_rgba(10,103,212,0.22)]"
                                                 : isUnavailable

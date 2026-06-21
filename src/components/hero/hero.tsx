@@ -74,9 +74,9 @@ useEffect(() => {
             </button>
            {
             !isLoggedIn &&(
-               <Link href="/sign-up">
+               <Link href="#process">
               <div className="bg-[#0066cc] rounded-lg py-2 px-3 text-center tracking-normal text-white">
-                Login/Signup
+                GET STARTED
               </div>
             </Link>
             )

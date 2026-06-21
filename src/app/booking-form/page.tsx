@@ -6,7 +6,7 @@ import sethascope from "../../../public/sign-up/sethascope.png";
 import heartrate from "../../../public/sign-up/heart_rate.png";
 import { useSearchParams } from "next/navigation";
 import { useBookingStore } from "@/store/bookingStore";
-
+import { useRouter } from "next/navigation";
 type doctor = {
   id: string;
   name: string;
@@ -51,7 +51,7 @@ export default function BookingForm() {
   const [selectedMonth] = useState(today.getMonth());
   const [selectedYear] = useState(currentYear);
   const [selectedDate, setSelectedDate] = useState(today.getDate());
-  const [selectedSlot] = useState(TIME_SLOTS[0]);
+  // const [selectedSlot, setSelectedSlot] = useState(TIME_SLOTS[0]);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [phone, setPhone] = useState("");
@@ -94,21 +94,11 @@ export default function BookingForm() {
 
   const [error, setError] = useState("");
   const [gender, setGender] = useState("male");
-
-  const DOCTORS = [
-    {
-      id: "d-002",
-      name: "Dr.Padma Latha",
-      speciality: "cardio specialist",
-      experience: "15 years of experience",
-      credentials:
-        "MBBS, MD - General Medicine, DM - Gastroenterology, Fortis Hospital, Jaipur",
-      initials: "PL",
-    },
-  ];
-
+  const route = useRouter();
+  
   const booking = useBookingStore((state) => state.booking);
-
+  const SelectedSlot=booking?.slotTime;
+  const SelectedDate = booking?.slotDate?.split("T")[0];
   const BookAnAppoinment = async () => {
     setError("");
 
@@ -158,7 +148,7 @@ export default function BookingForm() {
 
         appointment_date: booking.slotDate.split("T")[0],
       };
-
+      //  setSelectedSlot(slot_time)
       console.log(payload);
 
       const res = await fetch("/api/appointments", {
@@ -177,6 +167,7 @@ export default function BookingForm() {
       }
 
       alert("Appointment booked successfully");
+      route.push("/user-dashboard");
     } catch (err) {
       console.log(err);
       setError("Something went wrong");
@@ -245,7 +236,7 @@ export default function BookingForm() {
                   </p>
 
                   <p className="max-w-3xl text-base leading-7 text-[#161616] sm:mt-1 sm:text-md">
-                    Achievement: {booking?.education}
+                    Qualification: {booking?.education}
                   </p>
                 </div>
               </div>
@@ -352,8 +343,8 @@ export default function BookingForm() {
 
             <div className="">
               <p className="text-lg md:text-[20px] font-semibold tracking-wide text-[#111111]">
-                SLOT* ({selectedDate} {selectedMonthName} {selectedYear},{" "}
-                {selectedSlot})
+                SLOT* ({SelectedDate} ,{" "}
+                {SelectedSlot})
               </p>
               {error && (
                 <p className="text-red-600 text-sm font-medium">{error}</p>

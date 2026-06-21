@@ -48,9 +48,9 @@ export default function Navbar() {
 
         {!isLoggedIn ? (
           <Link
-            href="#process"
+            href="/sign-up"
             className="rounded-md bg-[#0a7be0] px-3 py-2 text-[10px] font-semibold text-white transition hover:bg-[#0669c1] sm:px-5 sm:pt-3 sm:text-xs md:text-sm tracking-wide">
-            GET STARTED
+            Login/Signup
           </Link>
         ) : (
           <Link

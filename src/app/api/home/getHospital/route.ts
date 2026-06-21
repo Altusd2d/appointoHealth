@@ -9,9 +9,17 @@ export async function POST(req: NextRequest) {
     const { name } = body;
     
     let hos = await sql`
-  SELECT *
-  FROM hospitals
-  WHERE name ILIKE ${`%${name}%`}
+SELECT
+  h.*,
+  COALESCE(
+    json_agg(d.*) FILTER (WHERE d.id IS NOT NULL),
+    '[]'
+  ) AS doctors
+FROM hospitals h
+LEFT JOIN doctors d
+  ON d.hospital_id = h.id
+WHERE h.name ILIKE ${`%${name}%`}
+GROUP BY h.id
 `;
 
     if (hos.length == 0) {
@@ -23,9 +31,7 @@ export async function POST(req: NextRequest) {
   WHERE d.specialist ILIKE ${`%${name}%`}
 `;
     }
-hos.forEach((hospital) => {
-  console.log(hospital.doctors);
-});
+
     return NextResponse.json({ message: hos }, { status: 200 });
   } catch (error) {
     console.log("ERROR:", error);
