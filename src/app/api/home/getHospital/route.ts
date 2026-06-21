@@ -7,11 +7,13 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { name } = body;
+    
     let hos = await sql`
   SELECT *
   FROM hospitals
   WHERE name ILIKE ${`%${name}%`}
 `;
+
     if (hos.length == 0) {
       hos = await sql`
   SELECT DISTINCT h.*

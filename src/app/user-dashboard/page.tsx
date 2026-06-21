@@ -51,48 +51,48 @@ const presentAppointments: Appointment[] = [
   },
 ];
 
-// const pastAppointments: Appointment[] = [
-//   {
-//     id: "202324",
-//     dateTime: "8-April-2026 / 9:30 AM",
-//     hospital: "Apollo Hospital,Hyderabad",
-//     doctor: "Dr.Chandra Shakar Reddy",
-//     specialty: "cardio specialist",
-//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-//     location: "Hyderabad",
-//     logo: "/hospital/apollo_logo.jpg",
-//     doctorPhoto: "/hospital/doctor1.png",
-//   },
-//   {
-//     id: "202324",
-//     dateTime: "8-April-2026 / 9:30 AM",
-//     hospital: "Apollo Hospital,Hyderabad",
-//     doctor: "Dr.Chandra Shakar Reddy",
-//     specialty: "cardio specialist",
-//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-//     location: "Hyderabad",
-//     logo: "/hospital/apollo_logo.jpg",
-//     doctorPhoto: "/hospital/doctor1.png",
-//   },
-//   {
-//     id: "202324",
-//     dateTime: "8-April-2026 / 9:30 AM",
-//     hospital: "Apollo Hospital,Hyderabad",
-//     doctor: "Dr.Chandra Shakar Reddy",
-//     specialty: "cardio specialist",
-//     qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
-//     location: "Hyderabad",
-//     logo: "/hospital/apollo_logo.jpg",
-//     doctorPhoto: "/hospital/doctor1.png",
-//   },
-// ];
+const pastAppointments: Appointment[] = [
+  {
+    id: "202324",
+    dateTime: "8-April-2026 / 9:30 AM",
+    hospital: "Apollo Hospital,Hyderabad",
+    doctor: "Dr.Chandra Shakar Reddy",
+    specialty: "cardio specialist",
+    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+    location: "Hyderabad",
+    logo: "/hospital/apollo_logo.jpg",
+    doctorPhoto: "/hospital/doctor1.png",
+  },
+  {
+    id: "202324",
+    dateTime: "8-April-2026 / 9:30 AM",
+    hospital: "Apollo Hospital,Hyderabad",
+    doctor: "Dr.Chandra Shakar Reddy",
+    specialty: "cardio specialist",
+    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+    location: "Hyderabad",
+    logo: "/hospital/apollo_logo.jpg",
+    doctorPhoto: "/hospital/doctor1.png",
+  },
+  {
+    id: "202324",
+    dateTime: "8-April-2026 / 9:30 AM",
+    hospital: "Apollo Hospital,Hyderabad",
+    doctor: "Dr.Chandra Shakar Reddy",
+    specialty: "cardio specialist",
+    qualification: "MBBS, MD - General Medicine, DM - Gastroenterology",
+    location: "Hyderabad",
+    logo: "/hospital/apollo_logo.jpg",
+    doctorPhoto: "/hospital/doctor1.png",
+  },
+];
 
 export default function UserDashboardPage() {
   const [activeTab, setActiveTab] = useState<"present" | "past">("present");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
-  const [pastAppointments, setPastAppointments] = useState<any[]>([]);
-  const [presentAppointments, setPresentAppointments] = useState<any[]>([]);
+  const [pastAppointments, setPastAppointments] = useState<Appointment[]>([]);
+  const [presentAppointments, setPresentAppointments] = useState<[]>([]);
   const [error, setError] = useState("");
   const fetchPresentAppointments = async () => {
     try {
@@ -421,5 +421,6 @@ export default function UserDashboardPage() {
         </div>
       </section>
     </main>
+    
   );
 }

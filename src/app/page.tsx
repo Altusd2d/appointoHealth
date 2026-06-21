@@ -18,9 +18,9 @@ export default function Home() {
       {/* <AboutUs /> */}
       {/* <CoreService /> */}
       {/* <Process /> */}
-      <HospitalSearch/>
+       <HospitalSearch/> 
       {/* <BlogPage/> */}
-      {/* <Faq/> */}
-    </div>
+      {/* <Faq/>  */}
+     </div> 
   );
 }
