@@ -29,8 +29,8 @@ const day = Date_day.toLocaleDateString("en-US", {
   `;
 
 console.log(Date_day,",",day)
-// const availability = JSON.parse(slots[0].availability);
-const availability = slots[0].availability;
+const availability = JSON.parse(slots[0].availability);
+// const availability = slots[0].availability;
 const res=availability[day]
 // console.log(res)
 
