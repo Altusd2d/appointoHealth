@@ -147,6 +147,7 @@ export default function Login() {
         return;
       }
       if(res.ok){
+      localStorage.setItem("token", data.token);
       alert("Login successful");
       console.log(data);
       router.push("/user-dashboard");

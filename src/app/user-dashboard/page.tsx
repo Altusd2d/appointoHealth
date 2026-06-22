@@ -69,7 +69,7 @@ export default function UserDashboardPage() {
       const res = await fetch("/api/auth/logout", {
         method: "POST",
       });
-
+  localStorage.removeItem("token");
       if (res.ok) {
         // window.location.href = "/";
         route.push("/");

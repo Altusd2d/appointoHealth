@@ -65,7 +65,7 @@ export default function Signup() {
     }
   };
   return (
-    <main className=" bg-white px-4 py-10 md:px-6">
+    <main className=" bg-white px-4 py-10 md:px-6 relative z-10">
       <section
         className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden 
        bg-[#efefef] md:flex-row md:shadow-xl rounded-xl">

@@ -2,20 +2,59 @@
 import localFont from "next/font/local";
 import Link from "next/link";
 import Image from "next/image";
+import { jwtDecode } from "jwt-decode";
 import logo from "../../../public/logo.png";
 const font1 = localFont({
   src: "../../fonts/font1.woff2",
 });
 import { useEffect, useState } from "react";
 import { User } from "lucide-react";
+
+
+type DecodedToken = {
+  id: string;
+  gmail: string;
+  name: string;
+  role: "hospital" | "user" | "admin";
+  iat: number;
+  exp: number;
+};
+
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const res = await fetch("/api/auth/check-auth");
+    const checkAuth = async () =>{
 
-      setIsLoggedIn(res.ok);
+      const token = localStorage.getItem("token");
+
+
+      if (token) {
+          try {
+            const decoded = jwtDecode<DecodedToken>(token);
+            console.log("Token",decoded.gmail)
+            console.log("decoded",decoded);
+            setIsLoggedIn(true);
+           
+      
+            if (decoded.role === "user") {
+              setIsLoggedIn(true);
+            }
+            else{
+              setIsLoggedIn(false)
+            }
+          } catch {
+            localStorage.removeItem("token");
+           
+          }
+        } else {
+          setIsLoggedIn(false);
+        }
+      // const token = cookieStore.get("token")?.value;
+      
+   
+
+      
       // console.log(isLoggedIn)
     };
 
