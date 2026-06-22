@@ -26,6 +26,7 @@ export async function POST(req: Request) {
       {
         userId: user[0].id,
         role: "user",
+        // token:token
       },
       process.env.JWT_SECRET!,
       {
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
     const response = NextResponse.json(
       {
         message: "Login successful",
+        token
       },
       {
         status: 200,

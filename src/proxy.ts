@@ -48,6 +48,9 @@ export function proxy(req: NextRequest) {
     if (pathname.startsWith("/admin-features") && decoded.role !== "admin") {
       return NextResponse.redirect(new URL("/unauthorized", req.url));
    }
+  //  if (pathname.startsWith("/user-dashboard") && decoded.role !== "user") {
+  //     return NextResponse.redirect(new URL("/unauthorized", req.url));
+  //  }
     if (pathname.startsWith("/api/admin") && decoded.role !== "admin") {
       return NextResponse.json(
         {
@@ -110,7 +113,7 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // "/api/admin/:path*",
+    "/api/admin/:path*",
     "/api/hospital/:path*",
     "/api/user/:path*",
     "/admin-features",

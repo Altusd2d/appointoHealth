@@ -14,15 +14,15 @@ export default function Hero() {
 
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-useEffect(() => {
-  const checkAuth = async () => {
-    const res = await fetch("/api/auth/check-auth");
+// useEffect(() => {
+//   const checkAuth = async () => {
+//     const res = await fetch("/api/auth/check-auth");
 
-    setIsLoggedIn(res.ok);
-  };
+//     setIsLoggedIn(res.ok);
+//   };
 
-  checkAuth();
-}, []);
+//   checkAuth();
+// }, []);
 
   const title = "Tired of waiting for booking appointments for a doctor";
 
@@ -35,8 +35,8 @@ useEffect(() => {
   };
   return (
     <div
-      className={`bg-[#00264c] xl:px-20 md:px-12 px-6 tracking-tighter md:pb-6
-           Roboto`}
+      className={`bg-[#00264c] xl:px-20 md:px-12 px-6 tracking-tighter md:pb-6 
+           Roboto `}
     >
       {/* <Navbar/> */}
       <div className="flex max-md:flex-col items-center">

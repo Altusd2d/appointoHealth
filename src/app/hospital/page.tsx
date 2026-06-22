@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 import TopHospital from "@/components/topHospital/topHospital";
 import { useBookingStore } from "@/store/bookingStore";
@@ -27,20 +27,16 @@ type doctor = {
   specialist: string | null;
   education: string | null;
   experience: string | null;
-  image: string | null;
+  image: string | StaticImageData;
   hospital_id: string | null;
   availability: Record<string, number[]> | null;
-  slot:string | null
+  slot: string | null;
 };
 
 type slots = {
   time: string;
   status: number;
 };
-
-
-
-
 
 const timings = [
   "12:00AM",
@@ -93,8 +89,6 @@ const timings = [
   "11:30PM",
 ];
 
-
-
 export default function HospitalSearch() {
   const [searchText, setSearchtext] = useState("");
   const [result, setResult] = useState<Hospital[]>([]);
@@ -107,9 +101,7 @@ export default function HospitalSearch() {
   const [expandedDoctorSlots, setExpandedDoctorSlots] = useState<
     Record<string, boolean>
   >({});
-  const [DoctorDataForBooking, setDataForBooking] = useState<
-   doctor 
-  >();
+  const [DoctorDataForBooking, setDataForBooking] = useState<doctor>();
   const [selectedSlotByDoctor, setSelectedSlotByDoctor] = useState<
     Record<string, string>
   >({});
@@ -121,10 +113,10 @@ export default function HospitalSearch() {
       date.getMonth() + 1,
     ).padStart(2, "0")}-${date.getFullYear()}`;
 
-    const formDateForBackend = (date: Date) =>
-  `${String(date.getDate()).padStart(2, "0")}-${String(
-    date.getMonth() + 1
-  ).padStart(2, "0")}-${date.getFullYear()}`;
+  const formDateForBackend = (date: Date) =>
+    `${String(date.getDate()).padStart(2, "0")}-${String(
+      date.getMonth() + 1,
+    ).padStart(2, "0")}-${date.getFullYear()}`;
 
   const ChangeDate = (today: Date) => {
     const yesterday = new Date(today);
@@ -141,12 +133,9 @@ export default function HospitalSearch() {
 
   const [slotload, setslotload] = useState<boolean>(false);
 
-  const setBooking = useBookingStore(
-  (state) => state.setBooking
-)
+  const setBooking = useBookingStore((state) => state.setBooking);
 
   const router = useRouter();
-    
 
   async function handleClick(hospital: string) {
     console.log(hospital);
@@ -175,14 +164,14 @@ export default function HospitalSearch() {
     // console.log(hospital);
     // setloading(true);
     setslotload(true);
-    console.log(date,":",id)
+    console.log(date, ":", id);
     const [day, month, year] = date.split("-");
 
-const isoDate = new Date(
-  Number(year),
-  Number(month) - 1,
-  Number(day)
-).toISOString();
+    const isoDate = new Date(
+      Number(year),
+      Number(month) - 1,
+      Number(day),
+    ).toISOString();
 
     try {
       const res = await fetch("/api/home/GetSlotsByDate", {
@@ -197,17 +186,17 @@ const isoDate = new Date(
       const slotarray = data.message;
       console.log(data);
 
-     const temp: slots[] = [];
+      const temp: slots[] = [];
 
-for (let i = 0; i < 48; i++) {
-  if(slotarray[i]>0)
-  temp.push({
-    time: timings[i],
-    status: slotarray[i],
-  });
-}
+      for (let i = 0; i < 48; i++) {
+        if (slotarray[i] > 0)
+          temp.push({
+            time: timings[i],
+            status: slotarray[i],
+          });
+      }
 
-setvisibleSlots(temp);
+      setvisibleSlots(temp);
 
       // setslotdates(data.message);
     } catch (err) {
@@ -217,37 +206,36 @@ setvisibleSlots(temp);
     }
   }
 
+  async function BookAnAppoinment(
+    hospital: Hospital,
+    date: Date,
+    slots: Record<string, string>,
+    doc: doctor,
+  ) {
+    const selectedSlot = slots[doc.id];
 
-async function BookAnAppoinment(
-  hospital: Hospital,
-  date: Date,
-  slots: Record<string, string>,
-  doc: doctor
-) {
-  const selectedSlot = slots[doc.id];
+    if (!selectedSlot) {
+      alert("Please select a slot");
+      return;
+    }
 
-  if (!selectedSlot) {
-    alert("Please select a slot");
-    return;
+    setBooking({
+      hospitalId: hospital.id,
+      hospitalName: hospital.name,
+      hospitalLocation: hospital.location ?? "",
+
+      doctorId: doc.id,
+      doctorName: doc.name,
+      specialist: doc.specialist ?? "",
+      education: doc.education ?? "",
+      experience: doc.experience ?? "",
+
+      slotDate: date.toISOString(),
+      slotTime: selectedSlot,
+    });
+
+    router.push("/booking-form");
   }
-
-  setBooking({
-    hospitalId: hospital.id,
-    hospitalName: hospital.name,
-    hospitalLocation: hospital.location ?? "",
-
-    doctorId: doc.id,
-    doctorName: doc.name,
-    specialist: doc.specialist ?? "",
-    education: doc.education ?? "",
-    experience: doc.experience ?? "",
-
-    slotDate: date.toISOString(),
-    slotTime: selectedSlot,
-  });
-
-  router.push("/booking-form");
-}
 
   useEffect(() => {
     const today = new Date();
@@ -291,8 +279,7 @@ async function BookAnAppoinment(
           handleClick(searchText);
         }}
         className="flex items-center justify-center gap-4 px-6 py-5 md:px-10 lg:px-18 xl:px-35
-      mb-6 "
-      >
+      mb-6 ">
         <input
           value={searchText}
           placeholder="search hospital/problem"
@@ -306,8 +293,7 @@ async function BookAnAppoinment(
           type="submit"
           className={`cursor-pointer rounded-lg bg-[#0066cc] px-5 py-2 text-center
                     tracking-tight text-base font-semibold text-white mt-14
-                    ${loading || searchText.length == 0 ? "opacity-50 pointer-events-none" : ""}`}
-        >
+                    ${loading || searchText.length == 0 ? "opacity-50 pointer-events-none" : ""}`}>
           {loading ? "searching" : "search"}
         </button>
       </form>
@@ -327,8 +313,7 @@ async function BookAnAppoinment(
           return (
             <article
               key={hospital.id}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
-            >
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex items-center gap-4">
                   <div className="grid h-12 w-12 place-items-center rounded-full border border-slate-300 text-xs font-semibold tracking-[0.25em] text-slate-700">
@@ -341,8 +326,7 @@ async function BookAnAppoinment(
                 <Link
                   href={`/hospital/${hospital.id}`}
                   type="button"
-                  className="cursor-pointer rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50"
-                >
+                  className="cursor-pointer rounded-xl border border-[#0066cc] px-5 py-2 text-lg font-medium text-sky-700 transition hover:bg-sky-50">
                   Know more
                 </Link>
               </div>
@@ -364,11 +348,10 @@ async function BookAnAppoinment(
               </p>
 
               <p className="mt-5 text-3xl font-medium text-slate-900">
-                openText:24/7
+                open:24/7
               </p>
 
               <div className="mt-6 flex flex-col sm:gap-40 gap-5 sm:flex-row sm:items-center sm:justify-betwee">
-                
                 <button
                   type="button"
                   onClick={() =>
@@ -383,8 +366,7 @@ async function BookAnAppoinment(
                       return nextHospitalId;
                     })
                   }
-                  className="text-left text-base font-medium text-sky-600 transition hover:text-sky-700"
-                >
+                  className="text-left text-base font-medium text-sky-600 transition hover:text-sky-700">
                   {expandedHospitalId === hospital.id ? "" : "View More..."}
                 </button>
               </div>
@@ -394,31 +376,30 @@ async function BookAnAppoinment(
                   <p className="max-w-4xl text-lg leading-[1.45] text-[#4a4a4a] sm:text-2xl">
                     {hospital.location} branch is a major center with
                     experienced doctors and advanced treatment facilities.
-                    <span className="ml-2 text-[#0a67d4]">view in maps</span>
-                    <span className="ml-2">map pin</span>
+                    {/* <span className="ml-2 text-[#0a67d4]">view in maps</span> */}
+                    {/* <span className="ml-2">map pin</span> */}
                   </p>
 
-                  <p className="mt-6 text-3xl font-medium text-[#111111] sm:text-5xl">
-                    openTiming:24/7
+                  <p className="mt-6 text-2xl font-medium text-[#111111] sm:text-5xl">
+                    open:24/7
                   </p>
 
                   <div className="mt-8 space-y-6">
                     {hospital?.doctors?.map((doctor) => {
                       const isSlotOpen =
                         expandedDoctorSlots[doctor.id] ?? false;
-                      
-                      console.log(doctor)
+
+                      console.log(doctor);
 
                       return (
                         <article
                           key={doctor.id}
-                          className="rounded-2xl border border-[#d8d8d8] bg-white px-5 py-5 shadow-[0_3px_10px_rgba(0,0,0,0.15)] sm:px-8"
-                        >
+                          className="rounded-2xl border border-[#d8d8d8] bg-white px-5 py-5 shadow-[0_3px_10px_rgba(0,0,0,0.15)] sm:px-8">
                           <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
                             <div className="flex flex-1 flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
                               <div className="flex flex-col items-center">
                                 <Image
-                                  src="/hospital/doctor1.png"
+                                  src={doctor.image}
                                   alt={doctor.name}
                                   width={150}
                                   height={150}
@@ -431,17 +412,18 @@ async function BookAnAppoinment(
 
                               <div className="flex-1">
                                 <h2 className="text-2xl font-medium text-[#0a67d4] sm:text-4xl">
-                                  {doctor.name}
+                                  Dr.{doctor.name}
                                 </h2>
-                                <p className="mt-2 text-lg text-[#1d1d1d] sm:text-xl">
-                                  {/* {doctor.speciality} */}
-                                  {doctor.education}
+
+                                <p className="mt-4 max-w-3xl text-base leading-7 text-[#161616] sm:mt-5 sm:text-lg">
+                                  {doctor.specialist} specialist
                                 </p>
                                 <p className="mt-1 text-base text-[#8a8a8a] sm:text-lg">
-                                  {doctor.experience}
+                                  {doctor.experience} years of experience
                                 </p>
-                                <p className="mt-4 max-w-3xl text-base leading-7 text-[#161616] sm:mt-5 sm:text-lg">
-                                  {/* {doctor.credentials} */}credentials
+                                <p className="mt-2 text-lg text-[#1d1d1d] sm:text-xl">
+                                  {/* {doctor.speciality} */}
+                                  Qualification: {doctor.education}
                                 </p>
                               </div>
                             </div>
@@ -451,16 +433,12 @@ async function BookAnAppoinment(
                               onClick={() => {
                                 setDataForBooking(doctor);
                                 setExpandedDoctorSlots((prev) => ({
-                                  
                                   [doctor.id]: !prev[doctor.id],
                                 }));
-                               
-                               
                               }}
                               className="inline-flex min-w-[185px] items-center justify-center gap-3 self-start
                                rounded-xl bg-[#0a67d4] px-5 py-4 text-base font-semibold text-white 
-                               shadow-xl transition hover:bg-[#085ebc] sm:text-xl"
-                            >
+                               shadow-xl transition hover:bg-[#085ebc] sm:text-xl">
                               {isSlotOpen ? "Hide slots" : "Show slots"}
                               <svg
                                 viewBox="0 0 12 8"
@@ -468,8 +446,7 @@ async function BookAnAppoinment(
                                 aria-hidden="true"
                                 className={`h-4 w-4 transition-transform ${
                                   isSlotOpen ? "" : "rotate-180"
-                                }`}
-                              >
+                                }`}>
                                 <path
                                   d="M1.5 6.5L6 2L10.5 6.5"
                                   stroke="currentColor"
@@ -484,25 +461,25 @@ async function BookAnAppoinment(
                           {isSlotOpen && (
                             <div
                               className="mt-8 rounded-[26px] border border-[#e4ebf6] bg-[#fcfdff] md:px-4 px-2 
-                            py-5 shadow-[0_12px_24px_rgba(15,23,42,0.06)] sm:px-7 sm:py-7"
-                            >
+                            py-5 shadow-[0_12px_24px_rgba(15,23,42,0.06)] sm:px-7 sm:py-7">
                               <div className="grid grid-cols-1 gap-3 text-center sm:grid-cols-3">
                                 {slotsdate.map((day, index: number) => {
-
                                   return (
                                     <button
                                       key={index}
                                       type="button"
                                       onClick={() => {
                                         ChangeDate(day);
-                                        GetSlots(formDateForBackend(day), doctor.id);
+                                        GetSlots(
+                                          formDateForBackend(day),
+                                          doctor.id,
+                                        );
                                       }}
                                       className={`rounded-xl px-3 py-2 text-xl font-medium transition sm:text-2xl ${
                                         index == 1
                                           ? "bg-[#eef6ff] text-[#0a67d4]"
                                           : "text-[#4d4d4d] hover:bg-[#f7f9fc]"
-                                      }`}
-                                    >
+                                      }`}>
                                       {formatDate(day)}
                                     </button>
                                   );
@@ -514,11 +491,10 @@ async function BookAnAppoinment(
                                   <div>Loading...</div>
                                 ) : (
                                   <>
-                                  
                                     {visibleSlots.length > 0 ? (
                                       visibleSlots.map((slot) => {
-                                        const isSelected =false
-                                         
+                                        const isSelected = false;
+
                                         const isUnavailable = slot.status === 2;
 
                                         return (
@@ -526,21 +502,18 @@ async function BookAnAppoinment(
                                             key={slot.time}
                                             type="button"
                                             onClick={() =>
-                                              setSelectedSlotByDoctor(
-                                                () => ({
-                                                  
-                                                  [doctor.id]: slot.time,
-                                                }),
-                                              )
+                                              setSelectedSlotByDoctor(() => ({
+                                                [doctor.id]: slot.time,
+                                              }))
                                             }
                                             className={`h-8 rounded-xl border text-lg mx-2 my-2 px-1 font-medium transition sm:h-14 sm:text-[18px] ${
-                                              selectedSlotByDoctor[doctor.id]==slot.time
+                                              selectedSlotByDoctor[doctor.id] ==
+                                              slot.time
                                                 ? "border-[#0a67d4] bg-[#0a67d4] text-white shadow-[0_8px_18px_rgba(10,103,212,0.22)]"
                                                 : isUnavailable
                                                   ? "cursor-not-allowed border-[#d8d8d8] text-[#c3c3c3]"
                                                   : "border-[#9fcbf7] text-[#3f8dde] hover:bg-[#f3f8ff]"
-                                            }`}
-                                          >
+                                            }`}>
                                             {slot.time}
                                           </button>
                                         );
@@ -553,32 +526,24 @@ async function BookAnAppoinment(
                               </div>
 
                               <button>
-
-                              <div
-                                
-                                className="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl 
+                                <div
+                                  className="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl 
                                 bg-primary px-6 text-lg font-semibold whitespace-nowrap
                                  text-white shadow-xl transition hover:bg-[#085ebc] sm:h-14 sm:text-2xl"
-                                
-
-                                 onClick={() => {
+                                  onClick={() => {
                                     if (!DoctorDataForBooking) {
-    alert("Please select a doctor");
-    return;
-  }
-  BookAnAppoinment(
-    hospital,
-    slotsdate[1],
-    selectedSlotByDoctor,
-    DoctorDataForBooking
-  );
-}}
-
-
-
-                              >
-                                Book a appointment
-                              </div>
+                                      alert("Please select a doctor");
+                                      return;
+                                    }
+                                    BookAnAppoinment(
+                                      hospital,
+                                      slotsdate[1],
+                                      selectedSlotByDoctor,
+                                      DoctorDataForBooking,
+                                    );
+                                  }}>
+                                  Book a appointment
+                                </div>
                               </button>
                             </div>
                           )}
@@ -599,8 +564,7 @@ async function BookAnAppoinment(
                         setExpandedHospitalId(null);
                         setExpandedDoctorSlots({});
                       }}
-                      className="text-left text-2xl font-medium text-[#0a67d4] transition hover:text-[#084f9f] sm:text-3xl"
-                    >
+                      className="text-left text-2xl font-medium text-[#0a67d4] transition hover:text-[#084f9f] sm:text-3xl">
                       View less...
                     </button>
                   </div>

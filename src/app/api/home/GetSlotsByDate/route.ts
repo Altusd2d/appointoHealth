@@ -5,21 +5,37 @@ export async function POST(req:Request) {
 try{
  const body=await req.json();
   const {id,date}=body;
-  console.log(date);
+  console.log(body);
   if(!id || !date){
     return NextResponse.json({message:"date, id required "},{status:404})
   }
-  const Date_day = new Date(date);
-  
+  // const Date_day = new Date(date);
+  // const Date_day = new Date(`${date}T00:00:00+05:30`);
 if (isNaN(new Date(date).getTime())) {
   return NextResponse.json(
     { message: "date is invalid" },
     { status: 400 }
   );
 }
+const Date_day = new Date(new Date(date).getTime() + 330 * 60 * 1000);
+
 const day = Date_day.toLocaleDateString("en-US", {
   weekday: "long",
 });
+
+console.log(Date_day,"  ",day);
+// const day = Date_day.toLocaleDateString("en-US", {
+//   weekday: "long",
+// });
+// console.log(
+//   new Date(date).toLocaleString("en-IN", {
+//     timeZone: "Asia/Kolkata",
+//   })
+// );
+// const day = new Date(date).toLocaleDateString("en-US", {
+//   weekday: "long",
+//   timeZone: "Asia/Kolkata",
+// });
 
   const slots = await sql`
     SELECT availability
