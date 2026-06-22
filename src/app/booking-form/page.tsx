@@ -151,7 +151,7 @@ export default function BookingForm() {
       //  setSelectedSlot(slot_time)
       console.log(payload);
 
-      const res = await fetch("/api/appointments", {
+      const res = await fetch("/api/user/appointments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

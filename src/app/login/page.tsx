@@ -146,9 +146,12 @@ export default function Login() {
         alert(data.message);
         return;
       }
+      if(res.ok){
       alert("Login successful");
       console.log(data);
       router.push("/user-dashboard");
+      }
+    
     } catch (error) {
       console.error(error);
       alert(error);
