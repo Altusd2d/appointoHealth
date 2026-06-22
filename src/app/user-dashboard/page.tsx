@@ -258,9 +258,9 @@ export default function UserDashboardPage() {
               </p>
             </div>
           </div>
-          <button className="h-7 w-12 shrink-0 rounded-sm bg-[#0f62c3] text-center text-[10px] font-semibold text-white">
+          {/* <button className="h-7 w-12 shrink-0 rounded-sm bg-[#0f62c3] text-center text-[10px] font-semibold text-white">
             Edit
-          </button>
+          </button> */}
         </div>
 
         <div className="mt-10 rounded-[8px] bg-[#f7f7f7] p-4 md:p-6">
@@ -371,9 +371,9 @@ export default function UserDashboardPage() {
                                 ? "Cancelling..."
                                 : "Cancel Appointment"}
                             </button>
-                            <button className="h-9 w-full rounded-md bg-[#0d65c8] px-7 text-[13px] font-semibold text-white shadow sm:w-auto sm:text-[14px]">
+                            {/* <button className="h-9 w-full rounded-md bg-[#0d65c8] px-7 text-[13px] font-semibold text-white shadow sm:w-auto sm:text-[14px]">
                               Reschedule
-                            </button>
+                            </button> */}
                           </div>
                         </div>
                       </article>
