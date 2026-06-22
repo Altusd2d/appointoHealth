@@ -24,6 +24,7 @@ WHERE a.patient_id = ${user.userId}
     a.appointment_date::DATE >= CURRENT_DATE
     OR a.status = 'booked'
   );
+  AND a.status!='completed'
 `;
 
 // console.log("presentt appointmensts "+presentAppointments+"two details")
