@@ -4,6 +4,7 @@ import sql from "@/lib/dbs";
 import { cookies } from "next/headers";
 
 interface JwtPayload {
+  // id: string;
   userId: string;
 }
 
