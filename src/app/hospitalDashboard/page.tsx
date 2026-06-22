@@ -40,7 +40,6 @@ export default function HospitalDashboardPage() {
 
   const [step, setStep] = useState< "login" | "forgot-password" |"verify-otp" | "change-password"|"reset-password">("login");
   const [otp, setOtp] = useState("");
-  
   const [confirmPassword, setConfirmPassword] = useState("");
   const [timeLeft, setTimeLeft] = useState(300); // 5 mins
   const [activeTab, setActiveTab] = useState<TabKey>("Dashboard");
@@ -82,6 +81,13 @@ const data = await loginQuery.json();
 
 if (loginQuery.ok) {
   localStorage.setItem("token", data.token);
+  // const token = localStorage.getItem("token");
+  const decoded = jwtDecode<DecodedToken>(data.token);
+
+setname(decoded.name)
+      setid(decoded.id);
+      setmail(decoded.gmail)
+
   console.log("Login successful", data);
   setIslogin(true)
   sethospital(data)
