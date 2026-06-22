@@ -4,7 +4,7 @@ import sql from "@/lib/dbs";
 import { cookies } from "next/headers";
 
 interface JwtPayload {
-  id: string;
+  // id: string;
   userId: string;
 }
 
@@ -125,7 +125,7 @@ const appointment = await sql`
   )
   VALUES (
     ${doctor_id},
-    ${decoded.id},
+    ${decoded.userId},
     ${name},
     ${age},
     ${phone_number},
