@@ -457,9 +457,9 @@ export default function UserDashboardPage() {
                             ? "Deleting..."
                             : "Delete"}
                         </button>
-                        <button className="h-9 w-full rounded-md bg-[#0d65c8] px-7 text-[13px] font-semibold text-white shadow sm:w-auto sm:text-[14px]">
+                        {/* <button className="h-9 w-full rounded-md bg-[#0d65c8] px-7 text-[13px] font-semibold text-white shadow sm:w-auto sm:text-[14px]">
                           Book Once Again
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </article>
