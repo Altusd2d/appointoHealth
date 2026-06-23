@@ -36,6 +36,14 @@ export async function GET() {
 
     // Request body
     // const body = await req.json();
+    const date=new Date();
+    const Date_day = new Date(new Date(date).getTime() + 330 * 60 * 1000);
+
+    const formattedDate = new Date(Date_day)
+  .toISOString()
+  .split("T")[0];
+
+
 
 
    const Today_billing = await sql`
@@ -47,7 +55,7 @@ export async function GET() {
   JOIN doctors d
     ON a.doctor_id = d.id
   WHERE a.hospital_id = ${decoded.id}
-    AND a.appointment_date = CURRENT_DATE
+    AND a.appointment_date = ${formattedDate}
 `;
 
 // AND a.date = CURRENT_DATE
@@ -60,10 +68,10 @@ const Month_billing = await sql`
     COALESCE(SUM(a.payment), 0) AS total_amount
   FROM appointments a
   WHERE a.hospital_id = ${decoded.id}
-    AND DATE_TRUNC('month', a.appointment_date) =
-        DATE_TRUNC('month', CURRENT_DATE)
+    AND a.appointment_date::date >= DATE_TRUNC('month', CURRENT_DATE)
+    AND a.appointment_date::date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
   GROUP BY a.appointment_date
-  ORDER BY a.appointment_date
+  ORDER BY a.appointment_date::date
 `;
 
     
