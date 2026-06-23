@@ -4,7 +4,7 @@ export async function GET() {
   try {
     const user = await getUserFromToken();
 
-    const presentAppointments = await sql`
+ const presentAppointments = await sql`
 SELECT
   a.*,
   jsonb_build_object(

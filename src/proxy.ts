@@ -100,6 +100,7 @@ export function proxy(req: NextRequest) {
       },
     });
   } catch (error) {
+    console.error(error)
     return NextResponse.json(
       {
         message: "Invalid token",
