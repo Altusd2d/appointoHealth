@@ -5,6 +5,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 export default function Hero() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+// useEffect(() => {
+//   const checkAuth = async () => {
+//     const res = await fetch("/api/auth/check-auth");
+
+//     setIsLoggedIn(res.ok);
+//   };
+
+//   checkAuth();
+// }, []);
+
   const title = "Tired of waiting for booking appointments for a doctor";
 
   const handleBookAppointmentClick = () => {
@@ -16,8 +30,8 @@ export default function Hero() {
   };
   return (
     <div
-      className={`bg-[#00264c] xl:px-20 md:px-12 px-6 tracking-tighter md:pb-6
-           Roboto`}
+      className={`bg-[#00264c] xl:px-20 md:px-12 px-6 tracking-tighter md:pb-6 
+           Roboto `}
     >
       {/* <Navbar/> */}
       <div className="flex max-md:flex-col items-center">
@@ -53,11 +67,15 @@ export default function Hero() {
             >
               Book an appointment
             </button>
-            <Link href="/sign-up">
+           {
+            !isLoggedIn &&(
+               <Link href="#process">
               <div className="bg-[#0066cc] rounded-lg py-2 px-3 text-center tracking-normal text-white">
-                Login/Signup
+                GET STARTED
               </div>
             </Link>
+            )
+           }
           </div>
         </div>
         <Image src={phones} alt="" width={577 * 1.5} height={433 * 1.5} />

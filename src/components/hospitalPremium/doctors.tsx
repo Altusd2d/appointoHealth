@@ -1,3 +1,6 @@
+
+
+
 "use client";
 
 import Image from "next/image";
@@ -73,7 +76,7 @@ function DoctorItem({ doctor }: { doctor: DoctorCard }) {
         />
       ) : null}
       <Image
-        src={doctor.image}
+        src="/hospital/doctor1.png"
         alt={doctor.name}
         width={440}
         height={510}
@@ -88,10 +91,12 @@ function DoctorItem({ doctor }: { doctor: DoctorCard }) {
           {doctor.name}
         </h3>
         <p className="mt-2 md:text-[16px] text-[12px] font-medium leading-none">
-          {doctor.role}
+          {/* {doctor.role} */}
+          doctorRole
         </p>
         <p className="mt-2 md:text-[16px] text-[12px] font-semibold ">
-          {doctor.achievement}
+          {/* {doctor.achievement} */}
+          achivement
         </p>
         <p className="mt-1 md:text-[16px] text-[12px] font-semibold">
           {doctor.experience}
@@ -101,23 +106,52 @@ function DoctorItem({ doctor }: { doctor: DoctorCard }) {
   );
 }
 
-export default function Doctors() {
+export default function Doctors({ id }: { id: string }) {
+  const [doctors, setdoctors] = useState<Doctor[]>([]);
+
+  const fetchHospital = async () => {
+    const res = await fetch(`/api/home/getDoctors`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+    });
+    const data = await res.json();
+    console.log("data", data);
+    setdoctors(data.message);
+  };
+
+  useEffect(() => {
+    console.log("id", id);
+
+    fetchHospital();
+  }, []);
+
+  useEffect(() => {
+    console.log(doctors);
+  }, [doctors]);
+
   return (
     <section className="mt-10 bg-[#e9e9e9] py-5 xl:px-27 lg:px-10 sm:px-10 px-5">
       <div className="mx-auto grid  grid-cols-1 justify-items-center gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {doctors.map((doctor) => (
           <DoctorItem key={doctor.id} doctor={doctor} />
         ))}
-
-        <div className="grid max-h-[352px] max-w-[255px] place-items-center">
-          <button
-            type="button"
-            className="md:text-[40px] text-[34px] font-semibold text-[#111111]"
-          >
-            View More...
-          </button>
-        </div>
+        {doctors.length == 5 && (
+          <div className="grid max-h-[352px] max-w-[255px] place-items-center">
+            <button
+              type="button"
+              className="md:text-[40px] text-[34px] font-semibold text-[#111111]">
+              View More...
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
 }
+
+//"/hospital/doctor1.png"

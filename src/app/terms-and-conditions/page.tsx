@@ -189,8 +189,8 @@ const sections: PolicySection[] = [
     title: "14. GRIEVANCE OFFICER",
     paragraphs: ["As required under the IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, we have appointed a Grievance Officer:"],
     contact: [
-      "Grievance Officer: [Name of Grievance Officer]",
-      "Email: support@Appointohealth.in",
+      "Grievance Officer: Hyderabad, Telangana, India",
+      "Email: support@appointohealth.in",
       "Response Time: Within 48 hours of receipt; resolution within 30 days.",
     ],
   },
@@ -210,9 +210,9 @@ const sections: PolicySection[] = [
     title: "17. CONTACT INFORMATION",
     contact: [
       "Company Name: Appointo Health",
-      "Website: www.Appointohealth.in",
-      "Email: support@Appointohealth.in",
-      "Phone: +91 XXXXX XXXXX [Please update with actual number]",
+      "Website: www.appointohealth.in",
+      "Email:  support@appointohealth.in",
+      "Phone: +91 6300383053 ",
     ],
   },
   {

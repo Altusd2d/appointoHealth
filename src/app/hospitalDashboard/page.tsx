@@ -1,511 +1,312 @@
 "use client";
-import logo from "../../../public/hospital/apollo_logo.jpg";
-import Image from "next/image";
-import React, { useMemo, useState } from "react";
 
-type Appointment = {
-  initials: string;
-  name: string;
+import Spinner from "@/components/ui/Spinner";
+import  { useMemo, useState ,useEffect} from "react";
+import { jwtDecode } from "jwt-decode";
+import AllAppoinments from "./components/AllAppoinments/AllAppoinments";
+import TodayAppoinments from "./components/TodayAppionments/TodayAppoinments";
+import Doctors from "./components/Doctors/Doctors";
+import Billings from "./components/Billing/Billings";
+import Setting from "./components/Setting/Setting";
+import { decode } from "punycode";
+
+type DecodedToken = {
   id: string;
-  doctor: string;
-  time: string;
-  status: "Completed" | "Waiting" | "Confirmed";
-  color: string;
-};
-
-type ActiveDoctor = {
-  initials: string;
+  gmail: string;
   name: string;
-  specialty: string;
-  patients: number;
-  color: string;
+  role: "hospital" | "patient" | "admin";
+  iat: number;
+  exp: number;
 };
 
-type TabKey =
-  | "Dashboard"
-  | "Appointments"
-  | "Doctors"
-  | "Billing"
-  | "Analytics"
-  | "Settings";
 
-const appointments: Appointment[] = [
-  {
-    initials: "RK",
-    name: "Ramesh Kumar",
-    id: "#P240515001",
-    doctor: "Dr. Rajesh Kumar",
-    time: "9:00 AM",
-    status: "Completed",
-    color: "from-emerald-500 to-teal-400",
-  },
-  {
-    initials: "PS",
-    name: "Priya Sharma",
-    id: "#P240515002",
-    doctor: "Dr. Amit Patel",
-    time: "10:30 AM",
-    status: "Waiting",
-    color: "from-pink-500 to-rose-400",
-  },
-  {
-    initials: "AS",
-    name: "Anita Singh",
-    id: "#P240515003",
-    doctor: "Dr. Priya Sharma",
-    time: "11:00 AM",
-    status: "Confirmed",
-    color: "from-indigo-500 to-violet-400",
-  },
-  {
-    initials: "MV",
-    name: "Manoj Verma",
-    id: "#P240515004",
-    doctor: "Dr. Rajesh Kumar",
-    time: "2:00 PM",
-    status: "Confirmed",
-    color: "from-sky-500 to-cyan-400",
-  },
-  {
-    initials: "SK",
-    name: "Sunita Kapoor",
-    id: "#P240515005",
-    doctor: "Dr. Amit Patel",
-    time: "4:00 PM",
-    status: "Confirmed",
-    color: "from-orange-400 to-amber-400",
-  },
-];
 
-const doctors: ActiveDoctor[] = [
-  {
-    initials: "RK",
-    name: "Dr. Rajesh Kumar",
-    specialty: "Cardiologist",
-    patients: 18,
-    color: "from-indigo-500 to-violet-500",
-  },
-  {
-    initials: "PS",
-    name: "Dr. Priya Sharma",
-    specialty: "Dermatologist",
-    patients: 22,
-    color: "from-pink-500 to-rose-400",
-  },
-  {
-    initials: "AP",
-    name: "Dr. Amit Patel",
-    specialty: "Orthopedic",
-    patients: 15,
-    color: "from-cyan-500 to-sky-400",
-  },
-  {
-    initials: "SR",
-    name: "Dr. Sneha Reddy",
-    specialty: "Pediatrician",
-    patients: 20,
-    color: "from-orange-400 to-amber-400",
-  },
-];
 
-const sidebarItems: { label: TabKey; glyph: string }[] = [
+type TabKey ="Dashboard"| "Appointments" | "Doctors" | "Billing" | "Analytics" | "Settings";
+
+
+
+export default function HospitalDashboardPage() {
+
+  
+  const sidebarItems: { label: TabKey; glyph: string }[] = [
   { label: "Dashboard", glyph: "DB" },
   { label: "Appointments", glyph: "AP" },
   { label: "Doctors", glyph: "DR" },
-  // { label: "Schedules", glyph: "SC" },
-  // { label: "Patients", glyph: "PT" },
   { label: "Billing", glyph: "BL" },
   { label: "Analytics", glyph: "AN" },
   { label: "Settings", glyph: "ST" },
-];
+  ];
 
-const statusStyles: Record<Appointment["status"], string> = {
-  Completed: "bg-slate-100 text-slate-600",
-  Waiting: "bg-amber-100 text-amber-600",
-  Confirmed: "bg-emerald-100 text-emerald-600",
+  const [step, setStep] = useState< "login" | "forgot-password" |"verify-otp" | "change-password"|"reset-password">("login");
+  const [otp, setOtp] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [timeLeft, setTimeLeft] = useState(300); // 5 mins
+  const [activeTab, setActiveTab] = useState<TabKey>("Dashboard");
+  const [Islogin, setIslogin] = useState<boolean | null>(null);
+  const [gmail, setgmail] = useState<string>("");
+  const [password, setpassword] = useState<string>("");
+  const [err, seterr] = useState<string>("");
+  const [isload, setisload] = useState<boolean>(false);
+  const [hospital,sethospital]=useState(null);
+  const [load, setload] = useState(false);
+  const[name,setname]=useState<string>("")
+  const[id,setid]=useState<string>("")
+  const[mail,setmail]=useState<string>("")
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+
+  const CheckLogin=async()=>
+  {
+    setisload(true)
+      console.log(gmail,password);
+      if(gmail.length==0 || password.length==0){
+        console.log("gmail or password is required")
+      }
+      const loginQuery = await fetch(
+  "/api/services/login",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      gmail,
+      password,
+    }),
+  }
+);
+
+const data = await loginQuery.json();
+
+if (loginQuery.ok) {
+  localStorage.setItem("token", data.token);
+  // const token = localStorage.getItem("token");
+  const decoded = jwtDecode<DecodedToken>(data.token);
+
+setname(decoded.name)
+      setid(decoded.id);
+      setmail(decoded.gmail)
+
+  console.log("Login successful", data);
+  setIslogin(true)
+  sethospital(data)
+  
+} 
+else {
+  console.log("Login failed", data.message);
+  seterr(data.message)
+}
+setisload(false)
+}
+
+
+const panel = useMemo(() => {
+  if (activeTab === "Dashboard")
+    return <TodayAppoinments />
+
+
+  if (activeTab === "Appointments")
+  return <AllAppoinments />
+
+  if (activeTab === "Doctors")
+   return <Doctors />
+
+  if (activeTab === "Settings")
+    // return <SettingsPanel hospital={hospital} />;
+  return <Setting mail={mail} id={id}/>
+
+  if (activeTab === "Billing")
+    // return <BillingPanel />;
+  return <Billings />
+
+  // return <SimplePanel title={activeTab} />;
+  return <></>
+}, [activeTab, hospital]);
+
+
+const verifyOTP = async (
+  otp: string,
+  gmail: string
+): Promise<boolean> => {
+  setload(true)
+  try {
+    const res = await fetch(
+      "/api/services/verifyOtp",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          otp,
+         identifier: gmail,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setload(false);
+      alert(data.message);
+
+      
+      return false;
+    }
+    setload(false)
+    setStep("change-password");
+    alert(data.message);
+    return true;
+  } catch (err) {
+    console.log(err);
+    setload(false)
+    alert("Failed to verify OTP");
+    return false;
+  }
+  finally{
+    setload(false);
+  }
 };
 
-function SimplePanel({ title }: { title: string }) {
-  return (
-    <article className="rounded-2xl bg-white p-6 shadow-sm">
-      <h2 className="text-2xl font-semibold">{title}</h2>
-      <p className="mt-2 text-slate-600">
-        {title} content is ready for integration.
-      </p>
-    </article>
-  );
+
+const changePassword=async(gmail:string,password:string)=>{
+  try {
+    setload(true)
+    const res = await fetch(
+      "/api/services/UpdatePassword",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        gmail,
+         password,
+        }),
+      }
+    );
+
+    const data = await res.json();
+    setload(false)
+
+    if (!res.ok) {
+      alert(data.message);
+      return ;
+    }
+    setStep("login");
+    alert(data.message);
+    return ;
+  } catch (err) {
+    console.log(err);
+    alert("Failed to change password try again");
+    return ;
+  }
+
+
 }
 
-function SettingsPanel() {
-  return (
-    <article className="rounded-2xl bg-white p-5 shadow-sm md:p-6">
-      <h2 className="text-2xl font-semibold">Settings</h2>
-      <p className="mt-1 text-slate-600">
-        Manage hospital profile and dashboard preferences.
-      </p>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 p-4">
-          <h3 className="text-lg font-semibold">Hospital Profile</h3>
-          <div className="mt-4 space-y-3">
-            <div>
-              <label className="text-sm text-slate-600">Hospital Name</label>
-              <input
-                defaultValue="Apollo Hospital"
-                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="text-sm text-slate-600">Contact Email</label>
-              <input
-                defaultValue="admin@apollohospital.com"
-                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="text-sm text-slate-600">Contact Number</label>
-              <input
-                defaultValue="+91 40 1234 5678"
-                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-              />
-            </div>
-          </div>
-        </div>
 
-        <div className="rounded-xl border border-slate-200 p-4">
-          {/* <h3 className="text-lg font-semibold">Preferences</h3> */}
-          <div className="mt-4 space-y-3 text-sm">
-            <div>
-              <label
-                htmlFor="hospital-image-1"
-                className="text-sm text-slate-600"
-              >
-                Image 1
-              </label>
-              <input
-                id="hospital-image-1"
-                type="file"
-                accept="image/*"
-                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-sky-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-sky-700 hover:file:bg-sky-100"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="hospital-image-2"
-                className="text-sm text-slate-600"
-              >
-                Image 2
-              </label>
-              <input
-                id="hospital-image-2"
-                type="file"
-                accept="image/*"
-                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-sky-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-sky-700 hover:file:bg-sky-100"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="hospital-location"
-                className="text-sm text-slate-600"
-              >
-                Location
-              </label>
-              <input
-                id="hospital-location"
-                defaultValue="Hyderabad"
-                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-              />
-            </div>
-            {/* <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>SMS Notifications</span><input type="checkbox" defaultChecked /></label>
-            <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Email Reports</span><input type="checkbox" defaultChecked /></label>
-            <label className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"><span>Auto-confirm Follow-ups</span><input type="checkbox" /></label> */}
-          </div>
-          <button
-            type="button"
-            className="mt-5 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
-          >
-            Save Settings
-          </button>
-        </div>
-      </div>
-    </article>
-  );
-}
 
-function AppointmentsPanel() {
-  return (
-    <article className="overflow-hidden rounded-sm border border-slate-300 bg-[#d9d9d9] shadow-sm">
-      <div className="grid grid-cols-1 border-b border-white/50 bg-[#c4c4c4] text-center text-[#0d2f52] sm:grid-cols-2">
-        <div className="border-r border-white/50 px-4 py-3 text-2xl font-bold max-sm:border-r-0 sm:px-6 sm:py-4 sm:text-3xl">
-          ID:202324
-        </div>
-        <div className="px-4 py-3 text-base font-medium text-slate-900 sm:px-6 sm:py-4 sm:text-2xl">
-          ON:8-April-2026/<span className="font-semibold">9:30 AM</span>
-        </div>
-      </div>
+useEffect(() => {
+  const token = localStorage.getItem("token");
 
-      <div className="p-4 md:p-7">
-        <div className="mb-5 flex flex-wrap items-start justify-between gap-4 sm:items-center">
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <Image
-              src={logo}
-              alt="Hospital logo"
-              width={100}
-              height={32}
-              className="h-8 w-auto object-contain rounded-full"
-            />
-            {/* <div className="text-lg font-bold tracking-[0.24em] text-[#173453] sm:text-2xl">APOLLO</div> */}
-            <h2 className="text-xl font-semibold text-slate-900 sm:text-2xl ">
-              Appollo Hospital,Hyderabad
-            </h2>
-          </div>
-          {/* <button
-            type="button"
-            className="rounded-md border border-slate-500 bg-[#f2f2f2] px-4 py-2 text-base font-semibold text-[#123554] shadow-[0_3px_8px_rgba(0,0,0,0.22)] sm:px-5 sm:text-xl"
-          >
-            Location <span aria-hidden="true">Pin</span>
-          </button> */}
-        </div>
+  if (token) {
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      console.log("Token",decoded.gmail)
+      setname(decoded.name)
+      setid(decoded.id);
+      setmail(decoded.gmail)
 
-        <div className="rounded-xl border border-slate-300 bg-[#efefef] p-4 shadow-[0_5px_12px_rgba(0,0,0,0.18)] md:p-5">
-          <div className="flex flex-wrap items-start gap-4 sm:items-center sm:gap-6 md:gap-8">
-            <div className="h-24 w-24 overflow-hidden rounded-full border border-slate-300 bg-white shadow-sm sm:h-28 sm:w-28 md:h-36 md:w-36">
-              <Image
-                src="/hospital/doctor1.png"
-                alt="Doctor"
-                width={144}
-                height={144}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="text-slate-900">
-              <h3 className="text-xl font-medium text-[#1363a2] sm:text-2xl lg:text-4xl">
-                Dr.Chandra Shakar Reddy
-              </h3>
-              <p className="mt-1 text-sm sm:text-base lg:text-xl">
-                cardio specialist
-              </p>
-              <p className="text-sm text-slate-600 sm:text-base lg:text-lg">
-                5 years of experiance
-              </p>
-              <p className="mt-3 text-xs leading-relaxed sm:text-sm lg:mt-4 lg:text-lg">
-                MBBS, MD - General Medicine, DM - Gastroenterology
-                <br />
-                Fortis Hospital , Jaipur
-              </p>
-            </div>
-          </div>
-        </div>
+      if (decoded.role === "hospital") {
+        setIslogin(true);
+      }
+    } catch {
+      localStorage.removeItem("token");
+      setIslogin(false);
+    }
+  } else {
+    setIslogin(false);
+    setStep("login");
+  }
+}, []);
 
-        <div className="mt-7 grid grid-cols-1 overflow-hidden border border-white/70 bg-[#cfcfcf] text-center text-[#0d2f52] sm:grid-cols-3">
-          <div className="border-b border-white/70 px-4 py-3 text-xl font-bold sm:border-b-0 sm:border-r lg:text-4xl">
-            P.Prashanth
-          </div>
-          <div className="border-b border-white/70 px-4 py-3 text-xl font-bold sm:border-b-0 sm:border-r lg:text-4xl">
-            Age:20
-          </div>
-          <div className="px-4 py-3 text-xl font-bold lg:text-4xl">Male</div>
-        </div>
 
-        <div className="mt-1 border border-white/70 bg-[#cfcfcf] px-4 py-6 text-center text-lg text-slate-900 sm:px-5 sm:py-8 sm:text-2xl lg:text-4xl">
-          Have Problem with Teeth ache Need a regular checkup
-        </div>
 
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-3 sm:gap-5 md:mt-9 md:gap-12">
-          <button
-            type="button"
-            className="w-full rounded-xl bg-[#f4d632] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-5 sm:py-3 sm:text-xl lg:text-3xl"
-          >
-            Mark Waiting
-          </button>
-          <button
-            type="button"
-            className="w-full rounded-xl bg-[#f50000] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-6 sm:py-3 sm:text-xl lg:text-3xl"
-          >
-            Resedule
-          </button>
-          <button
-            type="button"
-            className="w-full rounded-xl bg-[#0069d1] px-4 py-2 text-base font-bold text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)] sm:w-auto sm:px-5 sm:py-3 sm:text-xl lg:text-3xl"
-          >
-            Mark Completed
-          </button>
-        </div>
-      </div>
-    </article>
-  );
-}
-function DashboardPanel() {
+
+useEffect(() => {
+  if (step !== "verify-otp") return;
+
+  const timer = setInterval(() => {
+    setTimeLeft((prev) => {
+      if (prev <= 1) {
+        clearInterval(timer);
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [step]);
+
+
+
+const sendOtp = async (gmail: string) => {
+  try {
+    setload(true)
+
+    const res = await fetch("/api/services/changePassword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        gmail,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setload(false)
+      alert(data.message);
+      return;
+    }
+    setload(false)
+
+    alert(data.message);
+
+    setTimeLeft(300);
+    setStep("verify-otp");
+  } catch (err) {
+    console.log(err);
+    alert("Failed to send OTP");
+  }
+  finally{
+    setload(false)
+  }
+};
+
+if (Islogin === null) {
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <div className="rounded-2xl bg-white p-6 shadow-sm">
-          <div className="mb-5 flex items-start justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-xs font-semibold text-sky-700">
-              AP
-            </div>
-            {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+12%</span> */}
-          </div>
-          <h2 className="text-4xl font-bold leading-none">142</h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Today&apos;s Appointments
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-white p-6 shadow-sm">
-          <div className="mb-5 flex items-start justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-xs font-semibold text-emerald-700">
-              OK
-            </div>
-            {/* <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">+8%</span> */}
-          </div>
-          <h2 className="text-4xl font-bold leading-none">89</h2>
-          <p className="mt-2 text-sm text-slate-600">Completed Today</p>
-        </div>
-
-        <div className="rounded-2xl bg-white p-6 shadow-sm">
-          <div className="mb-5 flex items-start justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-xs font-semibold text-orange-700">
-              WT
-            </div>
-            {/* <span className="rounded-md bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">-3%</span> */}
-          </div>
-          <h2 className="text-4xl font-bold leading-none">28</h2>
-          <p className="mt-2 text-sm text-slate-600">Currently Waiting</p>
-        </div>
-
-        {/* <div className="rounded-2xl bg-white p-6 shadow-sm">
-          <div className="mb-5 flex items-start justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-100 text-xs font-semibold text-violet-700">DR</div>
-            <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">0%</span>
-          </div>
-          <h2 className="text-4xl font-bold leading-none">45</h2>
-          <p className="mt-2 text-sm text-slate-600">Active Doctors</p>
-        </div> */}
-      </div>
-
-      <div className="mt-6 grid gap-6 xl:grid-cols-[1.8fr,1fr]">
-        <article className="min-w-0 rounded-2xl bg-white p-4 shadow-sm md:p-6">
-          <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-2xl font-semibold">
-              Today&apos;s Appointments
-            </h3>
-            <button
-              type="button"
-              className="text-sm font-semibold text-blue-600 hover:text-blue-700"
-            >
-              View All {"->"}
-            </button>
-          </div>
-
-          <div className="max-w-full overflow-x-auto">
-            <table className="w-full min-w-[560px] border-collapse sm:min-w-[650px]">
-              <thead>
-                <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
-                  <th className="pb-3 font-semibold">PATIENT</th>
-                  <th className="pb-3 font-semibold">DOCTOR</th>
-                  <th className="pb-3 font-semibold">TIME</th>
-                  <th className="pb-3 font-semibold">STATUS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {appointments.map((patient) => (
-                  <tr key={patient.id} className="border-b border-slate-100">
-                    <td className="py-4">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r ${patient.color} text-sm font-semibold text-white`}
-                        >
-                          {patient.initials}
-                        </div>
-                        <div>
-                          <div className="text-base font-semibold leading-tight">
-                            {patient.name}
-                          </div>
-                          <div className="text-xs text-slate-500">
-                            {patient.id}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 text-sm font-medium">
-                      {patient.doctor}
-                    </td>
-                    <td className="py-4">
-                      <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                        {patient.time}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <span
-                        className={`rounded-lg px-3 py-1 text-xs font-semibold ${statusStyles[patient.status]}`}
-                      >
-                        {patient.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </article>
-
-        {/* <aside className="min-w-0 rounded-2xl bg-white p-4 shadow-sm md:p-6">
-          <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-2xl font-semibold">Active Doctors Today</h3>
-            <button type="button" className="text-sm font-semibold text-blue-600 hover:text-blue-700">View All {"->"}</button>
-          </div>
-
-          <div className="space-y-3">
-            {doctors.map((doctor) => (
-              <div key={doctor.name} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 p-3">
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r ${doctor.color} text-xs font-semibold text-white`}>{doctor.initials}</div>
-                  <div className="min-w-0">
-                    <div className="truncate text-base font-semibold leading-tight">{doctor.name}</div>
-                    <div className="truncate text-xs text-slate-500">{doctor.specialty}</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-blue-600">{doctor.patients}</div>
-                  <div className="text-xs text-slate-500">Patients</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <button type="button" className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm hover:bg-slate-50">
-              <div className="text-3xl font-semibold text-indigo-500">+</div>
-              <div className="mt-1 text-sm font-semibold">Add Doctor</div>
-            </button>
-            <button type="button" className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm hover:bg-slate-50">
-              <div className="text-2xl font-semibold text-violet-500">CAL</div>
-              <div className="mt-2 text-sm font-semibold">Manage Slots</div>
-            </button>
-          </div>
-        </aside> */}
-      </div>
+    <Spinner />
     </>
   );
 }
 
-export default function HospitalDashboardPage() {
-  const [activeTab, setActiveTab] = useState<TabKey>("Dashboard");
+console.log("hospital",hospital)
 
-  const panel = useMemo(() => {
-    if (activeTab === "Dashboard") return <DashboardPanel />;
-    if (activeTab === "Appointments") return <AppointmentsPanel />;
-    if (activeTab === "Settings") return <SettingsPanel />;
-    return <SimplePanel title={activeTab} />;
-  }, [activeTab]);
-
-  return (
-    <main className="min-h-screen overflow-x-hidden bg-[#eef0f3] text-slate-900">
-      <div className="flex min-h-screen flex-col md:flex-row">
+if(Islogin){
+  return(
+    <>
+    <div className="flex min-h-screen flex-col md:flex-row">
         <aside className="w-full bg-[#141821] text-white md:w-64 md:flex-shrink-0">
           <div className="border-b border-white/10 px-6 py-6 text-3xl font-semibold tracking-tight">
-            DoctorBook
+             Apponto Health
           </div>
 
           <nav className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 md:grid-cols-1 md:gap-1 md:p-0 md:py-4">
@@ -518,8 +319,7 @@ export default function HospitalDashboardPage() {
                   activeTab === item.label
                     ? "bg-[#0f253f] text-sky-400 md:border-l-2 md:border-sky-400"
                     : "text-slate-300 hover:bg-white/5"
-                }`}
-              >
+                }`}>
                 <span className="w-6 text-center text-[10px] font-semibold tracking-wider">
                   {item.glyph}
                 </span>
@@ -527,6 +327,17 @@ export default function HospitalDashboardPage() {
               </button>
             ))}
           </nav>
+            <div className="p-3 border-t border-slate-700">
+    <button
+      onClick={() => {
+        localStorage.removeItem("token");
+        window.location.reload();
+      }}
+      className="flex w-full items-center justify-center gap-2 rounded-md bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+    >
+      Logout
+    </button>
+  </div>
         </aside>
 
         <section className="min-w-0 flex-1 p-4 md:p-6 lg:p-8">
@@ -534,7 +345,7 @@ export default function HospitalDashboardPage() {
             <div>
               <h1 className="text-3xl font-semibold">{activeTab}</h1>
               <p className="mt-1 text-base text-slate-600">
-                Welcome back, Apollo Hospital
+                Welcome back, <span className="text-xl font-bold uppercase">{name}</span>
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -547,10 +358,259 @@ export default function HospitalDashboardPage() {
               </div>
             </div>
           </header>
-
           {panel}
         </section>
       </div>
-    </main>
+      </>
+  )
+}
+
+  return (
+
+ <div className="flex min-h-screen items-center justify-center bg-slate-100">
+  <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
+
+    {/* LOGIN */}
+    {step === "login" && (
+      <>
+        <h2 className="mb-6 text-center text-2xl font-semibold">
+          Login
+        </h2>
+
+        <form className="space-y-4">
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              Email
+            </label>
+
+            <input
+              type="email"
+              value={gmail}
+              onChange={(e) => setgmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full rounded-md border border-slate-300 px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              Password
+            </label>
+
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setpassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full rounded-md border border-slate-300 px-3 py-2"
+            />
+          </div>
+
+          {err && (
+            <div className="text-red-600">
+              {err}
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="text-sm text-blue-600 hover:underline"
+            onClick={() => {
+              setgmail("");
+              setOtp("");
+              setpassword("");
+              setConfirmPassword("");
+              setStep("forgot-password");
+            }}
+          >
+            Forgot Password?
+          </button>
+
+          <button
+  type="button"
+  disabled={isload}
+  className={`w-full rounded-md py-2 text-white ${
+    isload
+      ? "cursor-not-allowed bg-blue-400"
+      : "bg-blue-600 hover:bg-blue-700"
+  }`}
+  onClick={() => CheckLogin()}
+>
+  {isload ? "Logging..." : "Login"}
+</button>
+        </form>
+      </>
+    )}
+
+    {/* FORGOT PASSWORD */}
+    {step === "forgot-password" && (
+      <>
+        <h2 className="mb-6 text-center text-2xl font-semibold">
+          Forgot Password
+        </h2>
+
+        <div className="space-y-4">
+          <input
+            type="email"
+            value={gmail}
+            onChange={(e) => setgmail(e.target.value)}
+            placeholder="Enter your registered email"
+            className="w-full rounded-md border border-slate-300 px-3 py-2"
+          />
+
+          <button
+            type="button"
+            className={`w-full rounded-md py-2 text-white ${
+    load
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-blue-600 hover:bg-blue-700"
+  }`}
+            onClick={async () => {
+              await sendOtp(gmail);
+
+              setTimeLeft(300);
+              // setStep("verify-otp");
+            }}
+          >
+            {load?"Sending...":"Send OTP"}
+          </button>
+
+          <button
+            type="button"
+            className="w-full rounded-md border py-2"
+            onClick={() => setStep("login")}
+          >
+            Back to Login
+          </button>
+        </div>
+      </>
+    )}
+
+    {/* VERIFY OTP */}
+    {step === "verify-otp" && (
+      <>
+        <h2 className="mb-4 text-center text-2xl font-semibold">
+          Verify OTP
+        </h2>
+
+        <p className="mb-4 text-center text-sm text-slate-500">
+          OTP sent to {gmail}
+        </p>
+
+        <div className="mb-4 text-center font-medium text-red-500">
+          OTP Expires In: {minutes}:
+          {seconds.toString().padStart(2, "0")}
+        </div>
+
+        <div className="space-y-4">
+          <input
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter OTP"
+            className={`w-full rounded-md border border-slate-300 px-3 py-2
+           
+      
+      `}
+          />
+
+          <button
+  type="button"
+  disabled={load}
+  className={`w-full rounded-md py-2 text-white ${
+    load
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-green-600 hover:bg-green-700"
+  }`}
+  onClick={async () => {
+    await verifyOTP(otp, gmail);
+  }}
+>
+  {load ? "Verifying..." : "Verify OTP"}
+</button>
+
+          <button
+  type="button"
+  disabled={timeLeft > 0 || load}
+  className="w-full rounded-md border py-2 disabled:cursor-not-allowed disabled:opacity-50"
+  onClick={async () => {
+    await sendOtp(gmail);
+    setTimeLeft(300);
+  }}
+>
+  {load ? "Sending..." : "Resend OTP"}
+</button>
+
+          <button
+            type="button"
+            className="w-full rounded-md border py-2"
+            onClick={() => setStep("forgot-password")}
+          >
+            Back
+          </button>
+        </div>
+      </>
+    )}
+
+    {/* CHANGE PASSWORD */}
+    {step === "change-password" && (
+      <>
+        <h2 className="mb-6 text-center text-2xl font-semibold">
+          Change Password
+        </h2>
+
+        <div className="space-y-4">
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setpassword(e.target.value)}
+            placeholder="New Password"
+            className="w-full rounded-md border border-slate-300 px-3 py-2"
+          />
+
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
+            className="w-full rounded-md border border-slate-300 px-3 py-2"
+          />
+
+          {password &&
+            confirmPassword &&
+            password !== confirmPassword && (
+              <div className="text-red-600">
+                Passwords do not match
+              </div>
+            )}
+
+          <button
+  type="button"
+  disabled={
+    load ||
+    !password ||
+    !confirmPassword ||
+    password !== confirmPassword
+  }
+  className="w-full rounded-md bg-blue-600 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+  onClick={async () => {
+    await changePassword(gmail, password);
+  }}
+>
+  {load ? "Changing Password..." : "Change Password"}
+</button>
+
+          <button
+            type="button"
+            className="w-full rounded-md border py-2"
+            onClick={() => setStep("verify-otp")}
+          >
+            Back
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+</div>
   );
 }
