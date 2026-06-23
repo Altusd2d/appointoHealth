@@ -22,7 +22,7 @@ const day = Date_day.toLocaleDateString("en-US", {
   weekday: "long",
 });
 
-console.log(Date_day,"  ",day);
+// console.log(Date_day,"  ",day);
 
 
   const slots = await sql`
