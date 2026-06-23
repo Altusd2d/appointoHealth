@@ -9,8 +9,7 @@ try{
   if(!id || !date){
     return NextResponse.json({message:"date, id required "},{status:404})
   }
-  // const Date_day = new Date(date);
-  // const Date_day = new Date(`${date}T00:00:00+05:30`);
+
 if (isNaN(new Date(date).getTime())) {
   return NextResponse.json(
     { message: "date is invalid" },
@@ -23,19 +22,8 @@ const day = Date_day.toLocaleDateString("en-US", {
   weekday: "long",
 });
 
-console.log(Date_day,"  ",day);
-// const day = Date_day.toLocaleDateString("en-US", {
-//   weekday: "long",
-// });
-// console.log(
-//   new Date(date).toLocaleString("en-IN", {
-//     timeZone: "Asia/Kolkata",
-//   })
-// );
-// const day = new Date(date).toLocaleDateString("en-US", {
-//   weekday: "long",
-//   timeZone: "Asia/Kolkata",
-// });
+// console.log(Date_day,"  ",day);
+
 
   const slots = await sql`
     SELECT availability
@@ -44,51 +32,56 @@ console.log(Date_day,"  ",day);
     
   `;
 
-console.log(Date_day,",",day)
+
 const availability = JSON.parse(slots[0].availability);
 // const availability = slots[0].availability;
 const res=availability[day]
-// console.log(res)
+
+const formattedDate = new Date(Date_day)
+  .toISOString()
+  .split("T")[0];
+
 
 const slotsOnThatDay=await sql`
 SELECT appointment_time
     FROM appointments
     WHERE doctor_id = ${id}
-    and appointment_date=${date}
+    and appointment_date=${formattedDate}
 `;
-// console.log(slotsOnThatDay)
+
+console.log("slotsOnThatDay",slotsOnThatDay)
 
 const bookedSlots = new Set(
   slotsOnThatDay.map(slot => slot.appointment_time)
 );
 
-// console.log("bboked slots on date",bookedSlots)
+console.log("bboked slots on date",bookedSlots)
 
 const slot_time = [
-  "00:00:00", "00:30:00",
-  "01:00:00", "01:30:00",
-  "02:00:00", "02:30:00",
-  "03:00:00", "03:30:00",
-  "04:00:00", "04:30:00",
-  "05:00:00", "05:30:00",
-  "06:00:00", "06:30:00",
-  "07:00:00", "07:30:00",
-  "08:00:00", "08:30:00",
-  "09:00:00", "09:30:00",
-  "10:00:00", "10:30:00",
-  "11:00:00", "11:30:00",
-  "12:00:00", "12:30:00",
-  "13:00:00", "13:30:00",
-  "14:00:00", "14:30:00",
-  "15:00:00", "15:30:00",
-  "16:00:00", "16:30:00",
-  "17:00:00", "17:30:00",
-  "18:00:00", "18:30:00",
-  "19:00:00", "19:30:00",
-  "20:00:00", "20:30:00",
-  "21:00:00", "21:30:00",
-  "22:00:00", "22:30:00",
-  "23:00:00", "23:30:00"
+  "12:00AM", "12:30AM",
+  "1:00AM", "1:30AM",
+  "2:00AM", "2:30AM",
+  "3:00AM", "3:30AM",
+  "4:00AM", "4:30AM",
+  "5:00AM", "5:30AM",
+  "6:00AM", "6:30AM",
+  "7:00AM", "7:30AM",
+  "8:00AM", "8:30AM",
+  "9:00AM", "9:30AM",
+  "10:00AM", "10:30AM",
+  "11:00AM", "11:30AM",
+  "12:00PM", "12:30PM",
+  "1:00PM", "1:30PM",
+  "2:00PM", "2:30PM",
+  "3:00PM", "3:30PM",
+  "4:00PM", "4:30PM",
+  "5:00PM", "5:30PM",
+  "6:00PM", "6:30PM",
+  "7:00PM", "7:30PM",
+  "8:00PM", "8:30PM",
+  "9:00PM", "9:30PM",
+  "10:00PM", "10:30PM",
+  "11:00PM", "11:30PM"
 ];
 
 
@@ -97,7 +90,6 @@ for (let i = 0; i < slot_time.length; i++) {
     res[i] = 2;
   }
 }
-// console.log(availability[day])
   return NextResponse.json({message:res},{status:200});
 }
 catch(err){
