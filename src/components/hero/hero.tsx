@@ -4,11 +4,6 @@ import Image from "next/image";
 // import localFont from "next/font/local";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useEffect,useState } from "react";
-// const font1=localFont({
-//   src:"../../fonts/font1.woff2"
-// })
-
 export default function Hero() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 

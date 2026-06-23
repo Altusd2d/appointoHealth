@@ -52,7 +52,11 @@ const faqItems = [
       "Missed appointments may not be eligible for refund depending on clinic policy. Please check cancellation terms while booking.",
   },
 ];
-
+export const metadata = {
+  title: "FAQ | Appointo Health Help Center",
+  description:
+    "Find answers to common questions about doctor appointments, cancellations, online consultations, payments, and healthcare services on Appointo Health.",
+};
 export default function Faq() {
   return (
     <section id="faq" className="bg-[#f5f8fc] px-4 py-12 sm:px-6 md:px-10 lg:px-16">
