@@ -4,7 +4,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import Navbar from "@/components/hero/navbar";
 import Footer from "@/components/footer/footer";
-
+import { GoogleAnalytics } from "@next/third-parties/google";
 const font1 = localFont({
   src: "../fonts/font1.woff2",
 });
@@ -38,6 +38,7 @@ export default function RootLayout({
         {children}
         <Footer/>
       </body>
+       <GoogleAnalytics gaId="G-LEC6T001BF" />
     </html>
   );
 }
