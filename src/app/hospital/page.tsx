@@ -498,24 +498,34 @@ export default function HospitalSearch() {
                                         const isUnavailable = slot.status === 2;
 
                                         return (
-                                          <button
-                                            key={slot.time}
-                                            type="button"
-                                            onClick={() =>
-                                              setSelectedSlotByDoctor(() => ({
-                                                [doctor.id]: slot.time,
-                                              }))
-                                            }
-                                            className={`h-8 rounded-xl border text-lg mx-2 my-2 px-1 font-medium transition sm:h-14 sm:text-[18px] ${
-                                              selectedSlotByDoctor[doctor.id] ==
-                                              slot.time
-                                                ? "border-[#0a67d4] bg-[#0a67d4] text-white shadow-[0_8px_18px_rgba(10,103,212,0.22)]"
-                                                : isUnavailable
-                                                  ? "cursor-not-allowed border-[#d8d8d8] text-[#c3c3c3]"
-                                                  : "border-[#9fcbf7] text-[#3f8dde] hover:bg-[#f3f8ff]"
-                                            }`}>
-                                            {slot.time}
-                                          </button>
+                                          <div className="relative inline-block group " key={slot.time}>
+  <button
+    
+    type="button"
+    disabled={isUnavailable}
+    onClick={() =>
+      setSelectedSlotByDoctor(() => ({
+        [doctor.id]: slot.time,
+      }))
+    }
+    className={`h-0 rounded-xl border text-lg mx-2 my-2 px-1 font-medium transition sm:h-12 sm:text-[18px] ${
+      selectedSlotByDoctor[doctor.id] === slot.time
+        ? "border-[#0a67d4] bg-[#0a67d4] text-white shadow-[0_8px_18px_rgba(10,103,212,0.22)]"
+        : isUnavailable
+        ? "cursor-not-allowed border-red-300 bg-red-100 text-red-700 opacity-80"
+        : "border-[#9fcbf7] text-[#3f8dde] hover:bg-[#f3f8ff]"
+    }`}
+  >
+    {slot.time}
+  </button>
+
+  {isUnavailable && (
+    <div className="absolute -top-8 left-1/2 hidden -translate-x-1/2 rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
+      Booked
+    </div>
+  )}
+</div>
+                                          
                                         );
                                       })
                                     ) : (
