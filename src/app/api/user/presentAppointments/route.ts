@@ -4,7 +4,7 @@ export async function GET() {
   try {
     const user = await getUserFromToken();
 
-    const presentAppointments = await sql`
+ const presentAppointments = await sql`
 SELECT
   a.*,
   jsonb_build_object(
@@ -12,7 +12,7 @@ SELECT
     'name', d.name,
     'specialist', d.specialist,
     'experience', d.experience,
-    'education',d.education,
+    'education', d.education,
     'image', d.image
   ) AS doctor
 FROM appointments a
@@ -20,11 +20,11 @@ JOIN doctors d
   ON a.doctor_id = d.id
 WHERE a.patient_id = ${user.userId}
   AND a.status != 'cancelled'
+  AND a.status != 'completed'
   AND (
     a.appointment_date::DATE >= CURRENT_DATE
     OR a.status = 'booked'
-  );
-  AND a.status!='completed'
+  )
 `;
 
 // console.log("presentt appointmensts "+presentAppointments+"two details")
