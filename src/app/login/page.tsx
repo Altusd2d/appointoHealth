@@ -1,20 +1,46 @@
-// import Image from "next/image";
-// import Link from "next/link";
-// import sethascope from "../../../public/sign-up/sethascope.png"
-// import heartrate from "../../../public/sign-up/heart_rate.png"
-// export default function Login() {
-//   return (
-//     <main className=" bg-white px-4 py-10 md:px-6">
-//       <section className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden
-//        bg-[#efefef] md:flex-row md:shadow-2xl rounded-xl">
-//         <div className="relative hidden md:flex w-full flex-col items-center
-//          justify-between bg-white px-6 pb-8 pt-10 md:w-1/2 md:px-8">
-//           <h1 className="z-10 text-center text-4xl font-bold uppercase
-//            leading-tight text-[#042b52] lg:text-5xl text-[40px]">
-//             Appointo
-//             <br />
-//             Health
-//           </h1>
+import Image from "next/image";
+import Link from "next/link";
+import sethascope from "../../../public/sign-up/sethascope.png"
+import heartrate from "../../../public/sign-up/heart_rate.png"
+export const metadata = {
+  title: "Login | Appointo Health",
+  description:
+    "Securely login to Appointo Health to manage doctor appointments, consultations, medical records, and healthcare bookings online.",
+};
+export default function Login() {
+  return (
+    <main className=" bg-white px-4 py-10 md:px-6">
+      <section className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden 
+       bg-[#efefef] md:flex-row md:shadow-2xl rounded-xl">
+        <div className="relative hidden md:flex w-full flex-col items-center
+         justify-between bg-white px-6 pb-8 pt-10 md:w-1/2 md:px-8">
+          <h1 className="z-10 text-center text-4xl font-bold uppercase
+           leading-tight text-[#042b52] lg:text-5xl text-[40px]">
+            Appointo
+            <br />
+            Health
+          </h1>
+
+          <div className="flex items-center ">
+          <Image
+            src={heartrate}
+            alt="Heartbeat line"
+            // width={240}
+            // height={90}
+            className="mt-1 ml-14 w-[30vw] h-[200px] left-[0%]
+            absolute top-40 object-contain"
+          />
+          <Image
+            src={sethascope}
+            alt="Stethoscope"
+            // width={210}
+            // height={280}
+            className=" 
+             md:w-[20vwpx] h-[290px] -ml-15 object-contain 
+             absolute top-[16%] lg:left-[60%] z-20 left[50%] xl:left-[64%]"
+            priority
+          />
+          </div>
 
 //           <div className="flex items-center ">
 //           <Image

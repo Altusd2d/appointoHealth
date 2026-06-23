@@ -6,7 +6,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { premiumDoctors } from "./premiumDoctorsData";
-import { useEffect, useState } from "react";
 
 type DoctorCard = {
   id: string;
@@ -17,33 +16,54 @@ type DoctorCard = {
   image: string;
 };
 
-type Availability = {
-  Monday: number[];
-  Tuesday: number[];
-  Wednesday: number[];
-  Thursday: number[];
-  Friday: number[];
-  Saturday: number[];
-  Sunday: number[];
-};
-
-type Doctor = {
-  description: string;
-  id: string;
-  name: string;
-  specialist: string;
-  education: string;
-  experience: string;
-  image: string;
-  hospital_id: string;
-  availability: Availability;
-};
+const doctors: DoctorCard[] = [
+  {
+    id: "doc-1",
+    name: "Dr DAS",
+    role: "Cario Expert",
+    achievement: "Gold Medalist in AIIMS Bibinagar,",
+    experience: "10 years Experiance , more than 1500 patients",
+    image: "/hospital/doctor1.png",
+  },
+  {
+    id: "doc-2",
+    name: "Dr M Kishan Kumar",
+    role: "Skin Spelist",
+    achievement: "Gold Medalist in AIIMS Bibinagar,",
+    experience: "15 years Experiance , more than 1500 patients",
+    image: "/hospital/doctor1.png",
+  },
+  {
+    id: "doc-3",
+    name: "Dr Bupal Reddy",
+    role: "ENT Expert",
+    achievement: "Gold Medalist in AIIMS Bibinagar,",
+    experience: "10 years Experiance , more than 1500 patients",
+    image: "/hospital/doctor1.png",
+  },
+  {
+    id: "doc-4",
+    name: "Dr Latha",
+    role: "Cario Expert",
+    achievement: "Gold Medalist in AIIMS Bibinagar,",
+    experience: "10 years Experiance , more than 1500 patients",
+    image: "/hospital/doctor1.png",
+  },
+  {
+    id: "doc-5",
+    name: "Dr Sri Lakshmi",
+    role: "Cario Expert",
+    achievement: "Gold Medalist in AIIMS Bibinagar,",
+    experience: "10 years Experiance , more than 1500 patients",
+    image: "/hospital/doctor1.png",
+  },
+];
 
 const doctorSlugById = new Map(
   premiumDoctors.map((doctor) => [doctor.id, doctor.slug]),
 );
 
-function DoctorItem({ doctor }: { doctor: Doctor }) {
+function DoctorItem({ doctor }: { doctor: DoctorCard }) {
   const doctorSlug = doctorSlugById.get(doctor.id);
 
   return (

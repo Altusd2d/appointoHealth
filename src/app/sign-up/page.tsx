@@ -1,10 +1,13 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import sethascope from "../../../public/sign-up/sethascope.png";
-import heartrate from "../../../public/sign-up/heart_rate.png";
-import { useState } from "react";
+import sethascope from "../../../public/sign-up/sethascope.png"
+import heartrate from "../../../public/sign-up/heart_rate.png"
+export const metadata = {
+  title: "Sign Up | Appointo Health",
+  description:
+    "Create your Appointo Health account to book doctor appointments, consult specialists, and access healthcare services online.",
+};
 export default function Signup() {
   const router = useRouter();
   const [formData, setFormData] = useState({
